@@ -33,11 +33,12 @@ if(NOT glfw3_FOUND)
 	if(WIN32)
 		set(GLFW_ROOT "G:/Programs/Libraries/glfw-3.4.bin.WIN64/glfw-3.4.bin.WIN64")
 		set(GLFW_INCLUDE_DIR "${GLFW_ROOT}/include")
+		set(GLFW_INCLUDE_DEPS_DIR "${GLFW_ROOT}/deps")
 		set(GLFW_LIB_DIR "${GLFW_ROOT}/lib-vc2022")
 		
 		add_library(glfw SHARED IMPORTED)
 		set_target_properties(glfw PROPERTIES
-			INTERFACE_INCLUDE_DIRECTORIES "${GLFW_INCLUDE_DIR}"
+			INTERFACE_INCLUDE_DIRECTORIES "${GLFW_INCLUDE_DIR};${GLFW_INCLUDE_DEPS_DIR}"
 			IMPORTED_IMPLIB "${GLFW_LIB_DIR}/glfw3.lib"
 			IMPORTED_LOCATION "${GLFW_LIB_DIR}/glfw3.dll"
 		)
