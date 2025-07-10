@@ -14,11 +14,100 @@
 #include <stdlib.h>
 
 #include <thread>
+#include <utility>
+
+#ifdef WIN32
+#include <windows.h>
+#elif __unix__
+#include <errno.h>
+#include <unistd.h>
+#endif
 
 #define FPS 60
 #define VERTEX_ATTRIBUTE_SIZE 2
 
 #define ANIMATION_SPEED 2.5e-3
+
+std::string LoadDataFromFile(const std::string& filename)
+{
+	std::ifstream file(filename, std::ios::binary);
+	file.seekg(0, file.end);
+	int size = file.tellg();
+	file.seekg(0, file.beg);
+	if (!file.is_open())
+	{
+		int error;
+#ifdef WIN32
+		error = GetLastError();
+#elif
+		error = errno;
+#endif
+		throw error;
+	}
+
+	std::string data(size, '\0');
+	file.read(data.data(), size);
+
+	return data;
+}
+
+struct Shader
+{
+	std::string m_fragmentShader;
+	std::string m_vertexShader;
+
+	bool m_hasFragment = false;
+	bool m_hasVertex = false;
+};
+
+// TODO переделать
+static inline struct Shader GetVertexAndFragmentShaders(const std::string& source)
+{
+	Shader shader;
+
+	const std::string vertexLabel = "#shader vertex";
+	const std::string fragmentLabel = "#shader fragment";
+	const std::size_t vertexLabelSize = vertexLabel.size();
+	const std::size_t fragmentLabelSize = fragmentLabel.size();
+	const std::size_t vertexLabelPos = source.find(vertexLabel);
+	const std::size_t fragmentLabelPos = source.find(fragmentLabel);
+
+	if (vertexLabelPos != std::string::npos)
+	{
+		shader.m_hasVertex=true;
+		
+		shader.m_vertexShader =
+		source.substr
+		(
+			vertexLabelPos + vertexLabelSize, 
+			source.size() - 
+			(
+				fragmentLabelPos != std::string::npos and 
+				fragmentLabelPos > vertexLabelPos ? 
+				(fragmentLabelPos + fragmentLabelSize + 1) : std::string::npos
+			)
+		);
+	}
+	if (fragmentLabelPos != std::string::npos)
+	{
+		shader.m_hasFragment=true;
+		
+		shader.m_fragmentShader =
+		source.substr
+		(
+			fragmentLabelPos + fragmentLabelSize,
+			source.size() -
+			(
+				vertexLabelPos != std::string::npos and
+				vertexLabelPos > fragmentLabelPos ?
+				(vertexLabelPos + vertexLabelSize + 1) : std::string::npos
+			)
+		);
+	}
+
+	return shader;
+}
+
 
 
 /// <summary>
@@ -98,6 +187,10 @@ int main(int argc, char** argv)
 	std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
 
 
+	std::string shaderData= LoadDataFromFile("../res/shaders/shader.shader");
+	Shader shader = GetVertexAndFragmentShaders(shaderData);
+
+
 
 	GLFWwindow* window;
 
@@ -142,29 +235,8 @@ int main(int argc, char** argv)
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, VERTEX_ATTRIBUTE_SIZE, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_ATTRIBUTE_SIZE, 0);
 
-	std::string vertexShader =
-R"(#version 330 core
-
-layout(location=0) in vec4 position; 
-
-void main()
-{
-	gl_Position = position;
-}
 	
-)";
-	std::string fragmentShader =
-R"(#version 330 core
-
-layout(location=0) out vec4 color; 
-
-void main()
-{
-	color = vec4(1.0, 0.0, 0.0, 1.0);
-}
-	
-)";
-	GLuint shaderProgram = CreateShader(vertexShader, fragmentShader);
+	GLuint shaderProgram = CreateShader(shader.m_vertexShader, shader.m_fragmentShader);
 	glUseProgram(shaderProgram);  
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
