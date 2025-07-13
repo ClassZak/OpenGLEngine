@@ -228,15 +228,19 @@ int main(int argc, char** argv)
 		0.5		,	-0.5,
 	};
 
-	float bufferData[12];
-	for (std::size_t i = 0; i != vertexes.size(); ++i)
-		bufferData[i] = vertexes[i];
+	std::vector<float> vectorBufferData = vertexes;
+
 
 	
 	glGenBuffers(1, &bufferId);
 	glBindBuffer(GL_ARRAY_BUFFER, bufferId);
-	//unsigned int vertexesVectorSize = vertexes.size()
-	glBufferData(GL_ARRAY_BUFFER, sizeof(bufferData), bufferData, GL_STATIC_DRAW);
+	glBufferData
+	(
+		GL_ARRAY_BUFFER, 
+		vectorBufferData.size() * sizeof(std::vector<float>::value_type), 
+		vectorBufferData.data(),
+		GL_STATIC_DRAW
+	);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, VERTEX_ATTRIBUTE_SIZE, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_ATTRIBUTE_SIZE, 0);
 
@@ -265,7 +269,13 @@ int main(int argc, char** argv)
 #endif  // FPS <= 1000
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, bufferId);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(bufferData), bufferData, GL_STATIC_DRAW);
+			glBufferData
+			(
+				GL_ARRAY_BUFFER,
+				vectorBufferData.size() * sizeof(std::vector<float>::value_type),
+				vectorBufferData.data(),
+				GL_STATIC_DRAW
+			);
 			glEnableVertexAttribArray(0);
 			glVertexAttribPointer
 			(0, VERTEX_ATTRIBUTE_SIZE, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_ATTRIBUTE_SIZE, 0);
@@ -275,7 +285,7 @@ int main(int argc, char** argv)
 
 
 
-		glDrawArrays(GL_TRIANGLES, NULL, sizeof(bufferData) / sizeof(*bufferData));
+		glDrawArrays(GL_TRIANGLES, NULL, vectorBufferData.size());
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
