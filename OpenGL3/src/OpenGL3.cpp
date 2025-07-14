@@ -277,33 +277,29 @@ int main(int argc, char** argv)
 	if (glewInit() != GLEW_OK)
 		return -1;
 
-	unsigned int bufferId{};
 
-	std::vector<Vertex2D> vertexes =
+	const std::vector<Vertex2D> vertexes =
 	{
-		Vertex2D (- 0.5		,	-0.5),
-		Vertex2D (- 0.5		,	0.5),
+		Vertex2D (-0.5		,	-0.5),
+		Vertex2D (-0.5		,	0.5),
 		Vertex2D (0.5		,	0.5),
 
-		Vertex2D (- 0.5		,	-0.5),
+		Vertex2D (-0.5		,	-0.5),
 		Vertex2D (0.5		,	0.5),
 		Vertex2D (0.5		,	-0.5),
 	};
 
-	std::vector<Vertex2D> vertexBufferData = vertexes, uniqueVertexes = GetUniqueVertexes(vertexes);
-
-	std::vector<unsigned int> vertexesIndices = [](const auto& vertexes) -> std::vector<unsigned int>
+	std::vector<Vertex2D> vertexBufferData = GetUniqueVertexes(vertexes);
+	std::vector<unsigned int> vertexesIndices =
 	{
-		std::vector<unsigned int> vector(vertexes.size());
-		for(unsigned int i=0; (std::size_t)i!= vertexes.size();++i)
-			vector[i] = i;
-
-		return vector;
-	}(vertexes);
+		0,	1,	2,
+		0,	2,	3
+	};
 
 
 
 	
+	unsigned int bufferId{};
 	glGenBuffers(1, &bufferId);
 	glBindBuffer(GL_ARRAY_BUFFER, bufferId);
 	glBufferData
@@ -316,6 +312,18 @@ int main(int argc, char** argv)
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, VERTEX_ATTRIBUTE_SIZE, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_ATTRIBUTE_SIZE, 0);
 
+	unsigned int indexBufferObject{};
+	glGenBuffers(1, &indexBufferObject);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferObject);
+	glBufferData
+	(
+		GL_ELEMENT_ARRAY_BUFFER,
+		vertexesIndices.size() * sizeof(std::vector<unsigned int>::value_type) * vertexesIndices.size(),
+		vertexesIndices.data(),
+		GL_STATIC_DRAW 
+	);
+
+
 
 	GLuint shaderProgram = CreateShader(shader.m_vertexShader, shader.m_fragmentShader);
 	glUseProgram(shaderProgram);
@@ -326,7 +334,13 @@ int main(int argc, char** argv)
 		std::chrono::milliseconds	millisecondsSinceEpoch =
 		std::chrono::duration_cast<std::chrono::milliseconds>(durationSinceEpoch);
 		std::chrono::seconds		secondsSinceEpoch =
-		std::chrono::duration_cast<std::chrono::seconds>(millisecondsSinceEpoch);
+		std::chrono::duration_cast<std::chrono::seconds>(durationSinceEpoch);
+
+
+		vertexBufferData[1].x = 
+		vertexes[1].x + (cos(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + 1) / 2. - 0.5;
+		vertexBufferData[1].y = 
+		vertexes[1].y + (sin(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + 1) / 2. - 0.5;
 
 		long diff = 2L;
 #if FPS <= 1000
@@ -351,13 +365,22 @@ int main(int argc, char** argv)
 			glEnableVertexAttribArray(0);
 			glVertexAttribPointer
 			(0, VERTEX_ATTRIBUTE_SIZE, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_ATTRIBUTE_SIZE, 0);
+
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferObject);
+			glBufferData
+			(
+				GL_ELEMENT_ARRAY_BUFFER,
+				vertexesIndices.size() * sizeof(std::vector<unsigned int>::value_type) * vertexesIndices.size(),
+				vertexesIndices.data(),
+				GL_STATIC_DRAW
+			);
 		}
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
 
 
-
-		glDrawArrays(GL_TRIANGLES, NULL, vertexBufferData.size());
+		glDrawElements(GL_TRIANGLES, vertexesIndices.size(), GL_UNSIGNED_INT, nullptr);
+		//glDrawArrays(GL_TRIANGLES, NULL, vertexBufferData.size());
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
