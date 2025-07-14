@@ -225,14 +225,19 @@ struct Vertex2D : AVertex<float>
 };
 
 template<class T>
-void SaveUniqeVertexes(std::vector<T>& vertexes)
+std::vector<T> GetUniqueVertexes(const std::vector<T>& vertexes)
 {
 	std::vector<T> uniqeVertexes;
 	for(auto & vertex : vertexes)
 		if(std::find(uniqeVertexes.begin(), uniqeVertexes.end(), vertex) == uniqeVertexes.end())
 			uniqeVertexes.emplace_back(vertex);
 
-	vertexes = uniqeVertexes;
+	return uniqeVertexes;
+}
+template<class T>
+void SaveUniqueVertexes(std::vector<T>& vertexes)
+{
+	vertexes = GetUniqueVertexes(vertexes);
 }
 
 
@@ -285,7 +290,16 @@ int main(int argc, char** argv)
 		Vertex2D (0.5		,	-0.5),
 	};
 
-	std::vector<Vertex2D> vectorBufferData = vertexes;
+	std::vector<Vertex2D> vertexBufferData = vertexes, uniqueVertexes = GetUniqueVertexes(vertexes);
+
+	std::vector<unsigned int> vertexesIndices = [](const auto& vertexes) -> std::vector<unsigned int>
+	{
+		std::vector<unsigned int> vector(vertexes.size());
+		for(unsigned int i=0; (std::size_t)i!= vertexes.size();++i)
+			vector[i] = i;
+
+		return vector;
+	}(vertexes);
 
 
 
@@ -295,8 +309,8 @@ int main(int argc, char** argv)
 	glBufferData
 	(
 		GL_ARRAY_BUFFER, 
-		vectorBufferData.size() * sizeof(std::vector<Vertex2D>::value_type),
-		vectorBufferData.data(),
+		vertexBufferData.size() * sizeof(std::vector<Vertex2D>::value_type),
+		vertexBufferData.data(),
 		GL_STATIC_DRAW
 	);
 	glEnableVertexAttribArray(0);
@@ -330,8 +344,8 @@ int main(int argc, char** argv)
 			glBufferData
 			(
 				GL_ARRAY_BUFFER,
-				vectorBufferData.size() * sizeof(std::vector<Vertex2D>::value_type),
-				vectorBufferData.data(),
+				vertexBufferData.size() * sizeof(std::vector<Vertex2D>::value_type),
+				vertexBufferData.data(),
 				GL_STATIC_DRAW
 			);
 			glEnableVertexAttribArray(0);
@@ -343,7 +357,7 @@ int main(int argc, char** argv)
 
 
 
-		glDrawArrays(GL_TRIANGLES, NULL, vectorBufferData.size());
+		glDrawArrays(GL_TRIANGLES, NULL, vertexBufferData.size());
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
