@@ -10,6 +10,7 @@
 #include <cmath>
 #include <vector>
 #include <array>
+#include <algorithm>
 
 #include <conio.h>
 #include <stdlib.h>
@@ -179,6 +180,62 @@ static GLuint CreateShader(const std::string& vertexShader, const std::string& f
 }
 
 
+
+template<typename T>
+class AVertex
+{
+};
+
+struct Vertex2D : AVertex<float>
+{
+	float x, y;
+
+	float GetVector()
+	{
+		return sqrt(pow(x,2) + pow(y, 2));
+	}
+
+
+	Vertex2D()
+	{
+		x=y=0.f;
+	}
+	Vertex2D(float x, float y) : x(x),y(y)
+	{
+	}
+	Vertex2D(const Vertex2D& other) : Vertex2D(other.x, other.y)
+	{
+	}
+
+	Vertex2D& operator=(const Vertex2D& other)
+	{
+		this->x=other.x;
+		this->y=other.y;
+
+		return *this;
+	}
+	bool operator==(const Vertex2D& other)
+	{
+		return this->x==other.x && this->y==other.y;
+	}
+	bool operator!=(const Vertex2D& other)
+	{
+		return this->x!=other.x || this->y!=other.y;
+	}
+};
+
+template<class T>
+void SaveUniqeVertexes(std::vector<T>& vertexes)
+{
+	std::vector<T> uniqeVertexes;
+	for(auto & vertex : vertexes)
+		if(std::find(uniqeVertexes.begin(), uniqeVertexes.end(), vertex) == uniqeVertexes.end())
+			uniqeVertexes.emplace_back(vertex);
+
+	vertexes = uniqeVertexes;
+}
+
+
 int main(int argc, char** argv)
 {
 	setlocale(LC_ALL, "Russian");
@@ -217,18 +274,19 @@ int main(int argc, char** argv)
 
 	unsigned int bufferId{};
 
-	std::vector<float> vertexes =
+	std::vector<Vertex2D> vertexes =
 	{
-		-0.5	,	-0.5,
-		-0.5	,	0.5,
-		0.5		,	0.5,
+		Vertex2D (- 0.5		,	-0.5),
+		Vertex2D (- 0.5		,	0.5),
+		Vertex2D (0.5		,	0.5),
 
-		-0.5	,	-0.5,
-		0.5		,	0.5,
-		0.5		,	-0.5,
+		Vertex2D (- 0.5		,	-0.5),
+		Vertex2D (0.5		,	0.5),
+		Vertex2D (0.5		,	-0.5),
 	};
 
-	std::vector<float> vectorBufferData = vertexes;
+	std::vector<Vertex2D> vectorBufferData = vertexes;
+
 
 
 	
@@ -237,7 +295,7 @@ int main(int argc, char** argv)
 	glBufferData
 	(
 		GL_ARRAY_BUFFER, 
-		vectorBufferData.size() * sizeof(std::vector<float>::value_type), 
+		vectorBufferData.size() * sizeof(std::vector<Vertex2D>::value_type),
 		vectorBufferData.data(),
 		GL_STATIC_DRAW
 	);
@@ -272,7 +330,7 @@ int main(int argc, char** argv)
 			glBufferData
 			(
 				GL_ARRAY_BUFFER,
-				vectorBufferData.size() * sizeof(std::vector<float>::value_type),
+				vectorBufferData.size() * sizeof(std::vector<Vertex2D>::value_type),
 				vectorBufferData.data(),
 				GL_STATIC_DRAW
 			);
