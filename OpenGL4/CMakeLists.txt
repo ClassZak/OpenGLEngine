@@ -78,11 +78,22 @@ endif()
 add_executable(
 	${PROJECT_NAME}
 	${CMAKE_SOURCE_DIR}/src/OpenGL4.cpp
-	${CMAKE_SOURCE_DIR}/src/GLMacro.h
+
+	${CMAKE_SOURCE_DIR}/src/utils/GLMacro.h
+	${CMAKE_SOURCE_DIR}/src/utils/functions.hpp
+	${CMAKE_SOURCE_DIR}/src/utils/functions.cpp
+
 	${CMAKE_SOURCE_DIR}/src/Vertex/AVertex.hpp
 	${CMAKE_SOURCE_DIR}/src/Vertex/2DVertex.hpp
 	${CMAKE_SOURCE_DIR}/src/Vertex/VertexUtils.hpp
+
+	${CMAKE_SOURCE_DIR}/src/Shader/Shader.hpp
+	${CMAKE_SOURCE_DIR}/src/Shader/Shader.cpp
+
+
+
 )
+
 target_link_libraries(${PROJECT_NAME} PRIVATE
 	OpenGL::GL
 	glfw
