@@ -69,6 +69,7 @@ int main(int argc, char** argv)
 
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
+	glfwSwapInterval(1);
 
 	if (glewInit() != GLEW_OK)
 		return -1;
@@ -127,7 +128,8 @@ int main(int argc, char** argv)
 
 	int location = glGetUniformLocation(shaderProgram, "u_Color");
 	GL_ASSERT(location != -1);
-	glUniform4f(location, 0.2f, 0.2f, 02.f, 1.f);
+	GLLogCall(glUniform4f(location, 0.2f, 0.2f, 02.f, 1.f));
+
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
@@ -143,6 +145,11 @@ int main(int argc, char** argv)
 		vertexBufferData[1].y = 
 		vertexes[1].y + (sin(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + 1) / 2. - 0.5;
 
+
+
+
+
+
 		long diff = 2L;
 #if FPS <= 1000
 		while (int(1000. / diff) >= FPS)
@@ -154,6 +161,15 @@ int main(int argc, char** argv)
 				(std::chrono::system_clock::now() - now).count();
 		}
 #endif  // FPS <= 1000
+		
+		GLLogCall(glUniform4f
+		(
+			location,
+			(sin(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + 1) / 2.f,
+			(cos(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + 1) / 2.f,
+			(tan(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + 1),
+			1.f
+		));
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, bufferId);
 			glBufferData
