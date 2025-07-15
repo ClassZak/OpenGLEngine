@@ -17,7 +17,7 @@ endif()
 
 set(CMAKE_CXX_STANDARD 20)
 
-project(OpenGL3 VERSION 1.0
+project(OpenGL4 VERSION 1.0
 		DESCRIPTION "Application for data transfering"
 		LANGUAGES CXX
 )
@@ -77,9 +77,8 @@ endif()
 
 add_executable(
 	${PROJECT_NAME}
-	${CMAKE_SOURCE_DIR}/src/OpenGL3.cpp
+	"src/OpenGL4.cpp"
 	${CMAKE_SOURCE_DIR}/src/GLMacro.h
-)
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE
 	OpenGL::GL
