@@ -69,7 +69,9 @@ int main(int argc, char** argv)
 
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
+#if FPS <= 1000
 	glfwSwapInterval(1);
+#endif
 
 	if (glewInit() != GLEW_OK)
 		return -1;
@@ -154,9 +156,6 @@ int main(int argc, char** argv)
 #if FPS <= 1000
 		while (int(1000. / diff) >= FPS)
 		{
-#if FPS <= 100
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
-#endif // FPS <= 100
 			diff = std::chrono::duration_cast<std::chrono::milliseconds>
 				(std::chrono::system_clock::now() - now).count();
 		}
