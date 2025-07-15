@@ -59,6 +59,14 @@ int main(int argc, char** argv)
 	if (!glfwInit())
 		return -1;
 
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	
+
+
 	/* Create a windowed mode window and its OpenGL context */
 	window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
 	if (!window)
@@ -75,6 +83,15 @@ int main(int argc, char** argv)
 
 	if (glewInit() != GLEW_OK)
 		return -1;
+
+
+
+	
+	unsigned int vertexArrayObject;
+	GLLogCall(glGenVertexArrays(1, &vertexArrayObject));
+	GLLogCall(glBindVertexArray(vertexArrayObject));
+
+
 
 
 	const std::vector<Vertex2D<float>> vertexes =
@@ -117,7 +134,7 @@ int main(int argc, char** argv)
 	glBufferData
 	(
 		GL_ELEMENT_ARRAY_BUFFER,
-		vertexesIndices.size() * sizeof(std::vector<unsigned int>::value_type) * vertexesIndices.size(),
+		vertexesIndices.size() * sizeof(std::vector<unsigned int>::value_type),
 		vertexesIndices.data(),
 		GL_STATIC_DRAW 
 	);
@@ -161,14 +178,14 @@ int main(int argc, char** argv)
 		}
 #endif  // FPS <= 1000
 		
-		GLLogCall(glUniform4f
+		glUniform4f
 		(
 			location,
 			(sin(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + 1) / 2.f,
 			(cos(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + 1) / 2.f,
 			(tan(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + 1),
 			1.f
-		));
+		);
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, bufferId);
 			glBufferData
@@ -178,9 +195,6 @@ int main(int argc, char** argv)
 				vertexBufferData.data(),
 				GL_STATIC_DRAW
 			);
-			glEnableVertexAttribArray(0);
-			glVertexAttribPointer
-			(0, VERTEX_ATTRIBUTE_SIZE, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_ATTRIBUTE_SIZE, 0);
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferObject);
 
@@ -196,8 +210,7 @@ int main(int argc, char** argv)
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		GLLogCall
-		(glDrawElements(GL_TRIANGLES, vertexesIndices.size(), GL_UNSIGNED_INT, nullptr));
+		glDrawElements(GL_TRIANGLES, vertexesIndices.size(), GL_UNSIGNED_INT, nullptr);
 		//glDrawArrays(GL_TRIANGLES, NULL, vertexBufferData.size());
 
 		/* Swap front and back buffers */
@@ -210,6 +223,8 @@ int main(int argc, char** argv)
 	}
 
 	glDeleteProgram(shaderProgram);
+
+	glDeleteVertexArrays(1, &vertexArrayObject);
 
 	glfwTerminate();
 
