@@ -25,6 +25,14 @@
 #include <unistd.h>
 #endif
 
+
+#include "GLMacro.h"
+
+
+
+
+
+
 #define FPS 60
 #define VERTEX_ATTRIBUTE_SIZE 2
 
@@ -367,6 +375,8 @@ int main(int argc, char** argv)
 			(0, VERTEX_ATTRIBUTE_SIZE, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_ATTRIBUTE_SIZE, 0);
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferObject);
+
+			
 			glBufferData
 			(
 				GL_ELEMENT_ARRAY_BUFFER,
@@ -378,8 +388,8 @@ int main(int argc, char** argv)
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
 
-
-		glDrawElements(GL_TRIANGLES, vertexesIndices.size(), GL_UNSIGNED_INT, nullptr);
+		GLLogCall
+		(glDrawElements(GL_TRIANGLES, vertexesIndices.size(), GL_UNSIGNED_INT, nullptr));
 		//glDrawArrays(GL_TRIANGLES, NULL, vertexBufferData.size());
 
 		/* Swap front and back buffers */
