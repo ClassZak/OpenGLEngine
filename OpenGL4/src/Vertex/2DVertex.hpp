@@ -1,11 +1,12 @@
 #pragma once
 #include "AVertex.hpp"
 
-struct Vertex2D : AVertex<float>
+template<typename T>
+struct Vertex2D : AVertex<T>
 {
-	float x, y;
+	T x, y;
 
-	float GetVector()
+	T GetVector()
 	{
 		return sqrt(pow(x, 2) + pow(y, 2));
 	}
@@ -15,7 +16,7 @@ struct Vertex2D : AVertex<float>
 	{
 		x = y = 0.f;
 	}
-	Vertex2D(float x, float y) : x(x), y(y)
+	Vertex2D(T x, T y) : x(x), y(y)
 	{
 	}
 

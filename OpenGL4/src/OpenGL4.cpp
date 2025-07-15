@@ -229,7 +229,7 @@ int main(int argc, char** argv)
 		return -1;
 
 
-	const std::vector<Vertex2D> vertexes =
+	const std::vector<Vertex2D<float>> vertexes =
 	{
 		Vertex2D (-0.5f		,	-0.5f),
 		Vertex2D (-0.5f		,	0.5f),
@@ -240,7 +240,7 @@ int main(int argc, char** argv)
 		Vertex2D (0.5f		,	-0.5f),
 	};
 
-	std::vector<Vertex2D> vertexBufferData = GetUniqueVertexes(vertexes);
+	std::vector<Vertex2D<float>> vertexBufferData = GetUniqueVertexes(vertexes);
 	std::vector<unsigned int> vertexesIndices =
 	{
 		0,	1,	2,
@@ -256,7 +256,7 @@ int main(int argc, char** argv)
 	glBufferData
 	(
 		GL_ARRAY_BUFFER, 
-		vertexBufferData.size() * sizeof(std::vector<Vertex2D>::value_type),
+		vertexBufferData.size() * sizeof(std::vector<Vertex2D<float>>::value_type),
 		vertexBufferData.data(),
 		GL_STATIC_DRAW
 	);
@@ -309,7 +309,7 @@ int main(int argc, char** argv)
 			glBufferData
 			(
 				GL_ARRAY_BUFFER,
-				vertexBufferData.size() * sizeof(std::vector<Vertex2D>::value_type),
+				vertexBufferData.size() * sizeof(std::vector<Vertex2D<float>>::value_type),
 				vertexBufferData.data(),
 				GL_STATIC_DRAW
 			);
