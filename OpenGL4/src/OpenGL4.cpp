@@ -27,6 +27,8 @@
 
 
 #include "GLMacro.h"
+#include "Vertex/2DVertex.hpp"
+#include "Vertex/VertexUtils.hpp"
 
 
 
@@ -189,65 +191,6 @@ static GLuint CreateShader(const std::string& vertexShader, const std::string& f
 
 
 
-template<typename T>
-class AVertex
-{
-};
-
-struct Vertex2D : AVertex<float>
-{
-	float x, y;
-
-	float GetVector()
-	{
-		return sqrt(pow(x,2) + pow(y, 2));
-	}
-
-
-	Vertex2D()
-	{
-		x=y=0.f;
-	}
-	Vertex2D(float x, float y) : x(x),y(y)
-	{
-	}
-	Vertex2D(const Vertex2D& other) : Vertex2D(other.x, other.y)
-	{
-	}
-
-	Vertex2D& operator=(const Vertex2D& other)
-	{
-		this->x=other.x;
-		this->y=other.y;
-
-		return *this;
-	}
-	bool operator==(const Vertex2D& other)
-	{
-		return this->x==other.x && this->y==other.y;
-	}
-	bool operator!=(const Vertex2D& other)
-	{
-		return this->x!=other.x || this->y!=other.y;
-	}
-};
-
-template<class T>
-std::vector<T> GetUniqueVertexes(const std::vector<T>& vertexes)
-{
-	std::vector<T> uniqeVertexes;
-	for(auto & vertex : vertexes)
-		if(std::find(uniqeVertexes.begin(), uniqeVertexes.end(), vertex) == uniqeVertexes.end())
-			uniqeVertexes.emplace_back(vertex);
-
-	return uniqeVertexes;
-}
-template<class T>
-void SaveUniqueVertexes(std::vector<T>& vertexes)
-{
-	vertexes = GetUniqueVertexes(vertexes);
-}
-
 
 int main(int argc, char** argv)
 {
@@ -288,13 +231,13 @@ int main(int argc, char** argv)
 
 	const std::vector<Vertex2D> vertexes =
 	{
-		Vertex2D (-0.5		,	-0.5),
-		Vertex2D (-0.5		,	0.5),
-		Vertex2D (0.5		,	0.5),
+		Vertex2D (-0.5f		,	-0.5f),
+		Vertex2D (-0.5f		,	0.5f),
+		Vertex2D (0.5f		,	0.5f),
 
-		Vertex2D (-0.5		,	-0.5),
-		Vertex2D (0.5		,	0.5),
-		Vertex2D (0.5		,	-0.5),
+		Vertex2D (-0.5f		,	-0.5f),
+		Vertex2D (0.5f		,	0.5f),
+		Vertex2D (0.5f		,	-0.5f),
 	};
 
 	std::vector<Vertex2D> vertexBufferData = GetUniqueVertexes(vertexes);

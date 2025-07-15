@@ -77,8 +77,11 @@ endif()
 
 add_executable(
 	${PROJECT_NAME}
-	"src/OpenGL4.cpp"
+	${CMAKE_SOURCE_DIR}/src/OpenGL4.cpp
 	${CMAKE_SOURCE_DIR}/src/GLMacro.h
+	${CMAKE_SOURCE_DIR}/src/Vertex/AVertex.hpp
+	${CMAKE_SOURCE_DIR}/src/Vertex/2DVertex.hpp
+	${CMAKE_SOURCE_DIR}/src/Vertex/VertexUtils.hpp
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE
 	OpenGL::GL
