@@ -123,6 +123,11 @@ int main(int argc, char** argv)
 
 	GLuint shaderProgram = Shader::CreateShader(shader.m_vertexShader, shader.m_fragmentShader);
 	glUseProgram(shaderProgram);
+
+
+	int location = glGetUniformLocation(shaderProgram, "u_Color");
+	GL_ASSERT(location != -1);
+	glUniform4f(location, 0.2f, 0.2f, 02.f, 1.f);
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
