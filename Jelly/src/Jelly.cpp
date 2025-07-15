@@ -75,6 +75,14 @@ int main(int argc, char** argv)
 
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
+	glfwSetFramebufferSizeCallback
+	(
+		window,
+		[](GLFWwindow* window, int width, int height)
+		{
+			glViewport(0, 0, width, height);
+		}
+	);
 #if FPS <= 1000
 	glfwSwapInterval(1);
 #endif
