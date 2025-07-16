@@ -221,7 +221,6 @@ int main(int argc, char** argv)
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glDrawElements(GL_TRIANGLES, vertexesIndices.size(), GL_UNSIGNED_INT, nullptr);
-		//glDrawArrays(GL_TRIANGLES, NULL, vertexBufferData.size());
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
