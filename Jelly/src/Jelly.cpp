@@ -48,16 +48,18 @@
 /// <param name="center"></param>
 /// <returns></returns>
 template<typename T>
-static inline std::vector<Vertex2D<T>> GenerateCircleVertexes(std::size_t count, const Vertex2D<T>& center)
+static inline std::vector<Vertex2D<T>> GenerateCircleVertexes
+(std::size_t count, T radius, const Vertex2D<T>& center)
 {
-	std::vector<Vertex2D<T>> vertexes(count);
+	std::vector<Vertex2D<T>> vertexes;
+	vertexes.reserve(count);
 
-	double sector = M_PI * 2. / count;
+	double sector = 2 * M_PI / count;
 
-	for (std::size_t i = 0; i != count; ++i)
+	for (std::size_t i = 0; i < count; ++i)
 	{
-		T x = cos(sector * i), y = sin(sector * i);
-		vertexes.emplace_back(Vertex2D<T>(x + center.x, y + center.y));
+		T x = static_cast<T>(cos(sector * i)*radius), y = static_cast<T>(sin(sector * i)* radius);
+		vertexes.emplace_back(x + center.x, y + center.y);
 	}
 
 	return vertexes;
@@ -93,7 +95,7 @@ int main(int argc, char** argv)
 
 
 
-	/* Create a windowed mode window and its OpenGL context */
+	
 	window = glfwCreateWindow(640, 480, "Jelly", NULL, NULL);
 	if (!window)
 	{
@@ -175,24 +177,26 @@ int main(int argc, char** argv)
 
 
 
-	// ======= Второй объект =======
+	
 	unsigned int VAO2;
 	GLLogCall(glGenVertexArrays(1, &VAO2));
 	GLLogCall(glBindVertexArray(VAO2));
 
-	const std::vector<Vertex2D<float>> vertexes2 =
+	const int circlePointCount = 50;
+	const Vertex2D<float> center(0.75f, 0.f);
+	std::vector<Vertex2D<float>> vertexes2 = GenerateCircleVertexes(circlePointCount, 0.1f, center);
+	std::vector<Vertex2D<float>> vertexBufferData2;
+	vertexBufferData2.push_back(center);
+	vertexBufferData2.insert(vertexBufferData2.end(), vertexes2.begin(), vertexes2.end());
+
+	// Генерация индексов для треугольников
+	std::vector<unsigned int> vertexesIndices2;
+	for (int i = 0; i < circlePointCount; i++)
 	{
-		Vertex2D(0.0f, -0.5f),
-		Vertex2D(0.0f,  0.5f),
-		Vertex2D(1.0f,  0.5f),
-		Vertex2D(1.0f, -0.5f)
-	};
-	std::vector<Vertex2D<float>> vertexBufferData2 = GetUniqueVertexes(vertexes2);
-	std::vector<unsigned int> vertexesIndices2 =
-	{ 
-		0, 1, 2,
-		0, 2, 3
-	};
+		vertexesIndices2.push_back(0); // Центральная вершина
+		vertexesIndices2.push_back(1 + i); // Текущая вершина окружности
+		vertexesIndices2.push_back(1 + (i + 1) % circlePointCount); // Следующая вершина окружности
+	}
 
 	unsigned int VBO2;
 	glGenBuffers(1, &VBO2);
@@ -230,7 +234,7 @@ int main(int argc, char** argv)
 	GL_ASSERT(location != -1);
 	GLLogCall(glUniform4f(location, 0.2f, 0.2f, 02.f, 1.f));
 
-	/* Loop until the user closes the window */
+	
 	while (!glfwWindowShouldClose(window))
 	{
 		std::chrono::system_clock::duration durationSinceEpoch = now.time_since_epoch();
@@ -241,9 +245,9 @@ int main(int argc, char** argv)
 
 
 		vertexBufferData[1].x =
-			vertexes[1].x + (cos(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + 1) / 2. - 0.5;
+		vertexes[1].x + (cos(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + 1) / 2. - 0.5;
 		vertexBufferData[1].y =
-			vertexes[1].y + (sin(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + 1) / 2. - 0.5;
+		vertexes[1].y + (sin(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + 1) / 2. - 0.5;
 
 		long diff = 2L;
 #if FPS <= 1000
