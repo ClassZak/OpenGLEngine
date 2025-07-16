@@ -182,7 +182,7 @@ int main(int argc, char** argv)
 	GLLogCall(glGenVertexArrays(1, &VAO2));
 	GLLogCall(glBindVertexArray(VAO2));
 
-	const int circlePointCount = 50;
+	const unsigned int circlePointCount = 50;
 	float radius = 0.1f;
 	const Vertex2D<float> center(0.75f, 0.f);
 	std::vector<Vertex2D<float>> vertexes2 = GenerateCircleVertexes(circlePointCount, radius, center);
@@ -192,12 +192,23 @@ int main(int argc, char** argv)
 
 	// Генерация индексов для треугольников
 	std::vector<unsigned int> vertexesIndices2;
-	for (int i = 0; i < circlePointCount; i++)
+	for (int i = 0; i < circlePointCount -1 ; i++)
 	{
 		vertexesIndices2.push_back(0); // Центральная вершина
 		vertexesIndices2.push_back(1 + i); // Текущая вершина окружности
 		vertexesIndices2.push_back(1 + (i + 1) % circlePointCount); // Следующая вершина окружности
 	}
+
+	for(auto& el : vertexesIndices2)
+		std::cout<<el<<"\n";
+	std::cout<<std::endl;
+	std::cout<<vertexesIndices2.size()<<std::endl;
+	std::cout<<std::endl<<std::endl;
+	for(auto& el : vertexBufferData2)
+		printf("(%f\t,%f)\n",el.x,el.y);
+	std::cout<<std::endl;
+	std::cout<<vertexBufferData2.size()<<std::endl;
+		
 
 	unsigned int VBO2;
 	glGenBuffers(1, &VBO2);
@@ -240,9 +251,9 @@ int main(int argc, char** argv)
 	{
 		std::chrono::system_clock::duration durationSinceEpoch = now.time_since_epoch();
 		std::chrono::milliseconds	millisecondsSinceEpoch =
-			std::chrono::duration_cast<std::chrono::milliseconds>(durationSinceEpoch);
+		std::chrono::duration_cast<std::chrono::milliseconds>(durationSinceEpoch);
 		std::chrono::seconds		secondsSinceEpoch =
-			std::chrono::duration_cast<std::chrono::seconds>(durationSinceEpoch);
+		std::chrono::duration_cast<std::chrono::seconds>(durationSinceEpoch);
 
 
 		vertexBufferData[1].x =
@@ -251,13 +262,21 @@ int main(int argc, char** argv)
 		vertexes[1].y + (sin(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + 1) / 2. - 0.5;
 
 
-		double sector = 2 * M_PI / circlePointCount;
-		for (std::size_t i = 0; i < vertexBufferData2.size(); ++i)
+
+
+		double sector = 
+		(2 * M_PI) * 
+		fmod((double)millisecondsSinceEpoch.count(),1000) / 1000
+		/ 
+		(circlePointCount-1)
+		;
+
+		for (std::size_t i = 1; i < vertexBufferData2.size(); ++i)
 		{
 			vertexBufferData2[i].x = 
-			center.x + (cos(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + cos(sector * i)) * radius;
+			center.x + cos(sector * (i-1)) * radius;
 			vertexBufferData2[i].y = 
-			center.y + (sin(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + sin(sector * i)) * radius;
+			center.y + sin(sector * (i-1)) * radius;
 		}
 
 		long diff = 2L;
