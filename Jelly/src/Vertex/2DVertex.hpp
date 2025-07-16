@@ -1,6 +1,10 @@
 #pragma once
 #include "AVertex.hpp"
 
+/// <summary>
+/// 
+/// </summary>
+/// <typeparam name="T">скал€рный тип</typeparam>
 template<typename T>
 struct Vertex2D : AVertex<T>
 {

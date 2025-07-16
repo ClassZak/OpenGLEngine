@@ -1,4 +1,6 @@
-﻿#include <GL/glew.h>
+﻿#define _USE_MATH_DEFINES
+
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 #include <string>
@@ -20,6 +22,9 @@
 
 
 
+#include <math.h>
+
+
 
 #include "utils/GLMacro.h"
 #include "Vertex/2DVertex.hpp"
@@ -34,8 +39,29 @@
 
 #define ANIMATION_SPEED 2.5e-3
 
+/// <summary>
+/// 
+/// </summary>
+/// <typeparam name="T">скалярный тип</typeparam>
+/// <param name="count"></param>
+/// <param name="center"></param>
+/// <returns></returns>
+template<typename T>
+static inline std::vector<Vertex2D<T>> GenerateCircleVertexes(std::size_t count, const Vertex2D<T>& center)
+{
+	std::vector<Vertex2D<T>> vertexes;
+	vertexes.reserve(count);
 
+	double sector = M_PI * 2. / count;
 
+	for (std::size_t i = 0; i != count; ++i)
+	{
+		T x=cos(sector * i), y = sin(sector * i);
+		vertexes.emplace_back(Vertex2D<T>(x+center.x,y+center.y));
+	}
+
+	return vertexes;
+}
 
 int main(int argc, char** argv)
 {
@@ -97,7 +123,16 @@ int main(int argc, char** argv)
 	GLLogCall(glGenVertexArrays(1, &vertexArrayObject));
 	GLLogCall(glBindVertexArray(vertexArrayObject));
 
+	unsigned int vertexArrayObjectOfCircle;
+	GLLogCall(glGenVertexArrays(1, &vertexArrayObjectOfCircle));
+	GLLogCall(glBindVertexArray(vertexArrayObjectOfCircle));
 
+
+	unsigned int vertexBufferObject{};
+	glGenBuffers(1, &vertexBufferObject);
+
+	unsigned int vertexBufferObjectOfCircle{};
+	glGenBuffers(1, &vertexBufferObjectOfCircle);
 
 
 	const std::vector<Vertex2D<float>> vertexes =
@@ -110,7 +145,6 @@ int main(int argc, char** argv)
 		Vertex2D (0.5f		,	0.5f),
 		Vertex2D (0.5f		,	-0.5f),
 	};
-
 	std::vector<Vertex2D<float>> vertexBufferData = GetUniqueVertexes(vertexes);
 	std::vector<unsigned int> vertexesIndices =
 	{
@@ -119,11 +153,20 @@ int main(int argc, char** argv)
 	};
 
 
+	const std::vector<Vertex2D<float>> circleVertexes = GenerateCircleVertexes(33u, Vertex2D(0.f,0.f));
+	std::vector<Vertex2D<float>> circleVertexBufferData = circleVertexes;
+	std::vector<unsigned int> circleVertexesIndices = [&circleVertexes]() -> std::vector<unsigned int>
+		{
+			std::vector<unsigned int> indexes;
+			indexes.reserve(circleVertexes.size());
+			for(std::size_t i = 0; i!= circleVertexes.size(); ++i)
+				indexes.emplace_back(i);
+
+			return indexes;
+		}();
 
 	
-	unsigned int bufferId{};
-	glGenBuffers(1, &bufferId);
-	glBindBuffer(GL_ARRAY_BUFFER, bufferId);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
 	glBufferData
 	(
 		GL_ARRAY_BUFFER, 
@@ -133,6 +176,19 @@ int main(int argc, char** argv)
 	);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, VERTEX_ATTRIBUTE_SIZE, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_ATTRIBUTE_SIZE, 0);
+
+
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObjectOfCircle);
+	glBufferData
+	(
+		GL_ARRAY_BUFFER,
+		circleVertexBufferData.size() * sizeof(std::vector<Vertex2D<float>>::value_type),
+		circleVertexBufferData.data(),
+		GL_STATIC_DRAW
+	);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, VERTEX_ATTRIBUTE_SIZE, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_ATTRIBUTE_SIZE, 0);
+
 
 	unsigned int indexBufferObject{};
 	glGenBuffers(1, &indexBufferObject);
@@ -145,6 +201,17 @@ int main(int argc, char** argv)
 		GL_STATIC_DRAW 
 	);
 
+	unsigned int indexBufferObjectOfCircle{};
+	glGenBuffers(1, &indexBufferObjectOfCircle);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferObjectOfCircle);
+	glBufferData
+	(
+		GL_ELEMENT_ARRAY_BUFFER,
+		circleVertexBufferData.size() * sizeof(std::vector<unsigned int>::value_type),
+		circleVertexBufferData.data(),
+		GL_STATIC_DRAW 
+	);
+
 
 
 	GLuint shaderProgram = Shader::CreateShader(shader.m_vertexShader, shader.m_fragmentShader);
@@ -153,7 +220,6 @@ int main(int argc, char** argv)
 
 	int location = glGetUniformLocation(shaderProgram, "u_Color");
 	GL_ASSERT(location != -1);
-	GLLogCall(glUniform4f(location, 0.2f, 0.2f, 02.f, 1.f));
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
@@ -193,7 +259,7 @@ int main(int argc, char** argv)
 			1.f
 		);
 		{
-			glBindBuffer(GL_ARRAY_BUFFER, bufferId);
+			glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
 			glBufferData
 			(
 				GL_ARRAY_BUFFER,
@@ -216,8 +282,13 @@ int main(int argc, char** argv)
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glDrawElements(GL_TRIANGLES, vertexesIndices.size(), GL_UNSIGNED_INT, nullptr);
-		//glDrawArrays(GL_TRIANGLES, NULL, vertexBufferData.size());
+
+		glBindVertexArray(vertexArrayObject);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawElements(GL_TRIANGLES, vertexesIndices.size(), GL_UNSIGNED_INT, vertexesIndices.data());
+		glBindVertexArray(vertexArrayObjectOfCircle);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawElements(GL_TRIANGLES, circleVertexesIndices.size(), GL_UNSIGNED_INT, circleVertexesIndices.data());
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
@@ -231,6 +302,7 @@ int main(int argc, char** argv)
 	glDeleteProgram(shaderProgram);
 
 	glDeleteVertexArrays(1, &vertexArrayObject);
+	glDeleteVertexArrays(1, &vertexArrayObjectOfCircle);
 
 	glfwTerminate();
 
