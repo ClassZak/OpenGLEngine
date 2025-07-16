@@ -183,8 +183,9 @@ int main(int argc, char** argv)
 	GLLogCall(glBindVertexArray(VAO2));
 
 	const int circlePointCount = 50;
+	float radius = 0.1f;
 	const Vertex2D<float> center(0.75f, 0.f);
-	std::vector<Vertex2D<float>> vertexes2 = GenerateCircleVertexes(circlePointCount, 0.1f, center);
+	std::vector<Vertex2D<float>> vertexes2 = GenerateCircleVertexes(circlePointCount, radius, center);
 	std::vector<Vertex2D<float>> vertexBufferData2;
 	vertexBufferData2.push_back(center);
 	vertexBufferData2.insert(vertexBufferData2.end(), vertexes2.begin(), vertexes2.end());
@@ -248,6 +249,16 @@ int main(int argc, char** argv)
 		vertexes[1].x + (cos(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + 1) / 2. - 0.5;
 		vertexBufferData[1].y =
 		vertexes[1].y + (sin(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + 1) / 2. - 0.5;
+
+
+		double sector = 2 * M_PI / circlePointCount;
+		for (std::size_t i = 0; i < vertexBufferData2.size(); ++i)
+		{
+			vertexBufferData2[i].x = 
+			center.x + (cos(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + cos(sector * i)) * radius;
+			vertexBufferData2[i].y = 
+			center.y + (sin(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + sin(sector * i)) * radius;
+		}
 
 		long diff = 2L;
 #if FPS <= 1000
