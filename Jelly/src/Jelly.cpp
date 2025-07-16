@@ -138,9 +138,9 @@ int main(int argc, char** argv)
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, VERTEX_ATTRIBUTE_SIZE, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_ATTRIBUTE_SIZE, 0);
 
-	unsigned int indexBufferObject{};
-	glGenBuffers(1, &indexBufferObject);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferObject);
+	unsigned int IBO{};
+	glGenBuffers(1, &IBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
 	glBufferData
 	(
 		GL_ELEMENT_ARRAY_BUFFER,
@@ -206,7 +206,7 @@ int main(int argc, char** argv)
 				GL_STATIC_DRAW
 			);
 
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferObject);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
 
 
 			glBufferData
