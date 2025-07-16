@@ -40,6 +40,29 @@
 #define ANIMATION_SPEED 2.5e-3
 
 
+/// <summary>
+/// 
+/// </summary>
+/// <typeparam name="T">скалярный тип</typeparam>
+/// <param name="count"></param>
+/// <param name="center"></param>
+/// <returns></returns>
+template<typename T>
+static inline std::vector<Vertex2D<T>> GenerateCircleVertexes(std::size_t count, const Vertex2D<T>& center)
+{
+	std::vector<Vertex2D<T>> vertexes(count);
+
+	double sector = M_PI * 2. / count;
+
+	for (std::size_t i = 0; i != count; ++i)
+	{
+		T x = cos(sector * i), y = sin(sector * i);
+		vertexes.emplace_back(Vertex2D<T>(x + center.x, y + center.y));
+	}
+
+	return vertexes;
+}
+
 
 
 int main(int argc, char** argv)
@@ -98,9 +121,9 @@ int main(int argc, char** argv)
 
 
 
-	unsigned int VAO;
-	GLLogCall(glGenVertexArrays(1, &VAO));
-	GLLogCall(glBindVertexArray(VAO));
+	unsigned int VAO1;
+	GLLogCall(glGenVertexArrays(1, &VAO1));
+	GLLogCall(glBindVertexArray(VAO1));
 
 
 
@@ -125,9 +148,9 @@ int main(int argc, char** argv)
 
 
 
-	unsigned int VBO{};
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	unsigned int VBO1{};
+	glGenBuffers(1, &VBO1);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO1);
 	glBufferData
 	(
 		GL_ARRAY_BUFFER,
@@ -138,9 +161,9 @@ int main(int argc, char** argv)
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, VERTEX_ATTRIBUTE_SIZE, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_ATTRIBUTE_SIZE, 0);
 
-	unsigned int IBO{};
-	glGenBuffers(1, &IBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+	unsigned int IBO1{};
+	glGenBuffers(1, &IBO1);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO1);
 	glBufferData
 	(
 		GL_ELEMENT_ARRAY_BUFFER,
@@ -148,6 +171,54 @@ int main(int argc, char** argv)
 		vertexesIndices.data(),
 		GL_STATIC_DRAW
 	);
+
+
+
+
+	// ======= Второй объект =======
+	unsigned int VAO2;
+	GLLogCall(glGenVertexArrays(1, &VAO2));
+	GLLogCall(glBindVertexArray(VAO2));
+
+	const std::vector<Vertex2D<float>> vertexes2 =
+	{
+		Vertex2D(0.0f, -0.5f),
+		Vertex2D(0.0f,  0.5f),
+		Vertex2D(1.0f,  0.5f),
+		Vertex2D(1.0f, -0.5f)
+	};
+	std::vector<Vertex2D<float>> vertexBufferData2 = GetUniqueVertexes(vertexes2);
+	std::vector<unsigned int> vertexesIndices2 =
+	{ 
+		0, 1, 2,
+		0, 2, 3
+	};
+
+	unsigned int VBO2;
+	glGenBuffers(1, &VBO2);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO2);
+	glBufferData
+	(
+		GL_ARRAY_BUFFER,
+		vertexBufferData2.size() * sizeof(Vertex2D<float>),
+		vertexBufferData2.data(),
+		GL_STATIC_DRAW
+	);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, VERTEX_ATTRIBUTE_SIZE, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_ATTRIBUTE_SIZE, 0);
+
+	unsigned int IBO2;
+	glGenBuffers(1, &IBO2);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO2);
+	glBufferData
+	(
+		GL_ELEMENT_ARRAY_BUFFER,
+		vertexesIndices2.size() * sizeof(unsigned int),
+		vertexesIndices2.data(),
+		GL_STATIC_DRAW
+	);
+
+
 
 
 
@@ -174,11 +245,6 @@ int main(int argc, char** argv)
 		vertexBufferData[1].y =
 			vertexes[1].y + (sin(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + 1) / 2. - 0.5;
 
-
-
-
-
-
 		long diff = 2L;
 #if FPS <= 1000
 		while (int(1000. / diff) >= FPS)
@@ -196,31 +262,58 @@ int main(int argc, char** argv)
 			(tan(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + 1),
 			1.f
 		);
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, VBO);
-			glBufferData
-			(
-				GL_ARRAY_BUFFER,
-				vertexBufferData.size() * sizeof(std::vector<Vertex2D<float>>::value_type),
-				vertexBufferData.data(),
-				GL_STATIC_DRAW
-			);
-
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-
-
-			glBufferData
-			(
-				GL_ELEMENT_ARRAY_BUFFER,
-				vertexesIndices.size() * sizeof(std::vector<unsigned int>::value_type) * vertexesIndices.size(),
-				vertexesIndices.data(),
-				GL_STATIC_DRAW
-			);
-		}
+		
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
 
+
+
+
+		glBindVertexArray(VAO1);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO1);
+		glBufferData
+		(
+			GL_ARRAY_BUFFER,
+			vertexBufferData.size() * sizeof(std::vector<Vertex2D<float>>::value_type),
+			vertexBufferData.data(),
+			GL_STATIC_DRAW
+		);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO1);
+		glBufferData
+		(
+			GL_ELEMENT_ARRAY_BUFFER,
+			vertexesIndices.size() * sizeof(std::vector<unsigned int>::value_type) * vertexesIndices.size(),
+			vertexesIndices.data(),
+			GL_STATIC_DRAW
+		);
 		glDrawElements(GL_TRIANGLES, vertexesIndices.size(), GL_UNSIGNED_INT, nullptr);
+
+
+
+
+
+
+		glBindVertexArray(VAO2);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO2);
+		glBufferData
+		(
+			GL_ARRAY_BUFFER,
+			vertexBufferData2.size() * sizeof(std::vector<Vertex2D<float>>::value_type),
+			vertexBufferData2.data(),
+			GL_STATIC_DRAW
+		);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO2);
+		glUniform4f(location, 1.0f, 0.5f, 1.0f, 1.0f);
+		glBufferData
+		(
+			GL_ELEMENT_ARRAY_BUFFER,
+			vertexesIndices2.size() * sizeof(std::vector<unsigned int>::value_type)* vertexesIndices.size(),
+			vertexesIndices2.data(),
+			GL_STATIC_DRAW
+		);
+		glDrawElements(GL_TRIANGLES, vertexesIndices2.size(), GL_UNSIGNED_INT, nullptr);
+
+
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
@@ -233,7 +326,8 @@ int main(int argc, char** argv)
 
 	glDeleteProgram(shaderProgram);
 
-	glDeleteVertexArrays(1, &VAO);
+	glDeleteVertexArrays(1, &VAO1);
+	glDeleteVertexArrays(1, &VAO2);
 
 	glfwTerminate();
 
