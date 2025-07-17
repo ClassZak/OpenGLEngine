@@ -13,7 +13,7 @@ protected:
 	std::vector<TVertex> m_vertexes;
 	std::vector<unsigned int> m_indexes;
 
-	unsigned int m_VAO;
-	unsigned int m_VBO;
-	unsigned int m_IBO;
+	unsigned int m_VAO{};
+	unsigned int m_VBO{};
+	unsigned int m_IBO{};
 };

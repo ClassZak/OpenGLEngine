@@ -1,4 +1,5 @@
 ﻿#define _USE_MATH_DEFINES
+#define STB_IMAGE_IMPLEMENTATION
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -24,6 +25,10 @@
 
 
 
+#include <stb_image.h>
+
+
+
 #include "utils/GLMacro.h"
 #include "Vertex/2DVertex.hpp"
 #include "Vertex/VertexUtils.hpp"
@@ -37,6 +42,7 @@
 #define VERTEX_ATTRIBUTE_SIZE 2
 
 #define ANIMATION_SPEED 2.5e-3
+
 
 
 int main(int argc, char** argv)
@@ -75,6 +81,10 @@ int main(int argc, char** argv)
 			glViewport(0, 0, width, height);
 		}
 	);
+	GLFWimage images[1];
+	images[0].pixels = stbi_load("../assets/icon.png", &images[0].width, &images[0].height, 0, 4);
+	glfwSetWindowIcon(window, 1, images);
+	stbi_image_free(images[0].pixels);
 #if FPS <= 1000
 	glfwSwapInterval(1);
 #endif
