@@ -74,27 +74,44 @@ if(NOT glew_FOUND)
 endif()
 
 
-
-add_executable(
-	${PROJECT_NAME}
+set(SOURCES
 	${CMAKE_SOURCE_DIR}/src/Jelly.cpp
+	${CMAKE_SOURCE_DIR}/src/utils/functions.cpp
+	${CMAKE_SOURCE_DIR}/src/Shader/Shader.cpp
+	# ... остальные файлы CPP ...
+)
 
+# Добавляем исполняемый файл
+add_executable(${PROJECT_NAME}
+	${SOURCES}
+    
+	# Заголовочные файлы (чтобы они отображались в IDE)
 	${CMAKE_SOURCE_DIR}/src/utils/GLMacro.h
 	${CMAKE_SOURCE_DIR}/src/utils/functions.hpp
-	${CMAKE_SOURCE_DIR}/src/utils/functions.cpp
-
 	${CMAKE_SOURCE_DIR}/src/Vertex/AVertex.hpp
 	${CMAKE_SOURCE_DIR}/src/Vertex/2DVertex.hpp
 	${CMAKE_SOURCE_DIR}/src/Vertex/VertexUtils.hpp
-
 	${CMAKE_SOURCE_DIR}/src/Shader/Shader.hpp
-	${CMAKE_SOURCE_DIR}/src/Shader/Shader.cpp
-
 	${CMAKE_SOURCE_DIR}/src/Shape/AShape.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Circle.hpp
-
-
 )
+
+# Для Windows добавляем ресурсный файл
+if(WIN32)
+	# Создаем ресурсный файл
+	set(RESOURCE_FILE ${CMAKE_CURRENT_SOURCE_DIR}/resources.rc)
+    
+	# Добавляем ресурсы к исполняемому файлу
+	target_sources(${PROJECT_NAME} PRIVATE ${RESOURCE_FILE})
+    
+	# Устанавливаем свойства для Windows
+	set_target_properties(${PROJECT_NAME} PROPERTIES
+		WIN32_EXECUTABLE TRUE
+		LINK_FLAGS "/ENTRY:mainCRTStartup"
+	)
+	target_compile_definitions(${PROJECT_NAME} PRIVATE -DUNICODE -D_UNICODE)
+endif()
+
 target_include_directories(
 	${PROJECT_NAME}		PRIVATE
 	${CMAKE_SOURCE_DIR}/include
@@ -146,3 +163,7 @@ if(MSVC)
 		"$<$<CONFIG:Debug>:/Od>"
 	)
 endif()
+
+
+
+
