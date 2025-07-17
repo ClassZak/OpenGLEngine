@@ -78,22 +78,21 @@ set(SOURCES
 	${CMAKE_SOURCE_DIR}/src/Jelly.cpp
 	${CMAKE_SOURCE_DIR}/src/utils/functions.cpp
 	${CMAKE_SOURCE_DIR}/src/Shader/Shader.cpp
-	# ... остальные файлы CPP ...
 )
 
 # Добавляем исполняемый файл
 add_executable(${PROJECT_NAME}
 	${SOURCES}
-    
-	# Заголовочные файлы (чтобы они отображались в IDE)
+
 	${CMAKE_SOURCE_DIR}/src/utils/GLMacro.h
 	${CMAKE_SOURCE_DIR}/src/utils/functions.hpp
 	${CMAKE_SOURCE_DIR}/src/Vertex/AVertex.hpp
-	${CMAKE_SOURCE_DIR}/src/Vertex/2DVertex.hpp
+	${CMAKE_SOURCE_DIR}/src/Vertex/Vertex2D.hpp
 	${CMAKE_SOURCE_DIR}/src/Vertex/VertexUtils.hpp
 	${CMAKE_SOURCE_DIR}/src/Shader/Shader.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/AShape.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Circle.hpp
+	${CMAKE_SOURCE_DIR}/src/Shape/Line.hpp
 )
 
 # Для Windows добавляем ресурсный файл

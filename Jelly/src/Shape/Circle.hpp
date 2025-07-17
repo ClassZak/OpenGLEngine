@@ -5,61 +5,13 @@
 #include <cmath>
 
 #include "AShape.hpp"
-#include "../Vertex/2DVertex.hpp"
+#include "../Vertex/Vertex2D.hpp"
 
 
 template<class T>
 class Circle : public AShape<Vertex2D<T>>
 {
-protected:
-	std::function<void(void)> m_shaderUniformsProgram;
-
 public:
-	std::vector<Vertex2D<T>>& GetVertexes()
-	{
-		return this->m_vertexes;
-	}
-	std::vector<unsigned int>& GetIndexes()
-	{
-		return this->m_indexes;
-	}
-
-
-	unsigned int GetVAO() const
-	{
-		return this->m_VAO;
-	}
-	unsigned int GetVBO() const
-	{
-		return this->m_VBO;
-	}
-	unsigned int GetIBO() const
-	{
-		return this->m_IBO;
-	}
-
-	void SetVAO(unsigned int VAO)
-	{
-		this->m_VAO = VAO;
-	}
-	void SetVBO(unsigned int VBO)
-	{
-		this->m_VBO = VBO;
-	}
-	void SetIBO(unsigned int IBO)
-	{
-		this->m_IBO = IBO;
-	}
-
-
-	void SetShaderUniformsProgram(const std::function<void(void)>& shaderUniformsProgram)
-	{
-		m_shaderUniformsProgram = shaderUniformsProgram;
-	}
-
-
-
-
 	Circle
 	(
 		std::size_t count, 
@@ -88,77 +40,17 @@ public:
 		unsigned int IBO = 0u
 	) : Circle(count, radius, center, VAO, VBO, IBO)
 	{
-		SetShaderUniformsProgram(shaderUniformsProgram);
+		this->SetShaderUniformsProgram(shaderUniformsProgram);
 	}
 
 	~Circle()
 	{
 		glDeleteVertexArrays(1, &this->m_VAO);
+		glDeleteBuffers(1, &this->m_VBO);
 	}
 
-	void Init()
-	{
-		if(!this->m_VAO)
-			GLLogCall(glGenVertexArrays(1, &this->m_VAO));
-		GLLogCall(glBindVertexArray(this->m_VAO));
-
-		if (!this->m_VBO)
-			GLLogCall(glGenBuffers(1, &this->m_VBO));
-		GLLogCall(glBindBuffer(GL_ARRAY_BUFFER,this->m_VBO));
-
-		glBufferData
-		(
-			GL_ARRAY_BUFFER,
-			this->m_vertexes.size() * sizeof(Vertex2D<T>),
-			this->m_vertexes.data(),
-			GL_STATIC_DRAW
-		);
-
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer
-		(0, VERTEX_ATTRIBUTE_SIZE, GL_FLOAT, GL_FALSE, sizeof(T) * VERTEX_ATTRIBUTE_SIZE, 0);
-
-		if (!this->m_IBO)
-			glGenBuffers(1, &this->m_IBO);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->m_IBO);
-
-		glBufferData
-		(
-			GL_ELEMENT_ARRAY_BUFFER,
-			this->m_indexes.size() * sizeof(unsigned int),
-			this->m_indexes.data(),
-			GL_STATIC_DRAW
-		);
-	}
-
-	void Draw()
-	{
-		GLLogCall(glBindVertexArray(this->m_VAO));
-		GLLogCall(glBindBuffer(GL_ARRAY_BUFFER,this->m_VBO));
-
-		GLLogCall(glBufferData
-		(
-			GL_ARRAY_BUFFER, 
-			this->m_vertexes.size() * sizeof(std::vector<Vertex2D<float>>::value_type),
-			this->m_vertexes.data(), 
-			GL_STATIC_DRAW
-		));
-		GLLogCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->m_IBO));
-
-		if(m_shaderUniformsProgram)
-			m_shaderUniformsProgram();
-
-		GLLogCall(glBufferData
-		(
-			GL_ELEMENT_ARRAY_BUFFER, 
-			this->m_indexes.size() * sizeof(std::vector<unsigned int>::value_type),
-			this->m_indexes.data(),
-			GL_STATIC_DRAW
-		));
-
-		GLLogCall(glDrawElements(GL_TRIANGLES, this->m_indexes.size(), GL_UNSIGNED_INT, nullptr));
-	}
-
+	void Init() override;
+	void Draw() override;
 
 public:
 	/// <summary>
@@ -209,3 +101,68 @@ public:
 	}
 };
 
+
+
+template<class T>
+inline void Circle<T>::Draw()
+{
+	GLLogCall(glBindVertexArray(this->m_VAO));
+	GLLogCall(glBindBuffer(GL_ARRAY_BUFFER, this->m_VBO));
+
+	GLLogCall(glBufferData
+	(
+		GL_ARRAY_BUFFER,
+		this->m_vertexes.size() * sizeof(std::vector<Vertex2D<float>>::value_type),
+		this->m_vertexes.data(),
+		GL_STATIC_DRAW
+	));
+	GLLogCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->m_IBO));
+
+	if (this->m_shaderUniformsProgram)
+		this->m_shaderUniformsProgram();
+
+	GLLogCall(glBufferData
+	(
+		GL_ELEMENT_ARRAY_BUFFER,
+		this->m_indexes.size() * sizeof(std::vector<unsigned int>::value_type),
+		this->m_indexes.data(),
+		GL_STATIC_DRAW
+	));
+
+	GLLogCall(glDrawElements(GL_TRIANGLES, this->m_indexes.size(), GL_UNSIGNED_INT, nullptr));
+}
+template<class T>
+inline void Circle<T>::Init()
+{
+	if (!this->m_VAO)
+		GLLogCall(glGenVertexArrays(1, &this->m_VAO));
+	GLLogCall(glBindVertexArray(this->m_VAO));
+
+	if (!this->m_VBO)
+		GLLogCall(glGenBuffers(1, &this->m_VBO));
+	GLLogCall(glBindBuffer(GL_ARRAY_BUFFER, this->m_VBO));
+
+	glBufferData
+	(
+		GL_ARRAY_BUFFER,
+		this->m_vertexes.size() * sizeof(Vertex2D<T>),
+		this->m_vertexes.data(),
+		GL_STATIC_DRAW
+	);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer
+	(0, VERTEX_ATTRIBUTE_SIZE, GL_FLOAT, GL_FALSE, sizeof(T) * VERTEX_ATTRIBUTE_SIZE, 0);
+
+	if (!this->m_IBO)
+		glGenBuffers(1, &this->m_IBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->m_IBO);
+
+	glBufferData
+	(
+		GL_ELEMENT_ARRAY_BUFFER,
+		this->m_indexes.size() * sizeof(unsigned int),
+		this->m_indexes.data(),
+		GL_STATIC_DRAW
+	);
+}

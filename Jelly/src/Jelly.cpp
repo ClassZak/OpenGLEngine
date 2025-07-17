@@ -30,10 +30,11 @@
 
 
 #include "utils/GLMacro.h"
-#include "Vertex/2DVertex.hpp"
+#include "Vertex/Vertex2D.hpp"
 #include "Vertex/VertexUtils.hpp"
 #include "Shader/Shader.hpp"
 #include "Shape/Circle.hpp"
+#include "Shape/Line.hpp"
 
 
 
@@ -157,7 +158,21 @@ int main(int argc, char** argv)
 	);
 	circle.Init();
 
-
+	Line<float> line
+	(
+		{
+			Vertex2D<float>(-0.5f, -0.5f),
+			Vertex2D<float>(0.0f, 0.5f),
+			Vertex2D<float>(0.5f, -0.5f),
+			Vertex2D<float>(-1.f, -1.f),
+		},
+		GL_LINE_LOOP,
+		[&]()
+		{
+			glUniform4f(location, 1.0f, 0.0f, 0.0f, 1.0f);
+		}
+	);
+	line.Init();
 
 
 
@@ -228,6 +243,7 @@ int main(int argc, char** argv)
 
 
 		circle.Draw();
+		line.Draw();
 
 
 		/* Swap front and back buffers */
