@@ -90,6 +90,8 @@ add_executable(
 	${CMAKE_SOURCE_DIR}/src/Shader/Shader.hpp
 	${CMAKE_SOURCE_DIR}/src/Shader/Shader.cpp
 
+	${CMAKE_SOURCE_DIR}/src/Shape/AShape.hpp
+	${CMAKE_SOURCE_DIR}/src/Shape/Circle.hpp
 
 
 )

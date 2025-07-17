@@ -52,7 +52,9 @@ static inline std::vector<Vertex2D<T>> GenerateCircleVertexes
 (std::size_t count, T radius, const Vertex2D<T>& center)
 {
 	std::vector<Vertex2D<T>> vertexes;
-	vertexes.reserve(count);
+	vertexes.reserve(count+1);
+
+	vertexes.emplace_back(center);
 
 	double sector = 2 * M_PI / count;
 
@@ -186,9 +188,7 @@ int main(int argc, char** argv)
 	float radius = 0.1f;
 	const Vertex2D<float> center(0.75f, 0.f);
 	std::vector<Vertex2D<float>> vertexes2 = GenerateCircleVertexes(circlePointCount, radius, center);
-	std::vector<Vertex2D<float>> vertexBufferData2;
-	vertexBufferData2.push_back(center);
-	vertexBufferData2.insert(vertexBufferData2.end(), vertexes2.begin(), vertexes2.end());
+	std::vector<Vertex2D<float>> vertexBufferData2=vertexes2;
 
 	// Генерация индексов для треугольников
 	std::vector<unsigned int> vertexesIndices2;
@@ -198,17 +198,7 @@ int main(int argc, char** argv)
 		vertexesIndices2.push_back(1 + i); // Текущая вершина окружности
 		vertexesIndices2.push_back(1 + (i + 1) % circlePointCount); // Следующая вершина окружности
 	}
-
-	for(auto& el : vertexesIndices2)
-		std::cout<<el<<"\n";
-	std::cout<<std::endl;
-	std::cout<<vertexesIndices2.size()<<std::endl;
-	std::cout<<std::endl<<std::endl;
-	for(auto& el : vertexBufferData2)
-		printf("(%f\t,%f)\n",el.x,el.y);
-	std::cout<<std::endl;
-	std::cout<<vertexBufferData2.size()<<std::endl;
-		
+	
 
 	unsigned int VBO2;
 	glGenBuffers(1, &VBO2);
