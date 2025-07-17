@@ -35,5 +35,23 @@ struct Vertex2D : AVertex<T>
 	{
 		return this->x != other.x || this->y != other.y;
 	}
+
+
+	// Дружественная функция для вывода
+	friend std::ostream& operator<<(std::ostream& os, const Vertex2D<T>& obj)
+	{
+		os << "(" << obj.x << ",\t" << obj.y << ")";
+		return os;
+	}
+
+	// Дружественная функция для ввода
+	friend std::istream& operator>>(std::istream& is, Vertex2D<T>& obj)
+	{
+		std::cout << "Enter x: ";
+		is >> obj.x;
+		std::cout << "Enter y: ";
+		is >> obj.y;
+		return is;
+	}
 };
 

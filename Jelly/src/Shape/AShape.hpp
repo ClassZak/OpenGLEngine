@@ -4,12 +4,13 @@
 #include "../Vertex/AVertex.hpp"
 #include "../utils/GLMacro.h"
 
+#define VERTEX_ATTRIBUTE_SIZE 2
 
-template<class T>
+template<typename TVertex>
 class AShape
 {
 protected:
-	std::vector<T> m_vertexes;
+	std::vector<TVertex> m_vertexes;
 	std::vector<unsigned int> m_indexes;
 
 	unsigned int m_VAO;

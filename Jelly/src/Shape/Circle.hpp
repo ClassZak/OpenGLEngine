@@ -1,51 +1,54 @@
 #pragma once 
+#define _USE_MATH_DEFINES
+
 #include <functional>
+#include <cmath>
 
 #include "AShape.hpp"
 #include "../Vertex/2DVertex.hpp"
 
 
 template<class T>
-class Circle : public AShape<T>
+class Circle : public AShape<Vertex2D<T>>
 {
 protected:
 	std::function<void(void)> m_shaderUniformsProgram;
 
 public:
-	std::vector<T>& GetVertexes()
+	std::vector<Vertex2D<T>>& GetVertexes()
 	{
-		return m_vertexes;
+		return this->m_vertexes;
 	}
 	std::vector<unsigned int>& GetIndexes()
 	{
-		return m_indexes;
+		return this->m_indexes;
 	}
 
 
 	unsigned int GetVAO() const
 	{
-		return m_VAO;
+		return this->m_VAO;
 	}
 	unsigned int GetVBO() const
 	{
-		return m_VBO;
+		return this->m_VBO;
 	}
 	unsigned int GetIBO() const
 	{
-		return m_IBO;
+		return this->m_IBO;
 	}
 
 	void SetVAO(unsigned int VAO)
 	{
-		m_VAO = VAO;
+		this->m_VAO = VAO;
 	}
 	void SetVBO(unsigned int VBO)
 	{
-		m_VBO = VBO;
+		this->m_VBO = VBO;
 	}
 	void SetIBO(unsigned int IBO)
 	{
-		m_IBO = IBO;
+		this->m_IBO = IBO;
 	}
 
 
@@ -62,45 +65,52 @@ public:
 		std::size_t count, 
 		T radius, 
 		const Vertex2D<T>& center, 
-		unsigned int VAO, 
-		unsigned int VBO, 
-		unsigned int IBO
+		unsigned int VAO = 0u,
+		unsigned int VBO = 0u,
+		unsigned int IBO = 0u
 	)
 	{
-		m_vertexes = GenerateCircleVertexes(count, radius, center);
-		m_indexes = GenerateCircleVertexIndexes(count);
+		this->m_vertexes = GenerateCircleVertexes(count, radius, center);
+		this->m_indexes = GenerateCircleVertexIndexes(count);
 		
-		m_VAO = VAO;
-		m_VBO = VBO;
-		m_IBO = IBO;
+		this->m_VAO = VAO;
+		this->m_VBO = VBO;
+		this->m_IBO = IBO;
 	}
 	Circle
 	(
 		std::size_t count, 
 		T radius, 
 		const Vertex2D<T>& center, 
-		unsigned int VAO, 
-		unsigned int VBO, 
-		unsigned int IBO,
-		const std::function<void(void)>& shaderUniformsProgram
+		const std::function<void(void)>& shaderUniformsProgram,
+		unsigned int VAO = 0u,
+		unsigned int VBO = 0u,
+		unsigned int IBO = 0u
 	) : Circle(count, radius, center, VAO, VBO, IBO)
 	{
 		SetShaderUniformsProgram(shaderUniformsProgram);
 	}
 
+	~Circle()
+	{
+		glDeleteVertexArrays(1, &this->m_VAO);
+	}
+
 	void Bind()
 	{
-		GLLogCall(glGenVertexArrays(1, &m_VAO));
-		GLLogCall(glBindVertexArray(m_VAO));
+		if(!this->m_VAO)
+			GLLogCall(glGenVertexArrays(1, &this->m_VAO));
+		GLLogCall(glBindVertexArray(this->m_VAO));
 
-		GLLogCall(glGenBuffers(1, &m_VBO));
-		GLLogCall(glBindBuffer(GL_ARRAY_BUFFER,m_VBO));
+		if (!this->m_VBO)
+			GLLogCall(glGenBuffers(1, &this->m_VBO));
+		GLLogCall(glBindBuffer(GL_ARRAY_BUFFER,this->m_VBO));
 
 		glBufferData
 		(
 			GL_ARRAY_BUFFER,
-			m_vertexes.size() * sizeof(Vertex2D<T>),
-			m_vertexes.data(),
+			this->m_vertexes.size() * sizeof(Vertex2D<T>),
+			this->m_vertexes.data(),
 			GL_STATIC_DRAW
 		);
 
@@ -108,45 +118,49 @@ public:
 		glVertexAttribPointer
 		(0, VERTEX_ATTRIBUTE_SIZE, GL_FLOAT, GL_FALSE, sizeof(T) * VERTEX_ATTRIBUTE_SIZE, 0);
 
-		glGenBuffers(1, &m_IBO);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);
+		if (!this->m_IBO)
+			glGenBuffers(1, &this->m_IBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->m_IBO);
 
 		glBufferData
 		(
 			GL_ELEMENT_ARRAY_BUFFER,
-			m_indexes.size() * sizeof(unsigned int),
-			m_indexes.data(),
+			this->m_indexes.size() * sizeof(unsigned int),
+			this->m_indexes.data(),
 			GL_STATIC_DRAW
 		);
 	}
 
 	void Draw()
 	{
-		glBindVertexArray(m_VAO)
-		glBindBuffer(GL_ARRAY_BUFFER,m_VBO);
+		GLLogCall(glBindVertexArray(this->m_VAO));
+		GLLogCall(glBindBuffer(GL_ARRAY_BUFFER,this->m_VBO));
 
-		glBufferData
+		GLLogCall(glBufferData
 		(
 			GL_ARRAY_BUFFER, 
-			m_vertexes.size() * sizeof(std::vector<Vertex2D<T>>::value_type),
-			m_vertexes.data(), 
+			this->m_vertexes.size() * sizeof(std::vector<Vertex2D<float>>::value_type),
+			this->m_vertexes.data(), 
 			GL_STATIC_DRAW
-		)
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);
-		m_shaderUniformsProgram();
+		));
+		GLLogCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->m_IBO));
 
-		glBufferData
+		if(m_shaderUniformsProgram)
+			m_shaderUniformsProgram();
+
+		GLLogCall(glBufferData
 		(
 			GL_ELEMENT_ARRAY_BUFFER, 
-			m_indexes.size() * sizeof(std::vector<unsigned int>::value_type) * m_vertexes.size(),
-			m_indexes.data(),
+			this->m_indexes.size() * sizeof(std::vector<unsigned int>::value_type),
+			this->m_indexes.data(),
 			GL_STATIC_DRAW
-		);
+		));
 
-		glDrawElements(GL_TRIANGLES, m_vertexes.size(), GL_UNSIGNED_INT, nullptr);
+		GLLogCall(glDrawElements(GL_TRIANGLES, this->m_indexes.size(), GL_UNSIGNED_INT, nullptr));
 	}
 
 
+public:
 	/// <summary>
 	/// 
 	/// </summary>
@@ -154,7 +168,6 @@ public:
 	/// <param name="count"></param>
 	/// <param name="center"></param>
 	/// <returns></returns>
-	template<typename T>
 	static std::vector<Vertex2D<T>> GenerateCircleVertexes
 	(std::size_t count, T radius, const Vertex2D<T>& center)
 	{
@@ -163,13 +176,15 @@ public:
 
 		vertexes.emplace_back(center);
 
-		double sector = 2 * M_PI / count;
+		T sector = 2 * M_PI / (count-1);
 
-		for (std::size_t i = 0; i < count; ++i)
+		for (std::size_t i = 1; i <= count; ++i)
 		{
-			T x = static_cast<T>(cos(sector * i) * radius), y = static_cast<T>(sin(sector * i) * radius);
+			T x = static_cast<T>(cos(sector * (i-1)) * radius), y = static_cast<T>(sin(sector * (i-1)) * radius);
 			vertexes.emplace_back(x + center.x, y + center.y);
 		}
+
+		vertexes.emplace_back(*std::next(vertexes.begin()));
 
 		return vertexes;
 	}
