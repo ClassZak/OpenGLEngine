@@ -145,7 +145,7 @@ int main(int argc, char** argv)
 		Vertex2D<float>(0.75f,-0.5f),
 		[&location](){glUniform4f(location, 0.2f, 0.2f, 02.f, 1.f);}
 	);
-	circle.Bind();
+	circle.Init();
 
 
 

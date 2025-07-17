@@ -96,7 +96,7 @@ public:
 		glDeleteVertexArrays(1, &this->m_VAO);
 	}
 
-	void Bind()
+	void Init()
 	{
 		if(!this->m_VAO)
 			GLLogCall(glGenVertexArrays(1, &this->m_VAO));
