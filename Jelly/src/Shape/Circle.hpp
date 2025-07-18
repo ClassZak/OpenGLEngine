@@ -21,7 +21,7 @@ public:
 		unsigned int VBO = 0u,
 		unsigned int IBO = 0u
 	)
-	{
+	{ 
 		this->m_vertexes = GenerateCircleVertexes(count, radius, center);
 		this->m_indexes = GenerateCircleVertexIndexes(count);
 		
@@ -43,7 +43,7 @@ public:
 		this->SetShaderUniformsProgram(shaderUniformsProgram);
 	}
 
-	~Circle()
+	~Circle () override
 	{
 		glDeleteVertexArrays(1, &this->m_VAO);
 		glDeleteBuffers(1, &this->m_VBO);

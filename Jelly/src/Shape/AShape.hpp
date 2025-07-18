@@ -26,6 +26,14 @@ protected:
 	virtual void Init() = 0;
 	virtual void Draw() = 0;
 
+	virtual ~AShape()
+	{
+		if(this->m_VAO)
+			glDeleteVertexArrays(1, &this->m_VAO);
+		if(this->m_VBO)
+			glDeleteBuffers(1, &this->m_VBO);
+	}
+
 public:
 	std::vector<TVertex>& GetVertexes()
 	{

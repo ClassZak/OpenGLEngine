@@ -43,11 +43,7 @@ public:
 	}
 
 
-	~Line()
-	{
-		glDeleteVertexArrays(1, &this->m_VAO);
-		glDeleteBuffers(1, &this->m_VBO);
-	}
+	~Line()=default;
 
 	void Init() override;
 	void Draw() override;
