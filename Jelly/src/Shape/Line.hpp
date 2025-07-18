@@ -1,7 +1,9 @@
 ﻿#pragma once
 #include "AShape.hpp"
 #include "../Vertex/Vertex2D.hpp"
+
 #include <functional>
+#include <cmath>
 #include <GL/glew.h>
 
 template<typename T>
@@ -10,6 +12,8 @@ class Line : public AShape<Vertex2D<T>>
 protected:
 	std::function<void(void)> m_shaderUniformsProgram;
 	GLenum m_drawMode = GL_LINE_STRIP;
+	T m_lineWidth;
+	bool m_isSmooth;
 
 public:
 	Line
@@ -17,6 +21,8 @@ public:
 		std::initializer_list<Vertex2D<T>> vertices,
 		const std::function<void(void)>& shaderUniformsProgram = nullptr,
 		GLenum drawMode = GL_LINE_STRIP,
+		T lineWidth = 1,
+		bool isSmooth=false,
 		unsigned int VAO = 0u,
 		unsigned int VBO = 0u
 	) : Line
@@ -24,6 +30,8 @@ public:
 		std::vector<Vertex2D<T>>(vertices), 
 		shaderUniformsProgram,
 		drawMode,
+		lineWidth,
+		isSmooth,
 		VAO,
 		VBO
 	) { }
@@ -33,9 +41,15 @@ public:
 		const std::vector<Vertex2D<T>>& vertices,
 		const std::function<void(void)>& shaderUniformsProgram = nullptr,
 		GLenum drawMode = GL_LINE_STRIP,
+		T lineWidth = 1,
+		bool isSmooth = false,
 		unsigned int VAO = 0u,
 		unsigned int VBO = 0u
-	) : m_drawMode(drawMode), m_shaderUniformsProgram(shaderUniformsProgram)
+	) : 
+	m_drawMode(drawMode), 
+	m_shaderUniformsProgram(shaderUniformsProgram), 
+	m_lineWidth(lineWidth), 
+	m_isSmooth(isSmooth)
 	{
 		this->m_vertexes = vertices;
 		this->m_VAO = VAO;
@@ -82,11 +96,28 @@ void Line<T>::Init()
 template<typename T>
 void Line<T>::Draw()
 {
+	// m_lineWidth != 1
+	if (abs((double)m_lineWidth - 1) > 1e-10)
+		glLineWidth(m_lineWidth);
+
+	if (m_isSmooth)
+	{
+		glEnable(GL_LINE_SMOOTH);
+		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+	}
+
+
+
 	GLLogCall(glBindVertexArray(this->m_VAO));
 	GLLogCall(glBindBuffer(GL_ARRAY_BUFFER, this->m_VBO));
 
 	if (m_shaderUniformsProgram)
 		m_shaderUniformsProgram();
+
+
+
+	if (m_isSmooth)
+		glDisable(GL_LINE_SMOOTH);
 
 	GLLogCall(glDrawArrays(m_drawMode, 0, this->m_vertexes.size()));
 }

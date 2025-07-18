@@ -1,11 +1,11 @@
 ﻿#pragma once 
 #define _USE_MATH_DEFINES
 
-#include <functional>
-#include <cmath>
-
 #include "AShape.hpp"
 #include "../Vertex/Vertex2D.hpp"
+
+#include <functional>
+#include <cmath>
 
 
 template<class T>

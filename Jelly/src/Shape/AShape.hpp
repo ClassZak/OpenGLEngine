@@ -1,9 +1,10 @@
 ﻿#pragma once
-#include <vector>
-
 #include "../Vertex/AVertex.hpp"
 #include "../utils/GLMacro.h"
 #include "IDrawable.hpp"
+
+#include <vector>
+#include <functional>
 
 #define VERTEX_ATTRIBUTE_SIZE 2
 
@@ -12,7 +13,7 @@
 /// </summary>
 /// <typeparam name="TVertex">Тип вершины, наследник AVertex<T></typeparam>
 template<typename TVertex>
-class AShape : IDrawable
+class AShape : public IDrawable
 {
 protected:
 	std::function<void(void)> m_shaderUniformsProgram;
