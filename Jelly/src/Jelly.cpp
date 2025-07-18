@@ -15,7 +15,9 @@
 #include <array>
 #include <algorithm>
 
+#ifdef _WIN32
 #include <conio.h>
+#endif
 #include <stdlib.h>
 
 #include <thread>

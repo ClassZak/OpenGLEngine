@@ -11,7 +11,7 @@ std::string LoadDataFromFile(const std::string& filename)
 		int error;
 #ifdef WIN32
 		error = GetLastError();
-#elif
+#else
 		error = errno;
 #endif
 		throw error;

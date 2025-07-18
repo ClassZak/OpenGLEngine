@@ -1,4 +1,4 @@
-#pragma once 
+п»ї#pragma once 
 #define _USE_MATH_DEFINES
 
 #include <functional>
@@ -56,7 +56,7 @@ public:
 	/// <summary>
 	/// 
 	/// </summary>
-	/// <typeparam name="T">скалярный тип</typeparam>
+	/// <typeparam name="T">СЃРєР°Р»СЏСЂРЅС‹Р№ С‚РёРї</typeparam>
 	/// <param name="count"></param>
 	/// <param name="center"></param>
 	/// <returns></returns>
@@ -82,19 +82,19 @@ public:
 	}
 
 	/// <summary>
-	/// Генерация индексов для отрисовки
+	/// Р“РµРЅРµСЂР°С†РёСЏ РёРЅРґРµРєСЃРѕРІ РґР»СЏ РѕС‚СЂРёСЃРѕРІРєРё
 	/// </summary>
-	/// <param name="circlePointCount">Число точек</param>
-	/// <returns>Индексы для отрисовки</returns>
+	/// <param name="circlePointCount">Р§РёСЃР»Рѕ С‚РѕС‡РµРє</param>
+	/// <returns>РРЅРґРµРєСЃС‹ РґР»СЏ РѕС‚СЂРёСЃРѕРІРєРё</returns>
 	static std::vector<unsigned int> GenerateCircleVertexIndexes(unsigned int circlePointCount)
 	{
-		// Генерация индексов для треугольников
+		// Р“РµРЅРµСЂР°С†РёСЏ РёРЅРґРµРєСЃРѕРІ РґР»СЏ С‚СЂРµСѓРіРѕР»СЊРЅРёРєРѕРІ
 		std::vector<unsigned int> vertexesIndices;
 		for (int i = 0; i < circlePointCount - 1; i++)
 		{
-			vertexesIndices.push_back(0); // Центральная вершина
-			vertexesIndices.push_back(1 + i); // Текущая вершина окружности
-			vertexesIndices.push_back(1 + (i + 1) % circlePointCount); // Следующая вершина окружности
+			vertexesIndices.push_back(0); // Р¦РµРЅС‚СЂР°Р»СЊРЅР°СЏ РІРµСЂС€РёРЅР°
+			vertexesIndices.push_back(1 + i); // РўРµРєСѓС‰Р°СЏ РІРµСЂС€РёРЅР° РѕРєСЂСѓР¶РЅРѕСЃС‚Рё
+			vertexesIndices.push_back(1 + (i + 1) % circlePointCount); // РЎР»РµРґСѓСЋС‰Р°СЏ РІРµСЂС€РёРЅР° РѕРєСЂСѓР¶РЅРѕСЃС‚Рё
 		}
 
 		return vertexesIndices;

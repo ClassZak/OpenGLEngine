@@ -1,11 +1,11 @@
-#pragma once
+п»ї#pragma once
 #include <vector>
 #include <algorithm>
 
 /// <summary>
 /// 
 /// </summary>
-/// <typeparam name="T">скалярный тип</typeparam>
+/// <typeparam name="T">СЃРєР°Р»СЏСЂРЅС‹Р№ С‚РёРї</typeparam>
 template<typename T>
 class AVertex
 {

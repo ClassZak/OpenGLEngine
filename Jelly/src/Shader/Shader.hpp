@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <string>
@@ -17,7 +17,7 @@ struct Shader
 
 
 
-	// TODO переделать
+	// TODO РїРµСЂРµРґРµР»Р°С‚СЊ
 	static inline struct Shader GetVertexAndFragmentShaders(const std::string& source)
 	{
 		Shader shader;
@@ -59,18 +59,18 @@ struct Shader
 
 
 	/// <summary>
-	/// Компиляция шейдера
+	/// РљРѕРјРїРёР»СЏС†РёСЏ С€РµР№РґРµСЂР°
 	/// </summary>
 	/// <param name="type"></param>
 	/// <param name="source"></param>
-	/// <returns>Id шейдера. 0 - ошибка</returns>
+	/// <returns>Id С€РµР№РґРµСЂР°. 0 - РѕС€РёР±РєР°</returns>
 	static GLuint CompileShader(GLuint type, const std::string& source);
 
 	/// <summary>
-	/// Функция создания шейдера
+	/// Р¤СѓРЅРєС†РёСЏ СЃРѕР·РґР°РЅРёСЏ С€РµР№РґРµСЂР°
 	/// </summary>
 	/// <param name="vertexShader"></param>
 	/// <param name="fragmentShader"></param>
-	/// <returns>Id программы. 0 - ошибка</returns>
+	/// <returns>Id РїСЂРѕРіСЂР°РјРјС‹. 0 - РѕС€РёР±РєР°</returns>
 	static GLuint CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
 };

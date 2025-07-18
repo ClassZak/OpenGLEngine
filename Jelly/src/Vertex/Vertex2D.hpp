@@ -1,10 +1,10 @@
-#pragma once
+п»ї#pragma once
 #include "AVertex.hpp"
 
 /// <summary>
 /// 
 /// </summary>
-/// <typeparam name="T">скалярный тип</typeparam>
+/// <typeparam name="T">СЃРєР°Р»СЏСЂРЅС‹Р№ С‚РёРї</typeparam>
 template<typename T>
 struct Vertex2D : AVertex<T>
 {
@@ -37,14 +37,14 @@ struct Vertex2D : AVertex<T>
 	}
 
 
-	// Дружественная функция для вывода
+	// Р”СЂСѓР¶РµСЃС‚РІРµРЅРЅР°СЏ С„СѓРЅРєС†РёСЏ РґР»СЏ РІС‹РІРѕРґР°
 	friend std::ostream& operator<<(std::ostream& os, const Vertex2D<T>& obj)
 	{
 		os << "(" << obj.x << ",\t" << obj.y << ")";
 		return os;
 	}
 
-	// Дружественная функция для ввода
+	// Р”СЂСѓР¶РµСЃС‚РІРµРЅРЅР°СЏ С„СѓРЅРєС†РёСЏ РґР»СЏ РІРІРѕРґР°
 	friend std::istream& operator>>(std::istream& is, Vertex2D<T>& obj)
 	{
 		std::cout << "Enter x: ";

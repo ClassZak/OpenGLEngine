@@ -26,11 +26,11 @@ project(Jelly VERSION 1.0
 
 # OpenGL и GLFW
 find_package(OpenGL	REQUIRED)
-find_package(glfw3)
-find_package(glew)
-if(NOT glfw3_FOUND)
-	message(STATUS "GLFW not found, using fallback method")
-	if(WIN32)
+if(WIN32)
+	find_package(glfw3)
+	find_package(glew)
+	if(NOT glfw3_FOUND)
+		message(STATUS "GLFW not found, using fallback method")
 		set(GLFW_ROOT "G:/Programs/Libraries/glfw-3.4.bin.WIN64/glfw-3.4.bin.WIN64")
 		set(GLFW_INCLUDE_DIR "${GLFW_ROOT}/include")
 		set(GLFW_INCLUDE_DEPS_DIR "${GLFW_ROOT}/deps")
@@ -43,15 +43,13 @@ if(NOT glfw3_FOUND)
 			IMPORTED_LOCATION "${GLFW_LIB_DIR}/glfw3.dll"
 		)
 	endif()
-endif()
-if(NOT glew_FOUND)
-	message(STATUS "GLEW not found, using fallback method")
-	if(WIN32)
+	if(NOT glew_FOUND)
+		message(STATUS "GLEW not found, using fallback method")
 		set(GLEW_ROOT "G:/Programs/Libraries/glew-2.1.0-win32/glew-2.1.0")
 		set(GLEW_INCLUDE_DIR "${GLEW_ROOT}/include")
 		set(GLEW_LIB_DIR "${GLEW_ROOT}/lib/Release/x64")
 		set(GLEW_BIN_DIR "${GLEW_ROOT}/bin/Release/x64")
-
+		
 		if(NOT EXISTS "${GLEW_INCLUDE_DIR}/GL/glew.h")
 			message(FATAL_ERROR "GLEW header not found: ${GLEW_INCLUDE_DIR}/GL/glew.h")
 		endif()
@@ -65,13 +63,67 @@ if(NOT glew_FOUND)
 		set_target_properties(glew PROPERTIES
 			INTERFACE_INCLUDE_DIRECTORIES "${GLEW_INCLUDE_DIR}"
 			IMPORTED_IMPLIB "${GLEW_LIB_DIR}/glew32.lib"
-			IMPORTED_LOCATION "${GLEW_BIN_DIR}/glew32.dll"
+		IMPORTED_LOCATION "${GLEW_BIN_DIR}/glew32.dll"
 		)
+	endif()
+else()
+	# Linux-specific setup
+	# Ищем GLFW
+	find_path(GLFW_INCLUDE_DIR GLFW/glfw3.h
+		PATHS /usr/include /usr/local/include
+		DOC "Path to GLFW include directory"
+	)
 
+	find_library(GLFW_LIBRARY
+		NAMES glfw glfw3
+		PATHS /usr/lib /usr/local/lib /usr/lib/x86_64-linux-gnu
+		DOC "Path to GLFW library"
+	)
 
+	if(GLFW_INCLUDE_DIR AND GLFW_LIBRARY)
+		message(STATUS "Found GLFW: include=${GLFW_INCLUDE_DIR}, lib=${GLFW_LIBRARY}")
+		add_library(glfw UNKNOWN IMPORTED)
+		set_target_properties(glfw PROPERTIES
+			INTERFACE_INCLUDE_DIRECTORIES "${GLFW_INCLUDE_DIR}"
+			IMPORTED_LOCATION "${GLFW_LIBRARY}"
+		)
+	else()
+		message(FATAL_ERROR "GLFW not found. Install with: sudo apt install libglfw3-dev")
+	endif()
 
+	# Ищем GLEW
+	find_path(GLEW_INCLUDE_DIR GL/glew.h
+		PATHS /usr/include /usr/local/include
+		DOC "Path to GLEW include directory"
+	)
+
+	find_library(GLEW_LIBRARY
+		NAMES GLEW glew
+		PATHS /usr/lib /usr/local/lib /usr/lib/x86_64-linux-gnu
+		DOC "Path to GLEW library"
+	)
+
+	if(GLEW_INCLUDE_DIR AND GLEW_LIBRARY)
+		message(STATUS "Found GLEW: include=${GLEW_INCLUDE_DIR}, lib=${GLEW_LIBRARY}")
+		add_library(glew UNKNOWN IMPORTED)
+		set_target_properties(glew PROPERTIES
+			INTERFACE_INCLUDE_DIRECTORIES "${GLEW_INCLUDE_DIR}"
+			IMPORTED_LOCATION "${GLEW_LIBRARY}"
+		)
+	else()
+		message(FATAL_ERROR "GLEW not found. Install with: sudo apt install libglew-dev")
 	endif()
 endif()
+
+
+
+
+
+
+
+
+
+
 
 
 set(SOURCES
@@ -99,10 +151,10 @@ add_executable(${PROJECT_NAME}
 if(WIN32)
 	# Создаем ресурсный файл
 	set(RESOURCE_FILE ${CMAKE_CURRENT_SOURCE_DIR}/resources.rc)
-    
+	
 	# Добавляем ресурсы к исполняемому файлу
 	target_sources(${PROJECT_NAME} PRIVATE ${RESOURCE_FILE})
-    
+	
 	# Устанавливаем свойства для Windows
 	set_target_properties(${PROJECT_NAME} PROPERTIES
 		WIN32_EXECUTABLE TRUE
@@ -121,15 +173,22 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	glfw
 	glew
 )
+if(UNIX)
+	target_link_libraries(${PROJECT_NAME} PRIVATE
+		X11 pthread dl GL
+	)
+endif()
 
 
 # Для GLEW
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy_if_different
-		"${GLEW_BIN_DIR}/glew32.dll"
-		$<TARGET_FILE_DIR:${PROJECT_NAME}>
-	COMMENT "Copying glew32.dll to output directory"
-)
+if(WIN32)
+	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different
+			"${GLEW_BIN_DIR}/glew32.dll"
+			$<TARGET_FILE_DIR:${PROJECT_NAME}>
+		COMMENT "Copying glew32.dll to output directory"
+	)
+endif()
 
 
 # Платформенно-специфичные настройки
@@ -162,6 +221,27 @@ if(MSVC)
 		"$<$<CONFIG:Debug>:/Od>"
 	)
 endif()
+
+
+
+
+
+# Консоль для debug версии
+if(WIN32)
+	# Установка точки входа и подсистемы
+	if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+		# Debug: консольное приложение
+		set_target_properties(${PROJECT_NAME} PROPERTIES
+			LINK_FLAGS "/ENTRY:mainCRTStartup /SUBSYSTEM:CONSOLE"
+		)
+	else()
+		# Release: оконное приложение
+		set_target_properties(${PROJECT_NAME} PROPERTIES
+			LINK_FLAGS "/ENTRY:mainCRTStartup /SUBSYSTEM:WINDOWS"
+		)
+	endif()
+endif()
+
 
 
 

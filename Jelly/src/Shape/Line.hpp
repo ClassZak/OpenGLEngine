@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #include "AShape.hpp"
 #include "../Vertex/Vertex2D.hpp"
 #include <functional>
@@ -19,8 +19,8 @@ public:
 		const std::function<void(void)>& shaderUniformsProgram = nullptr,
 		unsigned int VAO = 0u,
 		unsigned int VBO = 0u
-	) : Line(  // Делегируем конструктору, принимающему vector
-		std::vector<Vertex2D<T>>(vertices), // Конвертируем initializer_list в vector
+	) : Line(  // Р”РµР»РµРіРёСЂСѓРµРј РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂСѓ, РїСЂРёРЅРёРјР°СЋС‰РµРјСѓ vector
+		std::vector<Vertex2D<T>>(vertices), // РљРѕРЅРІРµСЂС‚РёСЂСѓРµРј initializer_list РІ vector
 		drawMode,
 		shaderUniformsProgram,
 		VAO,

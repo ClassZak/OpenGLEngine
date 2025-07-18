@@ -1,4 +1,4 @@
-#include "Shader.hpp"
+п»ї#include "Shader.hpp"
 
 GLuint Shader::CompileShader(GLuint type, const std::string& source)
 {
@@ -7,15 +7,15 @@ GLuint Shader::CompileShader(GLuint type, const std::string& source)
 	glShaderSource(id, 1, &src, nullptr);
 	glCompileShader(id);
 
-	// TODO: обработка ошибок
+	// TODO: РѕР±СЂР°Р±РѕС‚РєР° РѕС€РёР±РѕРє
 	GLint result;
 	glGetShaderiv(id, GL_COMPILE_STATUS, &result);
 	if (result == GL_FALSE)
 	{
 		GLint length;
 		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-		// alloca для динамического наполнения стека
-		char* message = (char*)_malloca(length * sizeof(char));
+		// alloca РґР»СЏ РґРёРЅР°РјРёС‡РµСЃРєРѕРіРѕ РЅР°РїРѕР»РЅРµРЅРёСЏ СЃС‚РµРєР°
+		char* message = (char*)malloc(length * sizeof(char));
 		glGetShaderInfoLog(id, length, &length, message);
 		std::cout << "Failed to compile " <<
 			(type == GL_VERTEX_SHADER ? "vertex" : "fragment") << std::endl;
@@ -34,13 +34,13 @@ GLuint Shader::CreateShader(const std::string& vertexShader, const std::string& 
 	GLuint vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
 	if (!vs)
 	{
-		std::cout << "Не удалось создать вершинный шейдер" << std::endl;
+		std::cout << "РќРµ СѓРґР°Р»РѕСЃСЊ СЃРѕР·РґР°С‚СЊ РІРµСЂС€РёРЅРЅС‹Р№ С€РµР№РґРµСЂ" << std::endl;
 		return 0;
 	}
 	GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
 	if (!fs)
 	{
-		std::cout << "Не удалось создать фрагментный шейдер" << std::endl;
+		std::cout << "РќРµ СѓРґР°Р»РѕСЃСЊ СЃРѕР·РґР°С‚СЊ С„СЂР°РіРјРµРЅС‚РЅС‹Р№ С€РµР№РґРµСЂ" << std::endl;
 		return 0;
 	}
 
