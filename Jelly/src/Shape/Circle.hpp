@@ -43,11 +43,7 @@ public:
 		this->SetShaderUniformsProgram(shaderUniformsProgram);
 	}
 
-	~Circle () override
-	{
-		glDeleteVertexArrays(1, &this->m_VAO);
-		glDeleteBuffers(1, &this->m_VBO);
-	}
+	~Circle () = default;
 
 	void Init() override;
 	void Draw() override;
