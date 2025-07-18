@@ -130,6 +130,7 @@ set(SOURCES
 	${CMAKE_SOURCE_DIR}/src/main.cpp
 	${CMAKE_SOURCE_DIR}/src/utils/functions.cpp
 	${CMAKE_SOURCE_DIR}/src/Shader/Shader.cpp
+	${CMAKE_SOURCE_DIR}/src/Shape/Jelly.cpp
 )
 
 # Добавляем исполняемый файл
