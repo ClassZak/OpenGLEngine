@@ -10,7 +10,6 @@ template<typename T>
 class Line : public AShape<Vertex2D<T>>
 {
 protected:
-	std::function<void(void)> m_shaderUniformsProgram;
 	GLenum m_drawMode = GL_LINE_STRIP;
 	T m_lineWidth;
 	bool m_isSmooth;
@@ -47,13 +46,13 @@ public:
 		unsigned int VBO = 0u
 	) : 
 	m_drawMode(drawMode), 
-	m_shaderUniformsProgram(shaderUniformsProgram), 
 	m_lineWidth(lineWidth), 
 	m_isSmooth(isSmooth)
 	{
 		this->m_vertexes = vertices;
 		this->m_VAO = VAO;
 		this->m_VBO = VBO;
+		this->SetShaderUniformsProgram(shaderUniformsProgram);
 	}
 
 
@@ -111,8 +110,8 @@ void Line<T>::Draw()
 	GLLogCall(glBindVertexArray(this->m_VAO));
 	GLLogCall(glBindBuffer(GL_ARRAY_BUFFER, this->m_VBO));
 
-	if (m_shaderUniformsProgram)
-		m_shaderUniformsProgram();
+	if (this->m_shaderUniformsProgram)
+		this->m_shaderUniformsProgram();
 
 
 

@@ -21,6 +21,7 @@
 #include <stdlib.h>
 
 #include <thread>
+#include <functional>
 #include <utility>
 
 #include <math.h>
@@ -37,6 +38,7 @@
 #include "Shader/Shader.hpp"
 #include "Shape/Circle.hpp"
 #include "Shape/Line.hpp"
+#include "Shape/Jelly.hpp"
 
 
 
@@ -47,6 +49,9 @@
 #define ANIMATION_SPEED 2.5e-3
 
 
+std::vector<std::function<void(GLFWwindow* window, double xpos, double ypos)>> mouseMovingProcs;
+float windowWidth	=640;
+float windowHeight	=480;
 
 int main(int argc, char** argv)
 {
@@ -54,8 +59,8 @@ int main(int argc, char** argv)
 
 	std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
 
-	std::string shaderData = LoadDataFromFile("../res/shaders/shader.shader");
-	Shader shader = Shader::GetVertexAndFragmentShaders(shaderData);
+	std::string shader_data = LoadDataFromFile("../res/shaders/shader.shader");
+	Shader shader = Shader::GetVertexAndFragmentShaders(shader_data);
 
 	GLFWwindow* window;
 
@@ -67,7 +72,7 @@ int main(int argc, char** argv)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	window = glfwCreateWindow(640, 480, "Jelly", NULL, NULL);
+	window = glfwCreateWindow(windowWidth, windowHeight, "Jelly", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -76,14 +81,32 @@ int main(int argc, char** argv)
 
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
+	/* Предустановленные Callback функции*/
 	glfwSetFramebufferSizeCallback
 	(
 		window,
 		[](GLFWwindow* window, int width, int height)
 		{
 			glViewport(0, 0, width, height);
+			windowHeight = height;
+			windowWidth = width;
 		}
 	);
+	glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xpos, double ypos)->void
+		{
+			for(std::size_t i=0;i!= mouseMovingProcs.size();++i)
+				if(mouseMovingProcs[i])
+					mouseMovingProcs[i](window, xpos, ypos);
+		}
+	);
+	mouseMovingProcs.push_back([](GLFWwindow* window, double xpos, double ypos)->void
+		{
+			printf("(%.2f\t,\t%.2f)\n", xpos, ypos);
+		}
+	);
+
+	
+	
 	GLFWimage images[1];
 	images[0].pixels = stbi_load("../assets/icon.png", &images[0].width, &images[0].height, 0, 4);
 	glfwSetWindowIcon(window, 1, images);
@@ -95,53 +118,35 @@ int main(int argc, char** argv)
 	if (glewInit() != GLEW_OK)
 		return -1;
 
-	GLuint shaderProgram = Shader::CreateShader(shader.m_vertexShader, shader.m_fragmentShader);
-	glUseProgram(shaderProgram);
+	GLuint shader_program = Shader::CreateShader(shader.m_vertexShader, shader.m_fragmentShader);
+	glUseProgram(shader_program);
 
 
-	int location = glGetUniformLocation(shaderProgram, "u_Color");
+	int location = glGetUniformLocation(shader_program, "u_Color");
 	GL_ASSERT(location != -1);
 
 
 
 
-	Circle circle
-	(
-		30,
-		0.1f,
-		Vertex2D<float>(0.75f,-0.5f),
-		[&location](){glUniform4f(location, 0.2f, 0.2f, 02.f, 1.f);}
-	);
-	circle.Init();
 
-	Line<float> line
-	(
+	Jelly jelly(shader_program);
+	jelly.Init();
+	mouseMovingProcs.push_back([&jelly](GLFWwindow* window, double xpos, double ypos)->void
 		{
-			Vertex2D<float>(-0.5f, -0.5f),
-			Vertex2D<float>(0.0f, 0.5f),
-			Vertex2D<float>(0.5f, -0.5f),
-			Vertex2D<float>(-1.f, -1.f),
-		},
-		[&]()
-		{
-			glUniform4f(location, 1.0f, 0.0f, 0.0f, 1.0f);
-		},
-		GL_LINE_LOOP
+			jelly.Tugging(xpos / windowWidth, ypos/ windowHeight);
+		}
 	);
-	line.Init();
-
-
 
 
 
 
 	while (!glfwWindowShouldClose(window))
 	{
-		std::chrono::system_clock::duration durationSinceEpoch = now.time_since_epoch();
-		std::chrono::milliseconds	millisecondsSinceEpoch =
-		std::chrono::duration_cast<std::chrono::milliseconds>(durationSinceEpoch);
-		std::chrono::seconds		secondsSinceEpoch =
-		std::chrono::duration_cast<std::chrono::seconds>(durationSinceEpoch);
+		std::chrono::system_clock::duration duration_since_epoch = now.time_since_epoch();
+		std::chrono::milliseconds	milliseconds_since_epoch =
+		std::chrono::duration_cast<std::chrono::milliseconds>(duration_since_epoch);
+		std::chrono::seconds		seconds_since_epoch =
+		std::chrono::duration_cast<std::chrono::seconds>(duration_since_epoch);
 
 		long diff = 2L;
 #if FPS <= 1000
@@ -153,24 +158,14 @@ int main(int argc, char** argv)
 		}
 #endif  // FPS <= 1000
 
-		glUniform4f
-		(
-			location,
-			(sin(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + 1) / 2.f,
-			(cos(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + 1) / 2.f,
-			(tan(millisecondsSinceEpoch.count() * ANIMATION_SPEED) + 1),
-			1.f
-		);
-
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
+		glClearColor(.7f,.7f,.7f,1.f);
 
 
 
 
-		circle.Draw();
-		line.Draw();
-
+		jelly.Draw();
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
@@ -181,7 +176,7 @@ int main(int argc, char** argv)
 		now = std::chrono::system_clock::now();
 	}
 
-	glDeleteProgram(shaderProgram);
+	glDeleteProgram(shader_program);
 
 	glfwTerminate();
 
