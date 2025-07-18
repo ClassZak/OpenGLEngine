@@ -15,14 +15,15 @@ public:
 	Line
 	(
 		std::initializer_list<Vertex2D<T>> vertices,
-		GLenum drawMode = GL_LINE_STRIP,
 		const std::function<void(void)>& shaderUniformsProgram = nullptr,
+		GLenum drawMode = GL_LINE_STRIP,
 		unsigned int VAO = 0u,
 		unsigned int VBO = 0u
-	) : Line(  // Делегируем конструктору, принимающему vector
-		std::vector<Vertex2D<T>>(vertices), // Конвертируем initializer_list в vector
-		drawMode,
+	) : Line
+	(	// Явно конвертируем initializer_list в vector для перегрузки
+		std::vector<Vertex2D<T>>(vertices), 
 		shaderUniformsProgram,
+		drawMode,
 		VAO,
 		VBO
 	) { }
@@ -30,8 +31,8 @@ public:
 	Line
 	(
 		const std::vector<Vertex2D<T>>& vertices,
-		GLenum drawMode = GL_LINE_STRIP,
 		const std::function<void(void)>& shaderUniformsProgram = nullptr,
+		GLenum drawMode = GL_LINE_STRIP,
 		unsigned int VAO = 0u,
 		unsigned int VBO = 0u
 	) : m_drawMode(drawMode), m_shaderUniformsProgram(shaderUniformsProgram)

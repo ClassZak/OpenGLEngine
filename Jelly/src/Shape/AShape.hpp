@@ -3,11 +3,16 @@
 
 #include "../Vertex/AVertex.hpp"
 #include "../utils/GLMacro.h"
+#include "IDrawable.hpp"
 
 #define VERTEX_ATTRIBUTE_SIZE 2
 
+/// <summary>
+/// Класс для элементарных фигур
+/// </summary>
+/// <typeparam name="TVertex">Тип вершины, наследник AVertex<T></typeparam>
 template<typename TVertex>
-class AShape
+class AShape : IDrawable
 {
 protected:
 	std::function<void(void)> m_shaderUniformsProgram;

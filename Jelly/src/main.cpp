@@ -168,11 +168,11 @@ int main(int argc, char** argv)
 			Vertex2D<float>(0.5f, -0.5f),
 			Vertex2D<float>(-1.f, -1.f),
 		},
-		GL_LINE_LOOP,
 		[&]()
 		{
 			glUniform4f(location, 1.0f, 0.0f, 0.0f, 1.0f);
-		}
+		},
+		GL_LINE_LOOP
 	);
 	line.Init();
 
