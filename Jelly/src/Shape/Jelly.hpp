@@ -33,8 +33,10 @@ protected:
 
 	Line<float> m_bottomLine= Line<float>({Vertex2D<float>(START_X, START_Y), Vertex2D<float>(END_X, START_Y)});
 
+	inline void AnimateLines(long long millisecondsSinceEpoch, double animationSpeed = 1e-3);
+	inline void AnimateRoundedLines(long long millisecondsSinceEpoch, double animationSpeed = 1e-3);
 public:
-	Jelly();
+	Jelly()=default;
 	Jelly(GLuint shaderProgram) : Jelly()
 	{
 		m_shaderProgram=shaderProgram;
