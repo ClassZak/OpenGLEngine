@@ -38,11 +38,10 @@ public:
 	void Draw() override;
 
 	/// <summary>
-	/// Метод для дёрганья желе
+	/// Метод для дёрганья желе по времени
 	/// </summary>
-	/// <param name="xCoefficient">значение от 0 до 1</param>
-	/// <param name="yCoefficient">значение от 0 до 1</param>
-	void Tugging(float xCoefficient, float yCoefficient);
+	/// <param name="millisecondsSinceEpoch">время</param>
+	void Animate(long long millisecondsSinceEpoch, double animationSpeed = 1e-3);
 };
 
 

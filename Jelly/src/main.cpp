@@ -46,7 +46,7 @@
 #define FPS 60
 #define VERTEX_ATTRIBUTE_SIZE 2
 
-#define ANIMATION_SPEED 2.5e-3
+#define ANIMATION_SPEED 1.e-2
 
 
 std::vector<std::function<void(GLFWwindow* window, double xpos, double ypos)>> mouseMovingProcs;
@@ -132,11 +132,6 @@ int main(int argc, char** argv)
 
 	Jelly jelly(shader_program);
 	jelly.Init();
-	//mouseMovingProcs.push_back([&jelly](GLFWwindow* window, double xpos, double ypos)->void
-	//	{
-	//		jelly.Tugging(xpos / windowWidth, ypos/ windowHeight);
-	//	}
-	//);
 
 
 
@@ -173,6 +168,11 @@ int main(int argc, char** argv)
 
 		/* Poll for and process events */
 		glfwPollEvents();
+
+
+		/*Вызов анимации*/
+		jelly.Animate(milliseconds_since_epoch.count(), ANIMATION_SPEED);
+
 
 		now = std::chrono::system_clock::now();
 	}

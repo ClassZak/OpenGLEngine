@@ -8,8 +8,8 @@ Jelly::Jelly()
 
 void Jelly::Init()
 {
-	m_createdLines.push_back
-	(Line<float>({Vertex2D(START_X,START_Y),Vertex2D(END_X,START_Y) }));
+	m_bottomLine.Init();
+
 
 
 	for (int i = 0; i <= PARTS_COUNT; ++i)
@@ -21,8 +21,6 @@ void Jelly::Init()
 
 
 
-
-
 	if (m_shaderProgram)
 	{
 		int location = glGetUniformLocation(m_shaderProgram, "u_Color");
@@ -31,6 +29,7 @@ void Jelly::Init()
 			el.SetShaderUniformsProgram([location]()
 			{glUniform4f(location, .0f, .0f, .0f, .0f);});
 	}
+
 
 
 	for (auto& el : m_createdLines)
@@ -45,16 +44,27 @@ void Jelly::Init()
 
 void Jelly::Draw()
 {
+	m_bottomLine.Draw();
+
 	for (auto& el : m_lines)
 		el.Draw();
 }
 
 
-
-void Jelly::Tugging(float xCoefficient, float yCoefficient)
+void Jelly::Animate(long long millisecondsSinceEpoch, double animationSpeed)
 {
+	const auto ANIMATION_COEFFICIENT = millisecondsSinceEpoch * animationSpeed;
+
 	auto lineIt = m_lines.begin();
 	auto createdIt = m_createdLines.begin();
+
+	// Ey ý [0;1]
+	const double SHORT_COS_COEFFICIENT = (cos(ANIMATION_COEFFICIENT) + 1) / 2.;
+	const double SHORT_SIN_COEFFICIENT = (sin(ANIMATION_COEFFICIENT) + 1) / 2.;
+	const double SHORT_BORDER_SIN_COEFFICIENT = (sin(ANIMATION_COEFFICIENT / 10) + 1) / 2.;
+	// Ey ý [-1;1]
+	const double COS_COEFFICIENT = cos(ANIMATION_COEFFICIENT);
+	const double SIN_COEFFICIENT = sin(ANIMATION_COEFFICIENT);
 
 	while (createdIt != m_createdLines.end() && lineIt != m_lines.end())
 	{
@@ -62,21 +72,11 @@ void Jelly::Tugging(float xCoefficient, float yCoefficient)
 		auto& createdLineVertexes = createdIt->GetVertexes();
 		
 
-		auto lineVertexIt = lineVertexes.begin();
-		auto createdLineVertexIt = createdLineVertexes.begin();
+		auto lineVertexIt = std::next(lineVertexes.begin());
+		auto createdLineVertexIt = std::next(createdLineVertexes.begin());
 
-		while
-		(
-			lineVertexIt != lineVertexes.end() && 
-			createdLineVertexIt != createdLineVertexes.end()
-		)
-		{
-			(*lineVertexIt).x = (*createdLineVertexIt).x + (rand()%10) / 1000.;
-			(*lineVertexIt).y = (*createdLineVertexIt).y + (rand()%10) / 100.;
+		(*lineVertexIt).x = (*createdLineVertexIt).x * (SHORT_COS_COEFFICIENT * 0.3 * SHORT_BORDER_SIN_COEFFICIENT + 0.7);
 
-			++lineVertexIt;
-			++createdLineVertexIt;
-		}
 		++createdIt;
 		++lineIt;
 	}
