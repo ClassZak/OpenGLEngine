@@ -151,8 +151,6 @@ public:
 			vertexes.emplace_back(x + center.x, y + center.y);
 		}
 
-		//vertexes.emplace_back(*std::next(vertexes.begin()));
-
 		return vertexes;
 	}
 };
