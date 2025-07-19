@@ -25,7 +25,7 @@ inline void Jelly::AnimateLines(long long millisecondsSinceEpoch, double animati
 		auto createdLineVertexIt = std::next(createdLineVertexes.begin());
 
 		(*lineVertexIt).x =
-		(*createdLineVertexIt).x * (SHORT_COS_COEFFICIENT * 0.3 * SHORT_BORDER_SIN_COEFFICIENT + 0.7);
+		(*createdLineVertexIt).x * ((1-SHORT_COS_COEFFICIENT) * 0.2 * (1-SHORT_BORDER_SIN_COEFFICIENT) + 0.8);
 
 		++createdIt;
 		++lineIt;
@@ -34,40 +34,53 @@ inline void Jelly::AnimateLines(long long millisecondsSinceEpoch, double animati
 
 inline void Jelly::AnimateRoundedLines(long long millisecondsSinceEpoch, double animationSpeed)
 {
-	//const auto ANIMATION_COEFFICIENT = millisecondsSinceEpoch * animationSpeed;
+	const auto ANIMATION_COEFFICIENT = millisecondsSinceEpoch * animationSpeed;
 
-	//auto lineIt = m_roundedLines.begin();
-	//auto createdIt = m_createdRoundedLines.begin();
+	auto lineIt = m_roundedLines.begin();
+	auto createdIt = m_createdRoundedLines.begin();
 
 	// Ey ý [0;1]
-	//const double SHORT_COS_COEFFICIENT = (cos(ANIMATION_COEFFICIENT) + 1) / 2.;
-	//const double SHORT_SIN_COEFFICIENT = (sin(ANIMATION_COEFFICIENT) + 1) / 2.;
-	//const double SHORT_BORDER_SIN_COEFFICIENT = (sin(ANIMATION_COEFFICIENT / 10) + 1) / 2.;
+	const double SHORT_COS_COEFFICIENT = (cos(ANIMATION_COEFFICIENT) + 1) / 2.;
+	const double SHORT_SIN_COEFFICIENT = (sin(ANIMATION_COEFFICIENT) + 1) / 2.;
+	const double SHORT_BORDER_SIN_COEFFICIENT = (sin(ANIMATION_COEFFICIENT / 10) + 1) / 2.;
 	// Ey ý [-1;1]
-	//const double COS_COEFFICIENT = cos(ANIMATION_COEFFICIENT);
-	//const double SIN_COEFFICIENT = sin(ANIMATION_COEFFICIENT);
+	const double COS_COEFFICIENT = cos(ANIMATION_COEFFICIENT);
+	const double SIN_COEFFICIENT = sin(ANIMATION_COEFFICIENT);
 
-	//while (createdIt != m_createdLines.end() && lineIt != m_lines.end())
-	//{
-	//	auto& lineVertexes = lineIt->GetVertexes();
-	//	auto& createdLineVertexes = createdIt->GetVertexes();
+	while (createdIt != m_createdRoundedLines.end() && lineIt != m_roundedLines.end())
+	{
+		auto& lineVertexes = lineIt->GetVertexes();
+		auto& createdLineVertexes = createdIt->GetVertexes();
+
+		for (std::size_t i = 0; i != createdLineVertexes.size() and i != lineVertexes.size(); ++i)
+		{
+			/*float x = START_X + i * PART_SIZE;
+			float next_x = START_X + (i + 1) * PART_SIZE;
+			float upper_vertex_x = x * MULTIPLE_COEFFICIENT;
+			float next_upper_vertex_x = next_x * MULTIPLE_COEFFICIENT;
+
+			float upper_vertex_x_delta = abs(next_upper_vertex_x - upper_vertex_x);*/
 
 
-	//	auto lineVertexIt = std::next(lineVertexes.begin());
-	//	auto createdLineVertexIt = std::next(createdLineVertexes.begin());
 
-	//	(*lineVertexIt).x =
-	//	(*createdLineVertexIt).x * (SHORT_COS_COEFFICIENT * 0.3 * SHORT_BORDER_SIN_COEFFICIENT + 0.7);
+			lineVertexes[i].x =
+			createdLineVertexes[i].x * 
+			((1 - SHORT_COS_COEFFICIENT) * 0.2 * (1 - SHORT_BORDER_SIN_COEFFICIENT) + 0.8);
+		}
 
-	//	++createdIt;
-	//	++lineIt;
-	//}
+		++createdIt;
+		++lineIt;
+	}
 }
+
+
+
+
 
 
 void Jelly::Init()
 {
-	m_bottomLine.Init();
+	m_bottomLine->Init();
 
 
 
@@ -126,7 +139,7 @@ void Jelly::Init()
 		GL_ASSERT(location != -1);
 		
 		
-		m_bottomLine.SetShaderUniformsProgram([location]()
+		m_bottomLine->SetShaderUniformsProgram([location]()
 			{glUniform4f(location, .0f, .0f, .0f, .0f); });
 		
 		for(auto& el : m_createdLines)
@@ -150,7 +163,7 @@ void Jelly::Init()
 
 void Jelly::Draw()
 {
-	m_bottomLine.Draw();
+	m_bottomLine->Draw();
 
 	for (auto& el : m_lines)
 		el.Draw();

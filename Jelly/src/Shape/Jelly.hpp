@@ -12,11 +12,13 @@
 class Jelly : public IDrawable
 {
 protected:
-	GLuint m_shaderProgram=0;
+
 	std::list<Line<float>> m_createdLines;
 	std::list<Line<float>> m_lines;
 	std::list<Line<float>> m_createdRoundedLines;
 	std::list<Line<float>> m_roundedLines;
+
+
 
 	const float START_X = -0.75f;
 	const float END_X = 0.75f;
@@ -31,7 +33,13 @@ protected:
 
 	const float PART_SIZE = LENGTH / PARTS_COUNT;
 
-	Line<float> m_bottomLine= Line<float>({Vertex2D<float>(START_X, START_Y), Vertex2D<float>(END_X, START_Y)});
+
+	const float ROUNDED_LINES_VERTEX_COUNT = 20;
+
+	GLuint m_shaderProgram=0;
+	Line<float>* m_bottomLine= new Line<float>({Vertex2D<float>(START_X, START_Y), Vertex2D<float>(END_X, START_Y)});
+
+
 
 	inline void AnimateLines(long long millisecondsSinceEpoch, double animationSpeed = 1e-3);
 	inline void AnimateRoundedLines(long long millisecondsSinceEpoch, double animationSpeed = 1e-3);
