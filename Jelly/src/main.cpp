@@ -100,11 +100,6 @@ int main(int argc, char** argv)
 					mouseMovingProcs[i](window, xpos, ypos);
 		}
 	);
-	mouseMovingProcs.push_back([](GLFWwindow* window, double xpos, double ypos)->void
-		{
-			printf("(%.2f\t,\t%.2f)\n", xpos, ypos);
-		}
-	);
 
 	
 	

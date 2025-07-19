@@ -1,6 +1,8 @@
 #pragma once
+#define _USE_MATH_DEFINES
 #include "IDrawable.hpp"
 #include "Line.hpp"
+#include "Circle.hpp"
 
 #include <vector>
 #include <list>
@@ -11,8 +13,10 @@ class Jelly : public IDrawable
 {
 protected:
 	GLuint m_shaderProgram=0;
-	std::list<Line<float>> m_lines;
 	std::list<Line<float>> m_createdLines;
+	std::list<Line<float>> m_lines;
+	std::list<Line<float>> m_createdRoundedLines;
+	std::list<Line<float>> m_roundedLines;
 
 	const float START_X = -0.75f;
 	const float END_X = 0.75f;
@@ -24,6 +28,8 @@ protected:
 
 	const unsigned int PARTS_COUNT = 5u;
 	const float MULTIPLE_COEFFICIENT = 0.7f;
+
+	const float PART_SIZE = LENGTH / PARTS_COUNT;
 
 	Line<float> m_bottomLine= Line<float>({Vertex2D<float>(START_X, START_Y), Vertex2D<float>(END_X, START_Y)});
 
