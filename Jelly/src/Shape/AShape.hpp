@@ -27,6 +27,8 @@ protected:
 	virtual void Init() = 0;
 	virtual void Draw() = 0;
 
+	AShape() = default;
+
 	virtual ~AShape()
 	{
 		if(this->m_VAO)
@@ -72,8 +74,24 @@ public:
 		this->m_IBO = IBO;
 	}
 
+
 	void SetShaderUniformsProgram(const std::function<void(void)>& shaderUniformsProgram)
 	{
 		m_shaderUniformsProgram = shaderUniformsProgram;
+	}
+	const std::function<void(void)>&  GetShaderUniformsProgram() const
+	{
+		return m_shaderUniformsProgram;
+	}
+
+
+	AShape(const AShape<TVertex>& other)
+	: m_shaderUniformsProgram(other.m_shaderUniformsProgram),
+	m_vertexes(other.m_vertexes),
+	m_indexes(other.m_indexes),
+	m_VAO(0),
+	m_VBO(0),
+	m_IBO(0)
+	{
 	}
 };

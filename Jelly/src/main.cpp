@@ -56,6 +56,7 @@ float windowHeight	=480;
 int main(int argc, char** argv)
 {
 	setlocale(LC_ALL, "Russian");
+	srand(time(NULL));
 
 	std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
 
@@ -131,11 +132,11 @@ int main(int argc, char** argv)
 
 	Jelly jelly(shader_program);
 	jelly.Init();
-	mouseMovingProcs.push_back([&jelly](GLFWwindow* window, double xpos, double ypos)->void
-		{
-			jelly.Tugging(xpos / windowWidth, ypos/ windowHeight);
-		}
-	);
+	//mouseMovingProcs.push_back([&jelly](GLFWwindow* window, double xpos, double ypos)->void
+	//	{
+	//		jelly.Tugging(xpos / windowWidth, ypos/ windowHeight);
+	//	}
+	//);
 
 
 

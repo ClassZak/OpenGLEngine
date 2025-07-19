@@ -13,7 +13,6 @@ protected:
 	GLenum m_drawMode = GL_LINE_STRIP;
 	T m_lineWidth;
 	bool m_isSmooth;
-
 public:
 	Line
 	(
@@ -56,11 +55,37 @@ public:
 	}
 
 
+
+
+	Line(const Line<T>& other) :
+		AShape<Vertex2D<T>>(other),
+		m_drawMode(other.m_drawMode),
+		m_lineWidth(other.m_lineWidth),
+		m_isSmooth(other.m_isSmooth)
+	{
+	}
+	Line& operator=(const Line& other)
+	{
+		if (this != &other)
+		{
+			AShape<Vertex2D<T>>::operator=(other);
+			m_drawMode = other.m_drawMode;
+			m_lineWidth = other.m_lineWidth;
+			m_isSmooth = other.m_isSmooth;
+		}
+		return *this;
+	}
+
 	~Line()=default;
 
 	void Init() override;
 	void Draw() override;
 };
+
+
+
+
+
 
 template<typename T>
 void Line<T>::Init()
@@ -73,7 +98,8 @@ void Line<T>::Init()
 		GLLogCall(glGenBuffers(1, &this->m_VBO));
 	GLLogCall(glBindBuffer(GL_ARRAY_BUFFER, this->m_VBO));
 
-	glBufferData(
+	glBufferData
+	(
 		GL_ARRAY_BUFFER,
 		this->m_vertexes.size() * sizeof(Vertex2D<T>),
 		this->m_vertexes.data(),
@@ -109,6 +135,13 @@ void Line<T>::Draw()
 
 	GLLogCall(glBindVertexArray(this->m_VAO));
 	GLLogCall(glBindBuffer(GL_ARRAY_BUFFER, this->m_VBO));
+	glBufferData
+	(
+		GL_ARRAY_BUFFER,
+		this->m_vertexes.size() * sizeof(Vertex2D<T>),
+		this->m_vertexes.data(),
+		GL_STATIC_DRAW
+	);
 
 	if (this->m_shaderUniformsProgram)
 		this->m_shaderUniformsProgram();
