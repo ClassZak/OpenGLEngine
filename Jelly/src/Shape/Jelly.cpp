@@ -107,8 +107,6 @@ void Jelly::Init()
 			upper_vertex_x_delta/2,
 			Vertex2D<float>(upper_vertex_x + upper_vertex_x_delta/2.f ,END_Y), 0, M_PI
 		);
-		for (auto& el : vertexes)
-			std::cout<<el<<"\n";
 
 		round_vertexes_list.push_back(vertexes);
 	}
