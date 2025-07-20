@@ -3,6 +3,7 @@
 #include "IDrawable.hpp"
 #include "Line.hpp"
 #include "Circle.hpp"
+#include "Quadrangle.hpp"
 
 #include <vector>
 #include <list>
@@ -18,6 +19,8 @@ protected:
 	std::list<Line<float>> m_createdRoundedLines;
 	std::list<Line<float>> m_roundedLines;
 
+	std::list<Quadrangle<float>> m_createdQuadrangles;
+	std::list<Quadrangle<float>> m_quadrangles;
 
 
 	const float START_X = -0.75f;
@@ -43,6 +46,7 @@ protected:
 
 	inline void AnimateLines(long long millisecondsSinceEpoch, double animationSpeed = 1e-3);
 	inline void AnimateRoundedLines(long long millisecondsSinceEpoch, double animationSpeed = 1e-3);
+	inline void AnimateParts(long long millisecondsSinceEpoch, double animationSpeed = 1e-3);
 public:
 	Jelly()=default;
 	Jelly(GLuint shaderProgram) : Jelly()

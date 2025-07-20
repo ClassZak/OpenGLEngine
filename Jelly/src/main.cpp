@@ -160,7 +160,7 @@ int main(int argc, char** argv)
 
 
 
-		quadrangle.Draw();
+		//quadrangle.Draw();
 		jelly.Draw();
 
 		/* Swap front and back buffers */
