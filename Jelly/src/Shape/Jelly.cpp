@@ -51,23 +51,19 @@ inline void Jelly::AnimateRoundedLines(long long millisecondsSinceEpoch, double 
 	{
 		auto& lineVertexes = lineIt->GetVertexes();
 		auto& createdLineVertexes = createdIt->GetVertexes();
-
+		
+		
 		for (std::size_t i = 0; i != createdLineVertexes.size() and i != lineVertexes.size(); ++i)
 		{
-			/*float x = START_X + i * PART_SIZE;
-			float next_x = START_X + (i + 1) * PART_SIZE;
-			float upper_vertex_x = x * MULTIPLE_COEFFICIENT;
-			float next_upper_vertex_x = next_x * MULTIPLE_COEFFICIENT;
-
-			float upper_vertex_x_delta = abs(next_upper_vertex_x - upper_vertex_x);*/
-
-
-
 			lineVertexes[i].x =
 			createdLineVertexes[i].x * 
 			((1 - SHORT_COS_COEFFICIENT) * 0.2 * (1 - SHORT_BORDER_SIN_COEFFICIENT) + 0.8);
-		}
+			
 
+			float perpendicular = END_Y - createdLineVertexes[i].y;
+			lineVertexes[i].y = END_Y - perpendicular * (SHORT_BORDER_SIN_COEFFICIENT * 0.4 + 0.6);
+		}
+		
 		++createdIt;
 		++lineIt;
 	}
