@@ -158,34 +158,6 @@ public:
 
 
 template<class T>
-inline void Circle<T>::Draw()
-{
-	GLLogCall(glBindVertexArray(this->m_VAO));
-	GLLogCall(glBindBuffer(GL_ARRAY_BUFFER, this->m_VBO));
-
-	GLLogCall(glBufferData
-	(
-		GL_ARRAY_BUFFER,
-		this->m_vertexes.size() * sizeof(std::vector<Vertex2D<float>>::value_type),
-		this->m_vertexes.data(),
-		GL_STATIC_DRAW
-	));
-	GLLogCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->m_IBO));
-
-	if (this->m_shaderUniformsProgram)
-		this->m_shaderUniformsProgram();
-
-	GLLogCall(glBufferData
-	(
-		GL_ELEMENT_ARRAY_BUFFER,
-		this->m_indexes.size() * sizeof(std::vector<unsigned int>::value_type),
-		this->m_indexes.data(),
-		GL_STATIC_DRAW
-	));
-
-	GLLogCall(glDrawElements(GL_TRIANGLES, this->m_indexes.size(), GL_UNSIGNED_INT, nullptr));
-}
-template<class T>
 inline void Circle<T>::Init()
 {
 	if (!this->m_VAO)
@@ -219,4 +191,32 @@ inline void Circle<T>::Init()
 		this->m_indexes.data(),
 		GL_STATIC_DRAW
 	);
+}
+template<class T>
+inline void Circle<T>::Draw()
+{
+	GLLogCall(glBindVertexArray(this->m_VAO));
+	GLLogCall(glBindBuffer(GL_ARRAY_BUFFER, this->m_VBO));
+
+	GLLogCall(glBufferData
+	(
+		GL_ARRAY_BUFFER,
+		this->m_vertexes.size() * sizeof(std::vector<Vertex2D<float>>::value_type),
+		this->m_vertexes.data(),
+		GL_STATIC_DRAW
+	));
+	GLLogCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->m_IBO));
+
+	if (this->m_shaderUniformsProgram)
+		this->m_shaderUniformsProgram();
+
+	GLLogCall(glBufferData
+	(
+		GL_ELEMENT_ARRAY_BUFFER,
+		this->m_indexes.size() * sizeof(std::vector<unsigned int>::value_type),
+		this->m_indexes.data(),
+		GL_STATIC_DRAW
+	));
+
+	GLLogCall(glDrawElements(GL_TRIANGLES, this->m_indexes.size(), GL_UNSIGNED_INT, nullptr));
 }

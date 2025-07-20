@@ -39,6 +39,7 @@
 #include "Shape/Circle.hpp"
 #include "Shape/Line.hpp"
 #include "Shape/Jelly.hpp"
+#include "Shape/Quadrangle.hpp"
 
 
 
@@ -128,6 +129,10 @@ int main(int argc, char** argv)
 	Jelly jelly(shader_program);
 	jelly.Init();
 
+	Quadrangle quadrangle({Vertex2D( -.7f,-.7f), Vertex2D(.8f,-.8f), Vertex2D(.8f,.8f), Vertex2D(-.8f,.8f) });
+	quadrangle.SetShaderUniformsProgram([location]()->void{glUniform4f(location, 1.f, .0f, .0f, .0f);});
+	quadrangle.Init();
+
 
 
 
@@ -155,7 +160,7 @@ int main(int argc, char** argv)
 
 
 
-
+		quadrangle.Draw();
 		jelly.Draw();
 
 		/* Swap front and back buffers */
