@@ -32,7 +32,7 @@ protected:
 	const float LENGTH = abs(START_X - END_X);
 
 	const unsigned int PARTS_COUNT = 5u;
-	const float MULTIPLE_COEFFICIENT = 0.7f;
+	const float MULTIPLE_COEFFICIENT = 0.9f;
 
 	const float PART_SIZE = LENGTH / PARTS_COUNT;
 
