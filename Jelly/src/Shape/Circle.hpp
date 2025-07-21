@@ -9,7 +9,7 @@
 #include <cmath>
 
 
-template<class T>
+template<typename T>
 class Circle : public AShape<Vertex2D<T>>
 {
 public:
@@ -77,7 +77,8 @@ public:
 
 		for (std::size_t i = 1; i <= count; ++i)
 		{
-			T x = static_cast<T>(cos(sector * (i - 1)) * radius), y = static_cast<T>(sin(sector * (i - 1)) * radius);
+			T	x = static_cast<T>(cos(sector * (i - 1)) * radius),
+				y = static_cast<T>(sin(sector * (i - 1)) * radius);
 			vertexes.emplace_back(x + center.x, y + center.y);
 		}
 

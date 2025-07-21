@@ -148,6 +148,7 @@ add_executable(${PROJECT_NAME}
 	${CMAKE_SOURCE_DIR}/src/Shape/Line.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Jelly.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Quadrangle.hpp
+	${CMAKE_SOURCE_DIR}/src/Shape/CircleSector.hpp
 )
 
 # Для Windows добавляем ресурсный файл
