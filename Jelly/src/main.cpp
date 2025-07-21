@@ -75,6 +75,7 @@ int main(int argc, char** argv)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+
 	window = glfwCreateWindow(windowWidth, windowHeight, "Jelly", NULL, NULL);
 	if (!window)
 	{
@@ -115,6 +116,7 @@ int main(int argc, char** argv)
 
 	if (glewInit() != GLEW_OK)
 		return -1;
+	std::cout<<glGetString(GL_VERSION)<<std::endl;
 
 	GLuint shader_program = Shader::CreateShader(shader.m_vertexShader, shader.m_fragmentShader);
 	glUseProgram(shader_program);
