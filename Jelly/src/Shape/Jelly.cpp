@@ -106,7 +106,39 @@ inline void Jelly::AnimateParts(long long millisecondsSinceEpoch, double animati
 
 inline void Jelly::AnimateRoundedParts(long long millisecondsSinceEpoch, double animationSpeed)
 {
-	
+	const auto ANIMATION_COEFFICIENT = millisecondsSinceEpoch * animationSpeed;
+
+	auto animatedIt = m_circleSectors.begin();
+	auto createdIt = m_createdCircleSectors.begin();
+
+	// Ey ý [0;1]
+	const double SHORT_COS_COEFFICIENT = (cos(ANIMATION_COEFFICIENT) + 1) / 2.;
+	const double SHORT_SIN_COEFFICIENT = (sin(ANIMATION_COEFFICIENT) + 1) / 2.;
+	const double SHORT_BORDER_SIN_COEFFICIENT = (sin(ANIMATION_COEFFICIENT / 10) + 1) / 2.;
+	// Ey ý [-1;1]
+	const double COS_COEFFICIENT = cos(ANIMATION_COEFFICIENT);
+	const double SIN_COEFFICIENT = sin(ANIMATION_COEFFICIENT);
+
+	while (createdIt != m_createdCircleSectors.end() && animatedIt != m_circleSectors.end())
+	{
+		auto& vertexes = animatedIt->GetVertexes();
+		auto& created_vertexes = createdIt->GetVertexes();
+
+
+		for (std::size_t i = 0; i != created_vertexes.size() and i != vertexes.size(); ++i)
+		{
+			vertexes[i].x =
+				created_vertexes[i].x *
+				((1 - SHORT_COS_COEFFICIENT) * 0.2 * (1 - SHORT_BORDER_SIN_COEFFICIENT) + 0.8);
+
+
+			float perpendicular = END_Y - created_vertexes[i].y;
+			vertexes[i].y = END_Y - perpendicular * (SHORT_BORDER_SIN_COEFFICIENT * 0.4 + 0.6);
+		}
+
+		++createdIt;
+		++animatedIt;
+	}
 }
 
 
