@@ -104,6 +104,11 @@ inline void Jelly::AnimateParts(long long millisecondsSinceEpoch, double animati
 	}
 }
 
+inline void Jelly::AnimateRoundedParts(long long millisecondsSinceEpoch, double animationSpeed)
+{
+	
+}
+
 
 
 
@@ -133,12 +138,24 @@ void Jelly::Init()
 		auto vertexes = 
 		Circle<float>::GenerateRoundVertexes
 		(
-			20u,
+			ROUNDED_LINES_VERTEX_COUNT,
 			upper_vertex_x_delta/2,
 			Vertex2D<float>(upper_vertex_x + upper_vertex_x_delta/2.f ,END_Y), 0, M_PI
 		);
 
 		round_vertexes_list.push_back(vertexes);
+
+		m_createdCircleSectors.push_back
+		(
+			CircleSector<float>
+			(
+				ROUNDED_LINES_VERTEX_COUNT,
+				upper_vertex_x_delta / 2,
+				Vertex2D<float>(upper_vertex_x + upper_vertex_x_delta / 2.f,END_Y),
+				0,
+				M_PI
+			)
+		);
 	}
 	for (auto& el : round_vertexes_list)
 	{
@@ -148,9 +165,14 @@ void Jelly::Init()
 
 	for (auto& el : m_createdRoundedLines)
 	{
-		el.Init();
 		m_roundedLines.push_back(el);
 		m_roundedLines.back().Init();
+	}
+
+	for (auto& el : m_createdCircleSectors)
+	{
+		m_circleSectors.push_back(el);
+		m_circleSectors.back().Init();
 	}
 
 
@@ -158,7 +180,6 @@ void Jelly::Init()
 
 	for (auto& el : m_createdLines)
 	{
-		el.Init();
 		m_lines.push_back(el);
 		m_lines.back().Init();
 	}
@@ -193,15 +214,15 @@ void Jelly::Init()
 		int location = glGetUniformLocation(m_shaderProgram, "u_Color");
 		GL_ASSERT(location != -1);
 		
-		
+		// Для очистки от предыдущего использования
 		m_bottomLine->SetShaderUniformsProgram([location]()
 			{glUniform4f(location, .0f, .0f, .0f, .0f); });
-		
-		for(auto& el : m_createdLines)
-			el.SetShaderUniformsProgram([location]()
-				{glUniform4f(location, .0f, .0f, .0f, .0f);});
 
 		for(auto& el : m_quadrangles)
+			el.SetShaderUniformsProgram([location]()
+				{glUniform4f(location, 1., .0f, .0f, .0f); });
+
+		for(auto& el : m_circleSectors)
 			el.SetShaderUniformsProgram([location]()
 				{glUniform4f(location, 1., .0f, .0f, .0f); });
 	}
@@ -210,6 +231,8 @@ void Jelly::Init()
 void Jelly::Draw()
 {
 	for(auto& el : m_quadrangles)
+		el.Draw();
+	for(auto& el : m_circleSectors)
 		el.Draw();
 
 
@@ -227,5 +250,6 @@ void Jelly::Animate(long long millisecondsSinceEpoch, double animationSpeed)
 	AnimateLines(millisecondsSinceEpoch, animationSpeed);
 	AnimateRoundedLines(millisecondsSinceEpoch, animationSpeed);
 	AnimateParts(millisecondsSinceEpoch, animationSpeed);
+	AnimateRoundedParts(millisecondsSinceEpoch, animationSpeed);
 }
 

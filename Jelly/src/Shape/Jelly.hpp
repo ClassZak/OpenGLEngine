@@ -4,6 +4,7 @@
 #include "Line.hpp"
 #include "Circle.hpp"
 #include "Quadrangle.hpp"
+#include "CircleSector.hpp"
 
 #include <vector>
 #include <list>
@@ -21,6 +22,8 @@ protected:
 
 	std::list<Quadrangle<float>> m_createdQuadrangles;
 	std::list<Quadrangle<float>> m_quadrangles;
+	std::list<CircleSector<float>> m_createdCircleSectors;
+	std::list<CircleSector<float>> m_circleSectors;
 
 
 	const float START_X = -0.75f;
@@ -47,6 +50,7 @@ protected:
 	inline void AnimateLines(long long millisecondsSinceEpoch, double animationSpeed = 1e-3);
 	inline void AnimateRoundedLines(long long millisecondsSinceEpoch, double animationSpeed = 1e-3);
 	inline void AnimateParts(long long millisecondsSinceEpoch, double animationSpeed = 1e-3);
+	inline void AnimateRoundedParts(long long millisecondsSinceEpoch, double animationSpeed = 1e-3);
 public:
 	Jelly()=default;
 	Jelly(GLuint shaderProgram) : Jelly()

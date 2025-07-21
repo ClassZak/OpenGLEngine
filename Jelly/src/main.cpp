@@ -162,7 +162,7 @@ int main(int argc, char** argv)
 
 
 		jelly.Draw();
-		circleSector.Draw();
+		//circleSector.Draw();
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
