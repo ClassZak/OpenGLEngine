@@ -35,6 +35,8 @@ protected:
 			glDeleteVertexArrays(1, &this->m_VAO);
 		if(this->m_VBO)
 			glDeleteBuffers(1, &this->m_VBO);
+		if(this->m_IBO)
+			glDeleteBuffers(1, &this->m_IBO);
 	}
 
 public:
