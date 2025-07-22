@@ -161,7 +161,7 @@ int main(int argc, char** argv)
 		glClear(GL_COLOR_BUFFER_BIT);
 		glClearColor(.7f,.7f,.7f,1.f);
 
-
+		glDisableVertexAttribArray(0);
 
 		jelly.Draw();
 		//circleSector.Draw();

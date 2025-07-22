@@ -139,9 +139,11 @@ add_executable(${PROJECT_NAME}
 
 	${CMAKE_SOURCE_DIR}/src/utils/GLMacro.h
 	${CMAKE_SOURCE_DIR}/src/utils/functions.hpp
+
 	${CMAKE_SOURCE_DIR}/src/Vertex/AVertex.hpp
 	${CMAKE_SOURCE_DIR}/src/Vertex/Vertex2D.hpp
 	${CMAKE_SOURCE_DIR}/src/Vertex/VertexUtils.hpp
+
 	${CMAKE_SOURCE_DIR}/src/Shader/Shader.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/AShape.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Circle.hpp
@@ -149,6 +151,10 @@ add_executable(${PROJECT_NAME}
 	${CMAKE_SOURCE_DIR}/src/Shape/Jelly.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Quadrangle.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/CircleSector.hpp
+
+	${CMAKE_SOURCE_DIR}/src/OpenGLClass/IndexBufferObject.hpp
+	${CMAKE_SOURCE_DIR}/src/OpenGLClass/VertexArrayObject.hpp
+	${CMAKE_SOURCE_DIR}/src/OpenGLClass/VertexBufferObject.hpp
 )
 
 # Для Windows добавляем ресурсный файл
