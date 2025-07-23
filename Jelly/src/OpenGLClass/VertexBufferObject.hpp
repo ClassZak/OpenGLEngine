@@ -14,6 +14,7 @@ private:
 	GLuint m_index=0;
 
 
+public:
 	template<class T>
 	VertexBufferObject(const std::vector<T>& dataVector)
 	: VertexBufferObject(dataVector.data(), dataVector.size() * sizeof(T))
@@ -27,7 +28,7 @@ private:
 	{
 		glDeleteBuffers(1, &m_index);
 	}
-public:
+
 	template<class T>
 	void Init(const std::vector<T>& dataVector)
 	{
@@ -55,6 +56,11 @@ public:
 	void UnBind() const
 	{
 		GLLogCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+	}
+
+	GLuint GetId() const
+	{
+		return m_index;
 	}
 };
 

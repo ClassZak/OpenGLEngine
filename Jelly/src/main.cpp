@@ -33,14 +33,19 @@
 
 
 #include "utils/GLMacro.h"
+
 #include "Vertex/Vertex2D.hpp"
 #include "Vertex/VertexUtils.hpp"
+
 #include "Shader/Shader.hpp"
 #include "Shape/Circle.hpp"
 #include "Shape/Line.hpp"
 #include "Shape/Jelly.hpp"
 #include "Shape/Quadrangle.hpp"
 #include "Shape/CircleSector.hpp"
+
+#include "OpenGLClass/VertexBufferObject.hpp"
+#include "OpenGLClass/IndexBufferObject.hpp"
 
 
 
@@ -126,15 +131,24 @@ int main(int argc, char** argv)
 	GL_ASSERT(location != -1);
 
 
+	unsigned int VAO{};
+	GLLogCall(glGenVertexArrays(1, &VAO));
+	GLLogCall(glBindVertexArray(VAO));
 
-
-
-	Jelly jelly(shader_program);
-	jelly.Init();
-
-	CircleSector<float> circleSector(50u,0.5f,Vertex2D(0.f,0.f),0, M_PI);
-	circleSector.SetShaderUniformsProgram([location]()->void{glUniform4f(location, 0.f, 1.0f, .0f, .0f);});
-	circleSector.Init();
+	std::vector<Vertex2D<float>> vertexes =
+	{
+		Vertex2D(-0.5f	,	0.5f),
+		Vertex2D(0.5f	,	0.5f),
+		Vertex2D(0.5f	,	-0.5f),
+		Vertex2D(-0.5f	,	-0.5f),
+	};
+	VertexBufferObject vertexBuffer(vertexes);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer
+	(0, VERTEX_ATTRIBUTE_SIZE, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_ATTRIBUTE_SIZE, 0);
+	IndexBufferObject indexBufferObject({ 0, 1, 2, 0, 2, 3 });
+	/*Jelly jelly(shader_program);
+	jelly.Init();*/
 
 
 
@@ -161,10 +175,15 @@ int main(int argc, char** argv)
 		glClear(GL_COLOR_BUFFER_BIT);
 		glClearColor(.7f,.7f,.7f,1.f);
 
-		glDisableVertexAttribArray(0);
+		
 
-		jelly.Draw();
-		//circleSector.Draw();
+		GLLogCall(glBindVertexArray(VAO));
+		vertexBuffer.Bind();
+		indexBufferObject.Bind();
+		glUniform4f(location, 1.f,0.f,0.f,1.f);
+		GLLogCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+		//GLLogCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+		/*jelly.Draw();*/
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
@@ -174,7 +193,7 @@ int main(int argc, char** argv)
 
 
 		/*Вызов анимации*/
-		jelly.Animate(milliseconds_since_epoch.count(), ANIMATION_SPEED);
+		/*jelly.Animate(milliseconds_since_epoch.count(), ANIMATION_SPEED);*/
 
 
 		now = std::chrono::system_clock::now();
