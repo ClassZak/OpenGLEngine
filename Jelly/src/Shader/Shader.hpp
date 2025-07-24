@@ -8,28 +8,76 @@
 #include <sstream>
 #include <cctype>
 #include <utility>
-#include <string>
+#include <array>
+#include <vector>
 
 #include "../utils/functions.hpp"
+#include "../utils/GLMacro.h"
 
 class Shader
 {
 private:
-	std::map<std::string, std::string> m_uniforms;
 	std::string m_fragmentShader;
 	std::string m_vertexShader;
 	
 	bool m_hasFragment = false;
 	bool m_hasVertex = false;
+	GLuint m_program{0};
 	
 	Shader()
 	{ }
 public:
-	Shader(const std::string filepath) : Shader()
+	Shader(const std::string& filepath) : Shader()
 	{
 		std::string source = LoadDataFromFile(filepath);
-		GetVertexAndFragmentShaders(*this, source);
+		Shader::GetVertexAndFragmentShaders(*this, source);
+
+		GLuint program;
+		GLuint fragmentShader, vertexShader;
+		if(m_hasFragment)
+			fragmentShader = Shader::CompileShader(GL_FRAGMENT_SHADER, m_fragmentShader);
+		if(m_hasVertex)
+			vertexShader = Shader::CompileShader(GL_VERTEX_SHADER, m_vertexShader);
+
+		GL_ASSERT(fragmentShader!= 0 and vertexShader!= 0);
+
+		GL_ASSERT(m_program = Shader::CreateShader(m_vertexShader, m_fragmentShader));
 	}
+	~Shader()
+	{
+		glDeleteProgram(m_program);
+	}
+
+	void Bind()
+	{
+		GL_ASSERT(m_program);
+		glUseProgram(m_program);
+	}
+	void UnBind()
+	{
+		glUseProgram(0);
+	}
+
+
+
+	void SetUniform_4f(const std::string& uniform, const std::array<float, 4u>& values)
+	{
+		SetUniform_4f(uniform, values[0], values[1], values[2], values[3]);
+	}
+	void SetUniform_4f(const std::string& uniform, const std::initializer_list<float>& values)
+	{
+		if(values.size()!=4u)
+			throw std::invalid_argument("Wrong size of uniform arguments");
+
+		float** valuesPointer = new float*[sizeof(float*)*4];
+		char index=0;
+		for(auto& el : values)
+			valuesPointer[index++] = (float*) &el;
+		SetUniform_4f(uniform, *valuesPointer[0], *valuesPointer[1], *valuesPointer[2], *valuesPointer[3]);
+
+		delete [] valuesPointer;
+	}
+	void SetUniform_4f(const std::string& uniform, float v0, float v1, float v2, float v3);
 private:
 
 	// TODO переделать
@@ -66,6 +114,7 @@ private:
 			shader.m_fragmentShader = source.substr(start, length);
 		}
 	}
+
 
 
 

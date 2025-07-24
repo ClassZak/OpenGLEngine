@@ -1,5 +1,13 @@
 ﻿#include "Shader.hpp"
 
+void Shader::SetUniform_4f(const std::string& uniform, float v0, float v1, float v2, float v3)
+{
+	int location = glGetUniformLocation(m_program, uniform.c_str());
+	GL_ASSERT(location != -1);
+
+	glUniform4f(location, v0, v1, v2, v3);
+}
+
 GLuint Shader::CompileShader(GLuint type, const std::string& source)
 {
 	GLuint id = glCreateShader(type);

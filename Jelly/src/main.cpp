@@ -68,9 +68,6 @@ int main(int argc, char** argv)
 
 	std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
 
-	std::string shader_data = LoadDataFromFile("../res/shaders/shader.shader");
-	Shader shader = Shader::GetVertexAndFragmentShaders(shader_data);
-
 	GLFWwindow* window;
 
 	/* Initialize the library */
@@ -124,12 +121,6 @@ int main(int argc, char** argv)
 		return -1;
 	std::cout<<glGetString(GL_VERSION)<<std::endl;
 
-	GLuint shader_program = Shader::CreateShader(shader.m_vertexShader, shader.m_fragmentShader);
-	glUseProgram(shader_program);
-
-
-	int location = glGetUniformLocation(shader_program, "u_Color");
-	GL_ASSERT(location != -1);
 
 
 	
@@ -146,10 +137,14 @@ int main(int argc, char** argv)
 	layout.Push<float>(2);
 	vertexArrayObject.AddBuffer(vertexBuffer, layout);
 	IndexBufferObject indexBufferObject({ 0, 1, 2, 0, 2, 3 });
-	/*Jelly jelly(shader_program);
-	jelly.Init();*/
+	Shader shader = Shader("../res/shaders/shader.shader");
+	shader.Bind();
+	shader.SetUniform_4f("u_Color", {1.f, 0.f, 0.f, 1.f});
 
-
+	vertexArrayObject.UnBind();
+	vertexBuffer.UnBind();
+	indexBufferObject.UnBind();
+	shader.UnBind();
 
 
 	while (!glfwWindowShouldClose(window))
@@ -179,7 +174,8 @@ int main(int argc, char** argv)
 		vertexArrayObject.Bind();
 		vertexBuffer.Bind();
 		indexBufferObject.Bind();
-		glUniform4f(location, 1.f,0.f,0.f,1.f);
+		shader.Bind();
+		shader.SetUniform_4f("u_Color", { 1.f, 0.4f, 0.f, 1.f });
 		GLLogCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 		//GLLogCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 		/*jelly.Draw();*/
@@ -197,8 +193,6 @@ int main(int argc, char** argv)
 
 		now = std::chrono::system_clock::now();
 	}
-
-	glDeleteProgram(shader_program);
 
 	glfwTerminate();
 
