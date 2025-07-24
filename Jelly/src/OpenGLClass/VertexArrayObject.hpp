@@ -26,7 +26,7 @@ public:
 		this->Bind();
 		vertexBufferObject.Bind();
 		const auto& elements = vertexBufferLayout.GetElements();
-		unsigned int offset{0};
+		unsigned long long offset{0};
 		for (std::size_t i = 0; i != elements.size(); ++i)
 		{
 			const auto& element = elements[i];

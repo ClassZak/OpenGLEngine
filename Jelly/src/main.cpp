@@ -175,7 +175,7 @@ int main(int argc, char** argv)
 		vertexBuffer.Bind();
 		indexBufferObject.Bind();
 		shader.Bind();
-		shader.SetUniform_4f("u_Color", { 1.f, 0.4f, 0.f, 1.f });
+		shader.SetUniform_4f("u_Color", {(milliseconds_since_epoch.count() % 1000) / 1000.f, 0.4f, 0.f, 1.f });
 		GLLogCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 		//GLLogCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 		/*jelly.Draw();*/

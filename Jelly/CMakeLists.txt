@@ -252,7 +252,10 @@ if(WIN32)
 	endif()
 endif()
 
-
+# Debug режим для компиляции
+target_compile_definitions(Jelly PRIVATE
+	$<$<CONFIG:Debug>:DEBUG_MODE>
+)
 
 
 

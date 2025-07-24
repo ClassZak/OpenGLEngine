@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 #include <list>
-#include <map>
+#include <unordered_map>
 #include <sstream>
 #include <cctype>
 #include <utility>
@@ -17,12 +17,13 @@
 class Shader
 {
 private:
+	std::unordered_map<std::string, int> m_uniformLocationCache;
 	std::string m_fragmentShader;
 	std::string m_vertexShader;
 	
+	GLuint m_program{0};
 	bool m_hasFragment = false;
 	bool m_hasVertex = false;
-	GLuint m_program{0};
 	
 	Shader()
 	{ }
@@ -33,7 +34,7 @@ public:
 		Shader::GetVertexAndFragmentShaders(*this, source);
 
 		GLuint program;
-		GLuint fragmentShader, vertexShader;
+		GLuint fragmentShader=0, vertexShader=0;
 		if(m_hasFragment)
 			fragmentShader = Shader::CompileShader(GL_FRAGMENT_SHADER, m_fragmentShader);
 		if(m_hasVertex)
@@ -58,6 +59,8 @@ public:
 		glUseProgram(0);
 	}
 
+	GLint GetUniformLocation(const std::string& uniform);
+
 
 
 	void SetUniform_4f(const std::string& uniform, const std::array<float, 4u>& values)
@@ -69,13 +72,8 @@ public:
 		if(values.size()!=4u)
 			throw std::invalid_argument("Wrong size of uniform arguments");
 
-		float** valuesPointer = new float*[sizeof(float*)*4];
-		char index=0;
-		for(auto& el : values)
-			valuesPointer[index++] = (float*) &el;
-		SetUniform_4f(uniform, *valuesPointer[0], *valuesPointer[1], *valuesPointer[2], *valuesPointer[3]);
-
-		delete [] valuesPointer;
+		const float* valuesPointer = values.begin();
+		SetUniform_4f(uniform, valuesPointer[0], valuesPointer[1], valuesPointer[2], valuesPointer[3]);
 	}
 	void SetUniform_4f(const std::string& uniform, float v0, float v1, float v2, float v3);
 private:

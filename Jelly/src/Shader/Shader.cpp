@@ -1,10 +1,25 @@
 ﻿#include "Shader.hpp"
 
+GLint Shader::GetUniformLocation(const std::string& uniform)
+{
+	bool notCached = m_uniformLocationCache.find(uniform) == m_uniformLocationCache.end();
+	GLint location = notCached ? 
+	glGetUniformLocation(m_program, uniform.c_str()) : m_uniformLocationCache[uniform];
+
+	if(location == -1)
+		std::cout<<"Failed to locate uniform \""<<uniform<<"\""<<std::endl;
+	else if(notCached)
+		m_uniformLocationCache[uniform] = location;
+
+	return location;
+}
+
 void Shader::SetUniform_4f(const std::string& uniform, float v0, float v1, float v2, float v3)
 {
-	int location = glGetUniformLocation(m_program, uniform.c_str());
-	GL_ASSERT(location != -1);
-
+	int location = GetUniformLocation(uniform);
+#ifdef DEBUG_MODE
+	GL_ASSERT(location + 1);
+#endif
 	glUniform4f(location, v0, v1, v2, v3);
 }
 
