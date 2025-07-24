@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 #include <string>
 #include <iostream>
+#include <map>
 
 #include "../utils/functions.hpp"
 
@@ -54,6 +55,15 @@ struct Shader
 		}
 
 		return shader;
+	}
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="source"></param>
+	/// <returns>Словарь со значениями {<uniform_type>:<uniform_name>}</returns>
+	static inline std::map<std::string, std::string> GetUniforms(const std::string& source)
+	{
+		return std::map<std::string, std::string>();
 	}
 
 

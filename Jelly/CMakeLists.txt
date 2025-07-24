@@ -155,6 +155,7 @@ add_executable(${PROJECT_NAME}
 	${CMAKE_SOURCE_DIR}/src/OpenGLClass/IndexBufferObject.hpp
 	${CMAKE_SOURCE_DIR}/src/OpenGLClass/VertexArrayObject.hpp
 	${CMAKE_SOURCE_DIR}/src/OpenGLClass/VertexBufferObject.hpp
+	${CMAKE_SOURCE_DIR}/src/OpenGLClass/VertexBufferLayout.hpp
 )
 
 # Для Windows добавляем ресурсный файл

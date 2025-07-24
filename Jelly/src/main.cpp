@@ -46,6 +46,7 @@
 
 #include "OpenGLClass/VertexBufferObject.hpp"
 #include "OpenGLClass/IndexBufferObject.hpp"
+#include "OpenGLClass/VertexArrayObject.hpp"
 
 
 
@@ -131,10 +132,7 @@ int main(int argc, char** argv)
 	GL_ASSERT(location != -1);
 
 
-	unsigned int VAO{};
-	GLLogCall(glGenVertexArrays(1, &VAO));
-	GLLogCall(glBindVertexArray(VAO));
-
+	
 	std::vector<Vertex2D<float>> vertexes =
 	{
 		Vertex2D(-0.5f	,	0.5f),
@@ -142,10 +140,11 @@ int main(int argc, char** argv)
 		Vertex2D(0.5f	,	-0.5f),
 		Vertex2D(-0.5f	,	-0.5f),
 	};
+	VertexArrayObject vertexArrayObject;
 	VertexBufferObject vertexBuffer(vertexes);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer
-	(0, VERTEX_ATTRIBUTE_SIZE, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_ATTRIBUTE_SIZE, 0);
+	VertexBufferLayout layout;
+	layout.Push<float>(2);
+	vertexArrayObject.AddBuffer(vertexBuffer, layout);
 	IndexBufferObject indexBufferObject({ 0, 1, 2, 0, 2, 3 });
 	/*Jelly jelly(shader_program);
 	jelly.Init();*/
@@ -177,7 +176,7 @@ int main(int argc, char** argv)
 
 		
 
-		GLLogCall(glBindVertexArray(VAO));
+		vertexArrayObject.Bind();
 		vertexBuffer.Bind();
 		indexBufferObject.Bind();
 		glUniform4f(location, 1.f,0.f,0.f,1.f);
