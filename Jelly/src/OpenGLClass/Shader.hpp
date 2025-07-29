@@ -14,6 +14,11 @@
 #include "../utils/functions.hpp"
 #include "../utils/GLMacro.h"
 
+struct Uniform_4f
+{
+	float v0, v1, v2, v3;
+};
+
 class Shader
 {
 private:

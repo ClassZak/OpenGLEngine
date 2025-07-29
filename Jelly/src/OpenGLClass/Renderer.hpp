@@ -21,14 +21,39 @@
 class Renderer
 {
 	Renderer() = default;
-
-
-	std::set<Shader> m_shaders;
+	
+	
+	std::list<Shader> m_shaders;
 public:
 	Renderer(const Renderer&) = delete;
 	Renderer& operator=(const Renderer&) = delete;
-
-	Renderer& GetInstance();
+	
+	static Renderer& GetInstance();
+	
+	void AddShader(const Shader& shader);
+	void AddShader(const std::string& filepath);
+	std::list<Shader>& GetShaders()
+	{
+		return m_shaders;
+	}
+	
+	void Draw(const VertexBufferObject& vertexBufferObject);
+	void Draw(const VertexBufferObject& vertexBufferObject, const IndexBufferObject& indexBufferObject);
+	void Draw
+	(
+		const VertexArrayObject& vertexArrayObject,
+		const VertexBufferObject& vertexBufferObject,
+		const IndexBufferObject& indexBufferObject
+	);
+	void Draw
+	(
+		const VertexArrayObject& vertexArrayObject,
+		const VertexBufferObject& vertexBufferObject,
+		const IndexBufferObject& indexBufferObject,
+		Shader& shader,
+		const std::string& uniformName,
+		const Uniform_4f& uniform_4f
+	);
 };
 
 

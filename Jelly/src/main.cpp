@@ -47,6 +47,7 @@
 #include "OpenGLClass/VertexBufferObject.hpp"
 #include "OpenGLClass/IndexBufferObject.hpp"
 #include "OpenGLClass/VertexArrayObject.hpp"
+#include "OpenGLClass/Renderer.hpp"
 
 
 
@@ -169,15 +170,16 @@ int main(int argc, char** argv)
 		glClear(GL_COLOR_BUFFER_BIT);
 		glClearColor(.7f,.7f,.7f,1.f);
 
-		
-
-		vertexArrayObject.Bind();
-		vertexBuffer.Bind();
-		indexBufferObject.Bind();
-		shader.Bind();
-		shader.SetUniform_4f("u_Color", {(milliseconds_since_epoch.count() % 1000) / 1000.f, 0.4f, 0.f, 1.f });
-		GLLogCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
-		//GLLogCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+		Renderer::GetInstance().
+		Draw
+		(
+			vertexArrayObject,
+			vertexBuffer,
+			indexBufferObject,
+			shader,
+			"u_Color",
+			Uniform_4f{(milliseconds_since_epoch.count() % 1000) / 1000.f, 0.4f, 0.f, 1.f}
+		);
 		/*jelly.Draw();*/
 
 		/* Swap front and back buffers */

@@ -11,7 +11,6 @@
 class IndexBufferObject : public AOpenGLClass
 {
 private:
-	// Renderer id
 	GLsizeiptr m_count = 0;
 
 public:
@@ -38,6 +37,7 @@ public:
 
 	void Init(const GLuint* data, GLsizeiptr count)
 	{
+		m_count = count;
 		GLLogCall(glGenBuffers(1, &this->m_index));
 		GLLogCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->m_index));
 		glBufferData
@@ -59,6 +59,7 @@ public:
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
+
 	GLsizeiptr GetCount() const
 	{
 		return m_count;
