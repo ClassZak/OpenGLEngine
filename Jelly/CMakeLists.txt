@@ -127,34 +127,47 @@ endif()
 
 set(SOURCES
 	${CMAKE_SOURCE_DIR}/src/main.cpp
-	${CMAKE_SOURCE_DIR}/src/utils/functions.cpp
-	${CMAKE_SOURCE_DIR}/src/Shader/Shader.cpp
-	${CMAKE_SOURCE_DIR}/src/Shape/Jelly.cpp
 )
 
 # Добавляем исполняемый файл
 add_executable(${PROJECT_NAME}
 	${SOURCES}
-
-	${CMAKE_SOURCE_DIR}/src/utils/GLMacro.h
+	
+	${CMAKE_SOURCE_DIR}/src/OpenGLClass/IndexBufferObject.hpp
+	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Renderer.hpp
+	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Renderer.cpp
+	${CMAKE_SOURCE_DIR}/src/OpenGLClass/VertexArrayObject.hpp
+	${CMAKE_SOURCE_DIR}/src/OpenGLClass/VertexBufferObject.hpp
+	${CMAKE_SOURCE_DIR}/src/OpenGLClass/VertexBufferLayout.hpp
+	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Shader.hpp
+	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Shader.cpp
+	
+	
+	${CMAKE_SOURCE_DIR}/src/Shape/Interfaces/IDrawable.hpp
+	${CMAKE_SOURCE_DIR}/src/Shape/Interfaces/IHasIndexBufferObject.hpp
+	${CMAKE_SOURCE_DIR}/src/Shape/Interfaces/IHasVertexBufferObject.hpp
+	${CMAKE_SOURCE_DIR}/src/Shape/Interfaces/IRenderable.hpp
+	
+	${CMAKE_SOURCE_DIR}/src/Shape/AShape.hpp
+	${CMAKE_SOURCE_DIR}/src/Shape/Circle.hpp
+	${CMAKE_SOURCE_DIR}/src/Shape/CircleSector.hpp
+	${CMAKE_SOURCE_DIR}/src/Shape/Jelly.hpp
+	${CMAKE_SOURCE_DIR}/src/Shape/Jelly.cpp
+	${CMAKE_SOURCE_DIR}/src/Shape/Line.hpp
+	${CMAKE_SOURCE_DIR}/src/Shape/Quadrangle.hpp
+	
+	
 	${CMAKE_SOURCE_DIR}/src/utils/functions.hpp
-
+	${CMAKE_SOURCE_DIR}/src/utils/functions.cpp
+	${CMAKE_SOURCE_DIR}/src/utils/GLMacro.h
+	
 	${CMAKE_SOURCE_DIR}/src/Vertex/AVertex.hpp
 	${CMAKE_SOURCE_DIR}/src/Vertex/Vertex2D.hpp
 	${CMAKE_SOURCE_DIR}/src/Vertex/VertexUtils.hpp
 
-	${CMAKE_SOURCE_DIR}/src/Shader/Shader.hpp
-	${CMAKE_SOURCE_DIR}/src/Shape/AShape.hpp
-	${CMAKE_SOURCE_DIR}/src/Shape/Circle.hpp
-	${CMAKE_SOURCE_DIR}/src/Shape/Line.hpp
-	${CMAKE_SOURCE_DIR}/src/Shape/Jelly.hpp
-	${CMAKE_SOURCE_DIR}/src/Shape/Quadrangle.hpp
-	${CMAKE_SOURCE_DIR}/src/Shape/CircleSector.hpp
 
-	${CMAKE_SOURCE_DIR}/src/OpenGLClass/IndexBufferObject.hpp
-	${CMAKE_SOURCE_DIR}/src/OpenGLClass/VertexArrayObject.hpp
-	${CMAKE_SOURCE_DIR}/src/OpenGLClass/VertexBufferObject.hpp
-	${CMAKE_SOURCE_DIR}/src/OpenGLClass/VertexBufferLayout.hpp
+
+	
 )
 
 # Для Windows добавляем ресурсный файл

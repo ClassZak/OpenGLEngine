@@ -37,7 +37,7 @@
 #include "Vertex/Vertex2D.hpp"
 #include "Vertex/VertexUtils.hpp"
 
-#include "Shader/Shader.hpp"
+#include "OpenGLClass/Shader.hpp"
 #include "Shape/Circle.hpp"
 #include "Shape/Line.hpp"
 #include "Shape/Jelly.hpp"

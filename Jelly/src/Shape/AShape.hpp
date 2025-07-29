@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "../Vertex/AVertex.hpp"
 #include "../utils/GLMacro.h"
-#include "IDrawable.hpp"
+#include "Interfaces/IDrawable.hpp"
 
 #include <vector>
 #include <functional>

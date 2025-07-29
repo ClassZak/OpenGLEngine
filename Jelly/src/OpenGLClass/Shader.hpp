@@ -49,12 +49,12 @@ public:
 		glDeleteProgram(m_program);
 	}
 
-	void Bind()
+	void Bind() const
 	{
 		GL_ASSERT(m_program);
 		glUseProgram(m_program);
 	}
-	void UnBind()
+	void UnBind() const
 	{
 		glUseProgram(0);
 	}

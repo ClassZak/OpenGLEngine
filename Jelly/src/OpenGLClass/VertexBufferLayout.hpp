@@ -43,7 +43,9 @@ public:
 	template<typename T>
 	void Push(unsigned int count)
 	{
+#ifdef _WIN32
 		static_assert(false);
+#endif
 	}
 
 	template<>
