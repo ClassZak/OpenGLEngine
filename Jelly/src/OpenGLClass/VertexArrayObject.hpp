@@ -8,20 +8,16 @@
 #include "../utils/GLMacro.h"
 #include "VertexBufferObject.hpp"
 #include "VertexBufferLayout.hpp"
+#include "AOpenGLClass.hpp"
 
-class VertexArrayObject
+class VertexArrayObject : public AOpenGLClass
 {
-private:
-	// Renderer id
-	GLuint m_index = 0;
-
-
 public:
 	void AddBuffer
 	(
 		const VertexBufferObject& vertexBufferObject,
 		const VertexBufferLayout& vertexBufferLayout
-	) const
+	)
 	{
 		this->Bind();
 		vertexBufferObject.Bind();
@@ -56,18 +52,13 @@ public:
 	}
 
 
-	void Bind() const
+	void Bind() const override
 	{
 		GLLogCall(glBindVertexArray(this->m_index));
 	}
-	void UnBind() const
+	void UnBind() const override
 	{
 		GLLogCall(glBindVertexArray(0));
-	}
-
-	GLuint GetId() const
-	{
-		return m_index;
 	}
 };
 

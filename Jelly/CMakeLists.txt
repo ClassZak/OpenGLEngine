@@ -133,6 +133,7 @@ set(SOURCES
 add_executable(${PROJECT_NAME}
 	${SOURCES}
 	
+	${CMAKE_SOURCE_DIR}/src/OpenGLClass/AOpenGLClass.hpp
 	${CMAKE_SOURCE_DIR}/src/OpenGLClass/IndexBufferObject.hpp
 	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Renderer.hpp
 	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Renderer.cpp

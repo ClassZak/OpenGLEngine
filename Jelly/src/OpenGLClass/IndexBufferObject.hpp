@@ -6,12 +6,12 @@
 #include <functional>
 
 #include "../utils/GLMacro.h"
+#include "AOpenGLClass.hpp"
 
-class IndexBufferObject
+class IndexBufferObject : public AOpenGLClass
 {
 private:
 	// Renderer id
-	GLuint m_index = 0;
 	GLsizeiptr m_count = 0;
 
 public:
@@ -28,7 +28,7 @@ public:
 
 	~IndexBufferObject()
 	{
-		glDeleteBuffers(1, &m_index);
+		glDeleteBuffers(1, &this->m_index);
 	}
 
 	void Init(const std::vector<GLuint>& dataVector)
@@ -50,19 +50,14 @@ public:
 	}
 
 
-	void Bind() const
+	void Bind() const override
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->m_index);
 	}
 
-	void UnBind() const
+	void UnBind() const override
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	}
-
-	GLuint GetId() const
-	{
-		return m_index;
 	}
 	GLsizeiptr GetCount() const
 	{

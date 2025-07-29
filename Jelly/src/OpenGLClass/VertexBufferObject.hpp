@@ -6,14 +6,10 @@
 #include <functional>
 
 #include "../utils/GLMacro.h"
+#include "AOpenGLClass.hpp"
 
-class VertexBufferObject
+class VertexBufferObject : public AOpenGLClass
 {
-private:
-	// Renderer id
-	GLuint m_index=0;
-
-
 public:
 	template<class T>
 	VertexBufferObject(const std::vector<T>& dataVector)
@@ -26,7 +22,7 @@ public:
 
 	~VertexBufferObject()
 	{
-		glDeleteBuffers(1, &m_index);
+		glDeleteBuffers(1, &this->m_index);
 	}
 
 	template<class T>
@@ -48,19 +44,14 @@ public:
 	}
 
 
-	void Bind() const
+	void Bind() const override
 	{
 		GLLogCall(glBindBuffer(GL_ARRAY_BUFFER, this->m_index));
 	}
 	
-	void UnBind() const
+	void UnBind() const override
 	{
 		GLLogCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
-	}
-
-	GLuint GetId() const
-	{
-		return m_index;
 	}
 };
 
