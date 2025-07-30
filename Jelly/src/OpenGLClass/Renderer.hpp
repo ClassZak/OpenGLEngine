@@ -17,6 +17,11 @@
 #include "VertexBufferLayout.hpp"
 #include "IndexBufferObject.hpp"
 #include "../OpenGLClass/Shader.hpp"
+#include "../Shape/Interfaces/IHasIndexBufferObject.hpp"
+#include "../Shape/Interfaces/IHasVertexBufferObject.hpp"
+#include "../Shape/Interfaces/IHasVertexArrayObject.hpp"
+#include "../Shape/Interfaces/IHasShader.hpp"
+#include "../Shape/Interfaces/IDrawable.hpp"
 
 class Renderer
 {
@@ -54,6 +59,8 @@ public:
 		const std::string& uniformName,
 		const Uniform_4f& uniform_4f
 	);
+	void Draw(IDrawableOpenGL* object);
+	void Draw(IDrawableOpenGL* object, const std::string& uniformName, const Uniform_4f& uniform_4f);
 };
 
 

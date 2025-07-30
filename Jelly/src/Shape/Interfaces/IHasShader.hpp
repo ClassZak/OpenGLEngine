@@ -1,8 +1,9 @@
 #pragma once
 #include <memory>
 #include "../../OpenGLClass/Shader.hpp"
+#include "IDrawable.hpp"
 
-class IHasShader
+class IHasShader : IDrawableOpenGL
 {
 protected:
 	std::shared_ptr<Shader> m_shader = nullptr;

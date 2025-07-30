@@ -147,7 +147,7 @@ add_executable(${PROJECT_NAME}
 	${CMAKE_SOURCE_DIR}/src/Shape/Interfaces/IDrawable.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Interfaces/IHasIndexBufferObject.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Interfaces/IHasVertexBufferObject.hpp
-	${CMAKE_SOURCE_DIR}/src/Shape/Interfaces/IRenderable.hpp
+	${CMAKE_SOURCE_DIR}/src/Shape/Interfaces/IHasVertexArrayObject.hpp
 	
 	${CMAKE_SOURCE_DIR}/src/Shape/AShape.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Circle.hpp
@@ -156,6 +156,7 @@ add_executable(${PROJECT_NAME}
 	${CMAKE_SOURCE_DIR}/src/Shape/Jelly.cpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Line.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Quadrangle.hpp
+	${CMAKE_SOURCE_DIR}/src/Shape/SimpleRect.hpp
 	
 	
 	${CMAKE_SOURCE_DIR}/src/utils/functions.hpp

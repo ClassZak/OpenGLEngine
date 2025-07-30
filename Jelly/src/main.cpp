@@ -43,6 +43,7 @@
 #include "Shape/Jelly.hpp"
 #include "Shape/Quadrangle.hpp"
 #include "Shape/CircleSector.hpp"
+#include "Shape/SimpleRect.hpp"
 
 #include "OpenGLClass/VertexBufferObject.hpp"
 #include "OpenGLClass/IndexBufferObject.hpp"

@@ -1,7 +1,8 @@
 #pragma once
 #include "../../OpenGLClass/VertexBufferObject.hpp"
+#include "IDrawable.hpp"
 
-class IHasVertexBufferObject
+class IHasVertexBufferObject : IDrawableOpenGL
 {
 protected:
 	VertexBufferObject m_vertexBufferObject;

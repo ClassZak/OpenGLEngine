@@ -1,13 +1,14 @@
 #pragma once
 #include "../../OpenGLClass/IndexBufferObject.hpp"
+#include "IDrawable.hpp"
 
-class IHasShader
+class IHasIndexBufferObject : IDrawableOpenGL
 {
 protected:
 	IndexBufferObject m_indexBufferObject;
 public:
-	IHasShader() = default;
-	virtual ~IHasShader() = default;
+	IHasIndexBufferObject() = default;
+	virtual ~IHasIndexBufferObject() = default;
 
 
 	IndexBufferObject& GetIndexBufferObject()
