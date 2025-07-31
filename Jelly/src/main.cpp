@@ -174,28 +174,18 @@ int main(int argc, char** argv)
 		glClearColor(.7f,.7f,.7f,1.f);
 
 		Renderer::GetInstance().
-		//Draw
-		//(
-		//	vertexArrayObject,
-		//	vertexBuffer,
-		//	indexBufferObject,
-		//	shader,
-		//	"u_Color",
-		//	Uniform_4f{(milliseconds_since_epoch.count() % 1000) / 1000.f, 0.4f, 0.f, 1.f}
-		//);
-		Draw((IHasVertexBufferObject*)&rect, "u_Color", { (milliseconds_since_epoch.count() % 1000) / 1000.f, 0.f, 0.f, 1.f});
-
-		/*jelly.Draw();*/
+		Draw
+		(
+			(IHasVertexBufferObject*)&rect,
+			"u_Color",
+			{ (milliseconds_since_epoch.count() % 1000) / 1000.f, 0.f, 0.f, 1.f}
+		);
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
 
 		/* Poll for and process events */
 		glfwPollEvents();
-
-
-		/*Вызов анимации*/
-		/*jelly.Animate(milliseconds_since_epoch.count(), ANIMATION_SPEED);*/
 
 
 		now = std::chrono::system_clock::now();
