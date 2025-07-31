@@ -3,7 +3,7 @@
 #include "../../OpenGLClass/Shader.hpp"
 #include "IDrawable.hpp"
 
-class IHasShader : IDrawableOpenGL
+class IHasShader : public IDrawableOpenGL
 {
 protected:
 	std::shared_ptr<Shader> m_shader = nullptr;

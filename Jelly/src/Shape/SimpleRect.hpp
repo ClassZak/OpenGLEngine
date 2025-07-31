@@ -23,11 +23,16 @@ public:
 			Vertex2D(-0.6f	,	-0.6f),
 		};
 		
-		this->SetVertexBufferObject(vertexes);
+		VertexBufferObject* newVertexBufferObject = new VertexBufferObject(vertexes);
+		this->m_vertexBufferObject.reset(newVertexBufferObject);
+
 		VertexBufferLayout layout;
 		layout.Push<float>(2);
 		this->m_vertexArrayObject.AddBuffer(*this->m_vertexBufferObject.get(), layout);
-		this->SetIndexBufferObject({ 0, 1, 2, 0, 2, 3 });
+
+		IndexBufferObject* newIndexBufferObject = new IndexBufferObject({ 0, 1, 2, 0, 2, 3 });
+		this->m_indexBufferObject.reset(newIndexBufferObject);
+
 		this->SetShader("../res/shaders/shader.shader");
 		this->m_shader.get()->Bind();
 		this->m_shader.get()->SetUniform_4f("u_Color", { 1.f, 0.f, 0.f, 1.f });
@@ -36,5 +41,10 @@ public:
 		this->m_vertexBufferObject.get()->UnBind();
 		this->m_indexBufferObject.get()->UnBind();
 		this->m_shader.get()->UnBind();
+	}
+
+	operator IDrawableOpenGL* ()
+	{
+		return dynamic_cast<IHasVertexArrayObject*>(this);
 	}
 };

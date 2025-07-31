@@ -71,19 +71,28 @@ void Renderer::Draw(IDrawableOpenGL* object)
 void Renderer::Draw(IDrawableOpenGL* object, const std::string& uniformName, const Uniform_4f& uniform_4f)
 {
 	GLsizeiptr size = 0;
-	if (auto* iHasIndexBufferObject = dynamic_cast<IHasIndexBufferObject*>(object))
+	auto* iHasIndexBufferObject = dynamic_cast<IHasIndexBufferObject*>(object);
+	auto* iHasVertexBufferObject = dynamic_cast<IHasVertexBufferObject*>(object);
+	auto* iHasVertexArrayObject = dynamic_cast<IHasVertexArrayObject*>(object);
+	if (iHasIndexBufferObject)
 		size = iHasIndexBufferObject->GetIndexBufferObject()->GetCount();
-	else if(auto* iHasVertexBufferObject = dynamic_cast<IHasVertexBufferObject*>(object))
+	else if(iHasVertexBufferObject)
 		size = iHasVertexBufferObject->GetVertexBufferObject()->GetCount();
 	else 
 		throw std::invalid_argument("Wrong type");
 
+	if(iHasVertexArrayObject)
+		iHasVertexArrayObject->GetVertexArrayObject().Bind();
+	if(iHasVertexBufferObject)
+		iHasVertexBufferObject->GetVertexBufferObject()->Bind();
+	if(iHasIndexBufferObject)
+		iHasIndexBufferObject->GetIndexBufferObject()->Bind();
+
 	if (auto* iHasShader = dynamic_cast<IHasShader*>(object))
 	{
-		Shader* shder = iHasShader->GetShader();
-		shder->Bind();
-		shder->Bind();
-		shder->SetUniform_4f(uniformName, uniform_4f.v0, uniform_4f.v1, uniform_4f.v2, uniform_4f.v3);
+		Shader* shader = iHasShader->GetShader();
+		shader->Bind();
+		shader->SetUniform_4f(uniformName, uniform_4f.v0, uniform_4f.v1, uniform_4f.v2, uniform_4f.v3);
 	}
 
 	GLLogCall(glDrawElements(GL_TRIANGLES,size,GL_UNSIGNED_INT,nullptr));

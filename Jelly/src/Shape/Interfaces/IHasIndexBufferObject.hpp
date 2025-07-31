@@ -4,7 +4,7 @@
 #include "../../OpenGLClass/IndexBufferObject.hpp"
 #include "IDrawable.hpp"
 
-class IHasIndexBufferObject : IDrawableOpenGL
+class IHasIndexBufferObject : public IDrawableOpenGL
 {
 protected:
 	std::shared_ptr<IndexBufferObject> m_indexBufferObject = nullptr;
@@ -23,9 +23,9 @@ public:
 	}
 
 
-	void SetIndexBufferObject(const IndexBufferObject& indexBufferObject)
+	void SetIndexBufferObject(IndexBufferObject indexBufferObject)
 	{
-		m_indexBufferObject.reset((IndexBufferObject*)&indexBufferObject);
+		m_indexBufferObject.reset(&indexBufferObject);
 	}
 	void SetIndexBufferObject(const std::initializer_list<GLuint>& dataVector)
 	{

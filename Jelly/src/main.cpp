@@ -148,6 +148,8 @@ int main(int argc, char** argv)
 	indexBufferObject.UnBind();
 	shader.UnBind();
 
+	SimpleRect rect;
+
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -172,15 +174,17 @@ int main(int argc, char** argv)
 		glClearColor(.7f,.7f,.7f,1.f);
 
 		Renderer::GetInstance().
-		Draw
-		(
-			vertexArrayObject,
-			vertexBuffer,
-			indexBufferObject,
-			shader,
-			"u_Color",
-			Uniform_4f{(milliseconds_since_epoch.count() % 1000) / 1000.f, 0.4f, 0.f, 1.f}
-		);
+		//Draw
+		//(
+		//	vertexArrayObject,
+		//	vertexBuffer,
+		//	indexBufferObject,
+		//	shader,
+		//	"u_Color",
+		//	Uniform_4f{(milliseconds_since_epoch.count() % 1000) / 1000.f, 0.4f, 0.f, 1.f}
+		//);
+		Draw((IHasVertexBufferObject*)&rect, "u_Color", { (milliseconds_since_epoch.count() % 1000) / 1000.f, 0.f, 0.f, 1.f});
+
 		/*jelly.Draw();*/
 
 		/* Swap front and back buffers */

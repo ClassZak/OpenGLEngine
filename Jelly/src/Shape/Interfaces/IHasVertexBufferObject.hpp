@@ -4,7 +4,7 @@
 #include "../../OpenGLClass/VertexBufferObject.hpp"
 #include "IDrawable.hpp"
 
-class IHasVertexBufferObject : IDrawableOpenGL
+class IHasVertexBufferObject : public IDrawableOpenGL
 {
 protected:
 	std::shared_ptr<VertexBufferObject> m_vertexBufferObject = nullptr;
@@ -23,9 +23,9 @@ public:
 	}
 
 
-	void SetVertexBufferObject(const VertexBufferObject& vertexBufferObject)
+	void SetVertexBufferObject(VertexBufferObject vertexBufferObject)
 	{
-		m_vertexBufferObject.reset((VertexBufferObject*)&vertexBufferObject);
+		m_vertexBufferObject.reset(&vertexBufferObject);
 	}
 	template<class T>
 	void SetVertexBufferObject(const std::vector<T>& dataVector)
