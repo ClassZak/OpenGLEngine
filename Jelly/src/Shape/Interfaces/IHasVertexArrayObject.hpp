@@ -5,7 +5,7 @@
 class IHasVertexArrayObject : public IDrawableOpenGL
 {
 protected:
-	VertexArrayObject m_vertexBufferObject;
+	VertexArrayObject m_vertexArrayObject;
 public:
 	IHasVertexArrayObject() = default;
 	virtual ~IHasVertexArrayObject() = default;
@@ -13,6 +13,6 @@ public:
 
 	VertexArrayObject& GetVertexArrayObject()
 	{
-		return m_vertexBufferObject;
+		return m_vertexArrayObject;
 	}
 };

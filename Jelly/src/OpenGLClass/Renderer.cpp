@@ -64,17 +64,17 @@ void Renderer::Draw(IDrawableOpenGL* object)
 	if (auto* iHasVertexArrayObject = dynamic_cast<IHasVertexArrayObject*>(object))
 		iHasVertexArrayObject->GetVertexArrayObject().Bind();
 	if (auto* iHasVertexBufferObject = dynamic_cast<IHasVertexBufferObject*>(object))
-		iHasVertexBufferObject->GetVertexBufferObject().Bind();
+		iHasVertexBufferObject->GetVertexBufferObject()->Bind();
 	if (auto* iHasIndexBufferObject = dynamic_cast<IHasIndexBufferObject*>(object))
-		iHasIndexBufferObject->GetIndexBufferObject().Bind();
+		iHasIndexBufferObject->GetIndexBufferObject()->Bind();
 }
 void Renderer::Draw(IDrawableOpenGL* object, const std::string& uniformName, const Uniform_4f& uniform_4f)
 {
 	GLsizeiptr size = 0;
 	if (auto* iHasIndexBufferObject = dynamic_cast<IHasIndexBufferObject*>(object))
-		size = iHasIndexBufferObject->GetIndexBufferObject().GetCount();
+		size = iHasIndexBufferObject->GetIndexBufferObject()->GetCount();
 	else if(auto* iHasVertexBufferObject = dynamic_cast<IHasVertexBufferObject*>(object))
-		size = iHasVertexBufferObject->GetVertexBufferObject().GetCount();
+		size = iHasVertexBufferObject->GetVertexBufferObject()->GetCount();
 	else 
 		throw std::invalid_argument("Wrong type");
 
