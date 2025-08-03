@@ -7,14 +7,14 @@
 #include <GL/glew.h>
 
 template<typename T>
-class Line : public AShape<Vertex2D<T>>
+class OldLine : public AShape<Vertex2D<T>>
 {
 protected:
 	GLenum m_drawMode = GL_LINE_STRIP;
 	T m_lineWidth;
 	bool m_isSmooth;
 public:
-	Line
+	OldLine
 	(
 		std::initializer_list<Vertex2D<T>> vertices,
 		const std::function<void(void)>& shaderUniformsProgram = nullptr,
@@ -23,7 +23,7 @@ public:
 		bool isSmooth=false,
 		unsigned int VAO = 0u,
 		unsigned int VBO = 0u
-	) : Line
+	) : OldLine
 	(	// Явно конвертируем initializer_list в vector для перегрузки
 		std::vector<Vertex2D<T>>(vertices), 
 		shaderUniformsProgram,
@@ -34,7 +34,7 @@ public:
 		VBO
 	) { }
 
-	Line
+	OldLine
 	(
 		const std::vector<Vertex2D<T>>& vertices,
 		const std::function<void(void)>& shaderUniformsProgram = nullptr,
@@ -57,14 +57,14 @@ public:
 
 
 
-	Line(const Line<T>& other) :
+	OldLine(const OldLine<T>& other) :
 		AShape<Vertex2D<T>>(other),
 		m_drawMode(other.m_drawMode),
 		m_lineWidth(other.m_lineWidth),
 		m_isSmooth(other.m_isSmooth)
 	{
 	}
-	Line& operator=(const Line& other)
+	OldLine& operator=(const OldLine& other)
 	{
 		if (this != &other)
 		{
@@ -76,7 +76,7 @@ public:
 		return *this;
 	}
 
-	~Line()=default;
+	~OldLine()=default;
 
 	void Init() override;
 	void Draw() override;
@@ -88,7 +88,7 @@ public:
 
 
 template<typename T>
-void Line<T>::Init()
+void OldLine<T>::Init()
 {
 	if (!this->m_VAO)
 		GLLogCall(glGenVertexArrays(1, &this->m_VAO));
@@ -119,7 +119,7 @@ void Line<T>::Init()
 }
 
 template<typename T>
-void Line<T>::Draw()
+void OldLine<T>::Draw()
 {
 	// m_lineWidth != 1
 	if (abs((double)m_lineWidth - 1) > 1e-10)

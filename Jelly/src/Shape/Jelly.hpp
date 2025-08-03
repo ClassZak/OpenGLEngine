@@ -1,7 +1,7 @@
 #pragma once
 #define _USE_MATH_DEFINES
 #include "Interfaces/IDrawable.hpp"
-#include "Line.hpp"
+#include "OldLine.hpp"
 #include "Circle.hpp"
 #include "Quadrangle.hpp"
 #include "CircleSector.hpp"
@@ -15,10 +15,10 @@ class Jelly : public IDrawable
 {
 protected:
 
-	std::list<Line<float>> m_createdLines;
-	std::list<Line<float>> m_lines;
-	std::list<Line<float>> m_createdRoundedLines;
-	std::list<Line<float>> m_roundedLines;
+	std::list<OldLine<float>> m_createdLines;
+	std::list<OldLine<float>> m_lines;
+	std::list<OldLine<float>> m_createdRoundedLines;
+	std::list<OldLine<float>> m_roundedLines;
 
 	std::list<Quadrangle<float>> m_createdQuadrangles;
 	std::list<Quadrangle<float>> m_quadrangles;
@@ -43,7 +43,7 @@ protected:
 	const float ROUNDED_LINES_VERTEX_COUNT = 20;
 
 	GLuint m_shaderProgram=0;
-	Line<float>* m_bottomLine= new Line<float>({Vertex2D<float>(START_X, START_Y), Vertex2D<float>(END_X, START_Y)});
+	OldLine<float>* m_bottomLine= new OldLine<float>({Vertex2D<float>(START_X, START_Y), Vertex2D<float>(END_X, START_Y)});
 
 
 

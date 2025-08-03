@@ -154,7 +154,7 @@ void Jelly::Init()
 	{
 		float x= START_X + i * PART_SIZE;
 		m_createdLines.push_back
-		(Line<float>({ Vertex2D(x,START_Y),Vertex2D(x * MULTIPLE_COEFFICIENT,END_Y) }));
+		(OldLine<float>({ Vertex2D(x,START_Y),Vertex2D(x * MULTIPLE_COEFFICIENT,END_Y) }));
 	}
 
 	std::list<std::vector<Vertex2D<float>>> round_vertexes_list;
@@ -192,7 +192,7 @@ void Jelly::Init()
 	for (auto& el : round_vertexes_list)
 	{
 		for(std::size_t i=0; i+1<el.size();++i)
-			m_createdRoundedLines.push_back(Line({el[i],el[i+1]}));
+			m_createdRoundedLines.push_back(OldLine({el[i],el[i+1]}));
 	}
 
 	for (auto& el : m_createdRoundedLines)

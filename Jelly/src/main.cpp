@@ -39,7 +39,7 @@
 
 #include "OpenGLClass/Shader.hpp"
 #include "Shape/Circle.hpp"
-#include "Shape/Line.hpp"
+#include "Shape/OldLine.hpp"
 #include "Shape/Jelly.hpp"
 #include "Shape/Quadrangle.hpp"
 #include "Shape/CircleSector.hpp"
@@ -149,6 +149,8 @@ int main(int argc, char** argv)
 	shader.UnBind();
 
 	SimpleRect rect;
+	OldLine line({Vertex2D(-1.f,-1.f), Vertex2D(1.f, 1.f)});
+	line.Init();
 
 
 	while (!glfwWindowShouldClose(window))
@@ -173,6 +175,7 @@ int main(int argc, char** argv)
 		glClear(GL_COLOR_BUFFER_BIT);
 		glClearColor(.7f,.7f,.7f,1.f);
 
+		line.Draw();
 		Renderer::GetInstance().
 		Draw
 		(
