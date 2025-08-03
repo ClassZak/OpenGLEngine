@@ -4,7 +4,7 @@
 #include "../../OpenGLClass/IndexBufferObject.hpp"
 #include "IDrawable.hpp"
 
-class IHasIndexBufferObject : public IDrawableOpenGL
+class IHasIndexBufferObject : virtual public IDrawableOpenGL
 {
 protected:
 	std::shared_ptr<IndexBufferObject> m_indexBufferObject = nullptr;

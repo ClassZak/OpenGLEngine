@@ -155,13 +155,13 @@ int main(int argc, char** argv)
 		Renderer::GetInstance().
 		Draw
 		(
-			(IHasVertexBufferObject*)&rect,
+			&rect,
 			"u_Color",
 			{ (milliseconds_since_epoch.count() % 1000) / 1000.f, 0.f, 0.f, 1.f}
 		)
 		.Draw
 		(
-			(IHasVertexBufferObject*)&line,
+			&line,
 			"u_Color",
 			{ 0.f, (milliseconds_since_epoch.count() % 1000) / 1000.f, 0.f, 1.f }
 		);

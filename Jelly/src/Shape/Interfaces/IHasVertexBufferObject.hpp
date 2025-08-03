@@ -4,7 +4,7 @@
 #include "../../OpenGLClass/VertexBufferObject.hpp"
 #include "IDrawable.hpp"
 
-class IHasVertexBufferObject : public IDrawableOpenGL
+class IHasVertexBufferObject : virtual public IDrawableOpenGL
 {
 protected:
 	std::shared_ptr<VertexBufferObject> m_vertexBufferObject = nullptr;

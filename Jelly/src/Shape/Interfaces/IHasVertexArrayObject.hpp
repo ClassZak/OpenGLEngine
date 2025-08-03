@@ -2,7 +2,7 @@
 #include "../../OpenGLClass/VertexArrayObject.hpp"
 #include "IDrawable.hpp"
 
-class IHasVertexArrayObject : public IDrawableOpenGL
+class IHasVertexArrayObject : virtual public IDrawableOpenGL
 {
 protected:
 	VertexArrayObject m_vertexArrayObject;
