@@ -37,6 +37,19 @@ struct Vertex2D : AVertex<T>
 	}
 
 
+	Vertex2D<T> operator+(const Vertex2D<T>& other) const
+	{
+		Vertex2D<T> result(this->x + other.x, this->y + other.y);
+		
+		return result;
+	}
+	Vertex2D<T> operator-(const Vertex2D<T>& other) const
+	{
+		Vertex2D<T> result(this->x - other.x, this->y - other.y);
+		
+		return result;
+	}
+
 	// Дружественная функция для вывода
 	friend std::ostream& operator<<(std::ostream& os, const Vertex2D<T>& obj)
 	{

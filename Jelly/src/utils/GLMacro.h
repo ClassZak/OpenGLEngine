@@ -39,6 +39,6 @@ static inline bool GLLogCallFunction()
 	} \
 } while (0)
 #define GLLogCall(x) GLClearError();\
-	x;\
+		x;\
 	GL_ASSERT(GLLogCallFunction());
 

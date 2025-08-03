@@ -124,33 +124,9 @@ int main(int argc, char** argv)
 	std::cout<<glGetString(GL_VERSION)<<std::endl;
 
 
-
-	
-	std::vector<Vertex2D<float>> vertexes =
-	{
-		Vertex2D(-0.5f	,	0.5f),
-		Vertex2D(0.5f	,	0.5f),
-		Vertex2D(0.5f	,	-0.5f),
-		Vertex2D(-0.5f	,	-0.5f),
-	};
-	VertexArrayObject vertexArrayObject;
-	VertexBufferObject vertexBuffer(vertexes);
-	VertexBufferLayout layout;
-	layout.Push<float>(2);
-	vertexArrayObject.AddBuffer(vertexBuffer, layout);
-	IndexBufferObject indexBufferObject({ 0, 1, 2, 0, 2, 3 });
-	Shader shader = Shader("../res/shaders/shader.shader");
-	shader.Bind();
-	shader.SetUniform_4f("u_Color", {1.f, 0.f, 0.f, 1.f});
-
-	vertexArrayObject.UnBind();
-	vertexBuffer.UnBind();
-	indexBufferObject.UnBind();
-	shader.UnBind();
-
-	SimpleRect rect;
-	OldLine line({Vertex2D(-1.f,-1.f), Vertex2D(1.f, 1.f)});
-	line.Init();
+	SimpleRect rect(Vertex2D(-0.9f,-0.9f),0.5f, 0.5f);
+	SimpleRect rect2(Vertex2D(0.9f,-0.9f),0.5f, 0.5f);
+	Line line({Vertex2D(-1.f,-1.f), Vertex2D(1.f, 1.f)});
 
 
 	while (!glfwWindowShouldClose(window))
@@ -175,13 +151,19 @@ int main(int argc, char** argv)
 		glClear(GL_COLOR_BUFFER_BIT);
 		glClearColor(.7f,.7f,.7f,1.f);
 
-		line.Draw();
+		
 		Renderer::GetInstance().
 		Draw
 		(
 			(IHasVertexBufferObject*)&rect,
 			"u_Color",
 			{ (milliseconds_since_epoch.count() % 1000) / 1000.f, 0.f, 0.f, 1.f}
+		)
+		.Draw
+		(
+			(IHasVertexBufferObject*)&line,
+			"u_Color",
+			{ 0.f, (milliseconds_since_epoch.count() % 1000) / 1000.f, 0.f, 1.f }
 		);
 
 		/* Swap front and back buffers */

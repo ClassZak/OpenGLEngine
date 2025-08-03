@@ -155,6 +155,7 @@ add_executable(${PROJECT_NAME}
 	${CMAKE_SOURCE_DIR}/src/Shape/Jelly.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Jelly.cpp
 	${CMAKE_SOURCE_DIR}/src/Shape/OldLine.hpp
+	${CMAKE_SOURCE_DIR}/src/Shape/Line.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Quadrangle.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/SimpleRect.hpp
 	

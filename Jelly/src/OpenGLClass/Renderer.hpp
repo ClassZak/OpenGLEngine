@@ -23,6 +23,8 @@
 #include "../Shape/Interfaces/IHasShader.hpp"
 #include "../Shape/Interfaces/IDrawable.hpp"
 
+#include "../Shape/Line.hpp"
+
 class Renderer
 {
 	Renderer() = default;
@@ -42,15 +44,15 @@ public:
 		return m_shaders;
 	}
 	
-	void Draw(const VertexBufferObject& vertexBufferObject);
-	void Draw(const VertexBufferObject& vertexBufferObject, const IndexBufferObject& indexBufferObject);
-	void Draw
+	Renderer& Draw(const VertexBufferObject& vertexBufferObject);
+	Renderer& Draw(const VertexBufferObject& vertexBufferObject, const IndexBufferObject& indexBufferObject);
+	Renderer& Draw
 	(
 		const VertexArrayObject& vertexArrayObject,
 		const VertexBufferObject& vertexBufferObject,
 		const IndexBufferObject& indexBufferObject
 	);
-	void Draw
+	Renderer& Draw
 	(
 		const VertexArrayObject& vertexArrayObject,
 		const VertexBufferObject& vertexBufferObject,
@@ -59,8 +61,8 @@ public:
 		const std::string& uniformName,
 		const Uniform_4f& uniform_4f
 	);
-	void Draw(IDrawableOpenGL* object);
-	void Draw(IDrawableOpenGL* object, const std::string& uniformName, const Uniform_4f& uniform_4f);
+	Renderer& Draw(IDrawableOpenGL* object);
+	Renderer& Draw(IDrawableOpenGL* object, const std::string& uniformName, const Uniform_4f& uniform_4f);
 };
 
 
