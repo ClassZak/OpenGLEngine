@@ -125,9 +125,15 @@ int main(int argc, char** argv)
 	std::cout<<glGetString(GL_VERSION)<<std::endl;
 
 
+	Renderer::GetInstance().AddShader("../res/shaders/shader.shader");
+
+
 	SimpleRect rect(Vertex2D(-0.9f,-0.9f),0.5f, 0.5f);
-	SimpleRect rect2(Vertex2D(0.9f,-0.9f),0.5f, 0.5f);
 	Line line({Vertex2D(-1.f,-1.f), Vertex2D(1.f, 1.f)});
+	auto& rendererShader = Renderer::GetInstance().FindShader(3);
+	rect.SetShader(rendererShader);
+	line.SetShader(rendererShader);
+
 
 
 	while (!glfwWindowShouldClose(window))

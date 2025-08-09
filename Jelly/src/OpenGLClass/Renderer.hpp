@@ -5,6 +5,7 @@
 #include <iostream>
 #include <list>
 #include <unordered_map>
+#include <memory>
 #include <sstream>
 #include <cctype>
 #include <utility>
@@ -30,18 +31,29 @@ class Renderer
 	Renderer() = default;
 	
 	
-	std::set<Shader> m_shaders;
+	std::set<std::shared_ptr<Shader>> m_shaders;
 public:
 	Renderer(const Renderer&) = delete;
 	Renderer& operator=(const Renderer&) = delete;
 	
 	static Renderer& GetInstance();
 	
-	void AddShader(const Shader& shader);
+	void AddShader(std::shared_ptr<Shader> shader);
 	void AddShader(const std::string& filepath);
-	std::set<Shader>& GetShaders()
+	std::set<std::shared_ptr<Shader>>& GetShaders()
 	{
 		return m_shaders;
+	}
+	inline const std::shared_ptr<Shader> FindShader(GLuint program)
+	{
+		auto it = std::ranges::find_if(m_shaders, [program](const std::shared_ptr<Shader>& shader)->bool
+		{
+			return shader.get()->GetProgram()==program;
+		});
+		if(it == m_shaders.end())
+			return std::shared_ptr<Shader>(nullptr);
+		else
+			return *it;
 	}
 	
 	Renderer& Draw(const VertexBufferObject& vertexBufferObject);
@@ -88,83 +100,6 @@ public:
 
 		return Draw(object, uniformsVector);
 	}
-	Renderer& Draw(IDrawableOpenGL* object, const std::vector<Uniform>& uniforms)
-	{
-		GLsizeiptr size = 0;
-		auto* iHasIndexBufferObject = dynamic_cast<IHasIndexBufferObject*>(object);
-		auto* iHasVertexBufferObject = dynamic_cast<IHasVertexBufferObject*>(object);
-		auto* iHasVertexArrayObject = dynamic_cast<IHasVertexArrayObject*>(object);
-		auto* iHasShader = dynamic_cast<IHasShader*>(object);
-
-		if (!iHasVertexBufferObject)
-			throw std::invalid_argument("Unable to render object without vertecies");
-
-		if (iHasIndexBufferObject)
-			size = iHasIndexBufferObject->GetIndexBufferObject()->GetCount();
-		else if (iHasVertexBufferObject)
-			size = iHasVertexBufferObject->GetVertexBufferObject()->GetCount();
-		else
-			throw std::invalid_argument("Wrong type");
-
-		if (iHasVertexArrayObject)
-			iHasVertexArrayObject->GetVertexArrayObject().Bind();
-		if (iHasVertexBufferObject)
-			iHasVertexBufferObject->GetVertexBufferObject()->Bind();
-		if (iHasIndexBufferObject)
-			iHasIndexBufferObject->GetIndexBufferObject()->Bind();
-
-		if (iHasShader)
-		{
-			Shader* shader = iHasShader->GetShader();
-			shader->Bind();
-			for (auto it = uniforms.begin(); it != uniforms.end(); ++it)
-				shader->SetUniform(*it);
-		}
-
-		if (object->GetDrawMode() != GL_TRIANGLES)
-		{
-			if (object->GetDrawMode() == GL_LINE_STRIP)
-			{
-				if (Line* line = dynamic_cast<Line*>(object))
-				{
-					// m_lineWidth != 1
-					if (abs((double)line->GetWidth() - 1) > 1e-10)
-						glLineWidth(line->GetWidth());
-					if (line->IsSmooth())
-					{
-						glEnable(GL_LINE_SMOOTH);
-						glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-					}
-				}
-			}
-		}
-
-
-		// Фигурные скобки обязательно
-		if (iHasIndexBufferObject)
-		{
-			GLLogCall(glDrawElements(object->GetDrawMode(), size, GL_UNSIGNED_INT, nullptr));
-		}
-		else
-		{
-			GLLogCall(glDrawArrays(object->GetDrawMode(), 0, size));
-		}
-
-		if (object->GetDrawMode() == GL_LINE_STRIP)
-			glDisable(GL_LINE_SMOOTH);
-
-
-		if (iHasVertexArrayObject)
-			iHasVertexArrayObject->GetVertexArrayObject().UnBind();
-		if (iHasVertexBufferObject)
-			iHasVertexBufferObject->GetVertexBufferObject()->UnBind();
-		if (iHasIndexBufferObject)
-			iHasIndexBufferObject->GetIndexBufferObject()->UnBind();
-		if (iHasShader)
-			iHasShader->GetShader()->UnBind();
-
-		return *this;
-	}
+	Renderer& Draw(IDrawableOpenGL* object, const std::vector<Uniform>& uniforms);
 };
-
 

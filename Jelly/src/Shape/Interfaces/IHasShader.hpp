@@ -6,23 +6,24 @@
 class IHasShader : virtual public IDrawableOpenGL
 {
 protected:
-	std::shared_ptr<Shader> m_shader = nullptr;
+	std::weak_ptr<Shader> m_shader;
 public:
 	IHasShader() = default;
 	virtual ~IHasShader() = default;
 
 
-	std::shared_ptr<Shader> GetShaderSharedPointer()
+	std::weak_ptr<Shader> GetShader()
 	{
 		return m_shader;
 	}
-	Shader* GetShader()
+	Shader* GetShaderSharedPointer()
 	{
-		return m_shader.get();
+		if (auto ptr = m_shader.lock())
+			return ptr.get();
+		return nullptr;
 	}
-	void SetShader(const std::string& filepath)
+	void SetShader(std::shared_ptr<Shader> shader)
 	{
-		Shader* newShader = new Shader(filepath);
-		m_shader.reset(newShader);
+		m_shader = shader;
 	}
 };
