@@ -10,14 +10,16 @@
 #include <utility>
 #include <array>
 #include <vector>
+#include <variant>
+#include <cstdint>
+#include <regex>
+#include <glm/glm.hpp>
 
 #include "../utils/functions.hpp"
 #include "../utils/GLMacro.h"
+#include "Uniform.hpp"
 
-struct Uniform_4f
-{
-	float v0, v1, v2, v3;
-};
+
 
 class Shader
 {
@@ -65,22 +67,37 @@ public:
 	}
 
 	GLint GetUniformLocation(const std::string& uniform);
-
-
-
-	void SetUniform_4f(const std::string& uniform, const std::array<float, 4u>& values)
+	GLint GetProgram()const
 	{
-		SetUniform_4f(uniform, values[0], values[1], values[2], values[3]);
+		return m_program;
 	}
-	void SetUniform_4f(const std::string& uniform, const std::initializer_list<float>& values)
+
+
+	void SetUniform_4(const std::string& uniformName, const Uniform_4<float>& uniform)
+	{
+		SetUniform_4(uniformName, uniform.v0, uniform.v1, uniform.v2, uniform.v3);
+	}
+	void SetUniform_4(const std::string& uniform, const std::array<float, 4u>& values)
+	{
+		SetUniform_4(uniform, values[0], values[1], values[2], values[3]);
+	}
+	void SetUniform_4(const std::string& uniform, const std::initializer_list<float>& values)
 	{
 		if(values.size()!=4u)
 			throw std::invalid_argument("Wrong size of uniform arguments");
 
 		const float* valuesPointer = values.begin();
-		SetUniform_4f(uniform, valuesPointer[0], valuesPointer[1], valuesPointer[2], valuesPointer[3]);
+		SetUniform_4(uniform, valuesPointer[0], valuesPointer[1], valuesPointer[2], valuesPointer[3]);
 	}
-	void SetUniform_4f(const std::string& uniform, float v0, float v1, float v2, float v3);
+	void SetUniform_4(const std::string& uniform, float v0, float v1, float v2, float v3);
+
+	bool operator == (const Shader& other) const;
+	bool operator != (const Shader& other) const;
+	bool operator >  (const Shader& other) const;
+	bool operator <  (const Shader& other) const;
+	bool operator <= (const Shader& other) const;
+	bool operator >= (const Shader& other) const;
+
 private:
 
 	// TODO переделать

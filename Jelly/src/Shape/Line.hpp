@@ -33,7 +33,7 @@ protected:
 		this->m_vertexArrayObject.AddBuffer(*this->m_vertexBufferObject.get(), layout);
 		this->SetShader("../res/shaders/shader.shader");
 		this->m_shader.get()->Bind();
-		this->m_shader.get()->SetUniform_4f("u_Color", { 0.f, 1.f, 0.f, 1.f });
+		this->m_shader.get()->SetUniform_4("u_Color", { 0.f, 1.f, 0.f, 1.f });
 
 
 		this->m_vertexArrayObject.UnBind();

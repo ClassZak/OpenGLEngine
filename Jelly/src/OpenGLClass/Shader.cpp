@@ -14,7 +14,7 @@ GLint Shader::GetUniformLocation(const std::string& uniform)
 	return location;
 }
 
-void Shader::SetUniform_4f(const std::string& uniform, float v0, float v1, float v2, float v3)
+void Shader::SetUniform_4(const std::string& uniform, float v0, float v1, float v2, float v3)
 {
 	int location = GetUniformLocation(uniform);
 #ifdef DEBUG_MODE
@@ -22,6 +22,50 @@ void Shader::SetUniform_4f(const std::string& uniform, float v0, float v1, float
 #endif
 	glUniform4f(location, v0, v1, v2, v3);
 }
+
+
+#pragma region
+bool Shader::operator==(const Shader& other)const
+{
+	if(&other==this)
+		return true;
+
+	return GetProgram() == other.GetProgram();
+}
+bool Shader::operator!=(const Shader& other)const
+{
+	return !(*this==other);
+}
+bool Shader::operator>(const Shader& other)const
+{
+	if (&other == this)
+		return false;
+
+	return GetProgram() > other.GetProgram();
+}
+bool Shader::operator<(const Shader& other)const
+{
+	if (&other == this)
+		return false;
+
+	return GetProgram() < other.GetProgram();
+}
+bool Shader::operator>=(const Shader& other)const
+{
+	if (&other == this)
+		return true;
+
+	return GetProgram() >= other.GetProgram();
+}
+bool Shader::operator<=(const Shader& other)const
+{
+	if (&other == this)
+		return true;
+
+	return GetProgram() <= other.GetProgram();
+}
+#pragma endregion
+
 
 GLuint Shader::CompileShader(GLuint type, const std::string& source)
 {

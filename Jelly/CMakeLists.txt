@@ -17,7 +17,7 @@ endif()
 set(CMAKE_CXX_STANDARD 20)
 
 project(Jelly VERSION 1.0
-		DESCRIPTION "Application for data transfering"
+		DESCRIPTION "Jelly animation"
 		LANGUAGES CXX
 )
 
@@ -62,7 +62,7 @@ if(WIN32)
 		set_target_properties(glew PROPERTIES
 			INTERFACE_INCLUDE_DIRECTORIES "${GLEW_INCLUDE_DIR}"
 			IMPORTED_IMPLIB "${GLEW_LIB_DIR}/glew32.lib"
-		IMPORTED_LOCATION "${GLEW_BIN_DIR}/glew32.dll"
+			IMPORTED_LOCATION "${GLEW_BIN_DIR}/glew32.dll"
 		)
 	endif()
 else()
@@ -113,6 +113,20 @@ else()
 		message(FATAL_ERROR "GLEW not found. Install with: sudo apt install libglew-dev")
 	endif()
 endif()
+#GLM
+find_package(glm)
+find_package(glm QUIET)
+if(NOT glm_FOUND)
+	message(STATUS "GLM not found, using fallback method")
+	set(GLM_ROOT "G:/Programs/Libraries/glm-1.0.1/glm-1.0.1")
+	set(GLM_INCLUDE_DIR "${GLM_ROOT}")
+	
+	# Создаем интерфейсную библиотеку вместо SHARED
+	add_library(glm INTERFACE IMPORTED)
+	set_target_properties(glm PROPERTIES
+		INTERFACE_INCLUDE_DIRECTORIES "${GLM_INCLUDE_DIR}"
+	)
+endif()
 
 
 
@@ -142,6 +156,8 @@ add_executable(${PROJECT_NAME}
 	${CMAKE_SOURCE_DIR}/src/OpenGLClass/VertexBufferLayout.hpp
 	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Shader.hpp
 	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Shader.cpp
+	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Material.hpp
+	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Uniform.hpp
 	
 	
 	${CMAKE_SOURCE_DIR}/src/Shape/Interfaces/IDrawable.hpp
@@ -198,6 +214,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	OpenGL::GL
 	glfw
 	glew
+	glm
 )
 if(UNIX)
 	target_link_libraries(${PROJECT_NAME} PRIVATE

@@ -3,6 +3,7 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
 #include <string>
 #include <fstream>
@@ -157,13 +158,13 @@ int main(int argc, char** argv)
 		(
 			&rect,
 			"u_Color",
-			{ (milliseconds_since_epoch.count() % 1000) / 1000.f, 0.f, 0.f, 1.f}
+			Uniform_4<float>{{}, (milliseconds_since_epoch.count() % 1000) / 1000.f, 0.f, 0.f, 1.f}
 		)
 		.Draw
 		(
 			&line,
 			"u_Color",
-			{ 0.f, (milliseconds_since_epoch.count() % 1000) / 1000.f, 0.f, 1.f }
+			Uniform_4<float>{ {}, 0.f, (milliseconds_since_epoch.count() % 1000) / 1000.f, 0.f, 1.f }
 		);
 
 		/* Swap front and back buffers */
