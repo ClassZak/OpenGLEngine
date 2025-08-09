@@ -52,30 +52,43 @@ public:
 		const VertexBufferObject& vertexBufferObject,
 		const IndexBufferObject& indexBufferObject
 	);
-	template<typename T>
 	Renderer& Draw
 	(
 		const VertexArrayObject& vertexArrayObject,
 		const VertexBufferObject& vertexBufferObject,
 		const IndexBufferObject& indexBufferObject,
 		Shader& shader,
-		const std::string& uniformName,
-		const Uniform_4<T>& Uniform_4
+		const Uniform& uniform
 	)
 	{
 		vertexArrayObject.Bind();
 		vertexBufferObject.Bind();
 		indexBufferObject.Bind();
 		shader.Bind();
-		shader.SetUniform_4(uniformName, Uniform_4.v0, Uniform_4.v1, Uniform_4.v2, Uniform_4.v3);
+		shader.SetUniform(uniform);
 		GLLogCall(glDrawElements(GL_TRIANGLES, indexBufferObject.GetCount(), GL_UNSIGNED_INT, nullptr));
 
 		return *this;
 	}
 	Renderer& Draw(IDrawableOpenGL* object);
+
+
+
 	
-	template<typename T>
-	Renderer& Draw(IDrawableOpenGL* object, const std::string& uniformName, const Uniform_4<T>& Uniform_4)
+	Renderer& Draw(IDrawableOpenGL* object, const Uniform& uniform)
+	{
+		std::vector<Uniform> uniformsVector;
+		uniformsVector.emplace_back(uniform);
+
+		return Draw(object, uniformsVector);
+	}
+	Renderer& Draw(IDrawableOpenGL* object, const std::initializer_list<Uniform>& uniforms)
+	{
+		std::vector<Uniform> uniformsVector(uniforms);
+
+		return Draw(object, uniformsVector);
+	}
+	Renderer& Draw(IDrawableOpenGL* object, const std::vector<Uniform>& uniforms)
 	{
 		GLsizeiptr size = 0;
 		auto* iHasIndexBufferObject = dynamic_cast<IHasIndexBufferObject*>(object);
@@ -104,7 +117,8 @@ public:
 		{
 			Shader* shader = iHasShader->GetShader();
 			shader->Bind();
-			shader->SetUniform_4(uniformName, Uniform_4.v0, Uniform_4.v1, Uniform_4.v2, Uniform_4.v3);
+			for (auto it = uniforms.begin(); it != uniforms.end(); ++it)
+				shader->SetUniform(*it);
 		}
 
 		if (object->GetDrawMode() != GL_TRIANGLES)
@@ -151,8 +165,6 @@ public:
 
 		return *this;
 	}
-	template<typename T>
-	Renderer& Draw(IDrawableOpenGL* object, GLuint shaderProgram, const Uniform_4<T>& Uniform_4);
 };
 
 

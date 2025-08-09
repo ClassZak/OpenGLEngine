@@ -157,14 +157,20 @@ int main(int argc, char** argv)
 		Draw
 		(
 			&rect,
-			"u_Color",
-			Uniform_4<float>{{}, (milliseconds_since_epoch.count() % 1000) / 1000.f, 0.f, 0.f, 1.f}
+			Uniform
+			(
+				"u_Color",
+				UniformVec4{(milliseconds_since_epoch.count() % 1000) / 1000.f, 0.f, 0.f, 1.f}
+			)
 		)
 		.Draw
 		(
 			&line,
-			"u_Color",
-			Uniform_4<float>{ {}, 0.f, (milliseconds_since_epoch.count() % 1000) / 1000.f, 0.f, 1.f }
+			Uniform
+			(
+				"u_Color",
+				UniformVec4{ 0.f, (milliseconds_since_epoch.count() % 1000) / 1000.f, 0.f, 1.f }
+			)
 		);
 
 		/* Swap front and back buffers */

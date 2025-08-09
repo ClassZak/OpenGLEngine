@@ -73,23 +73,9 @@ public:
 	}
 
 
-	void SetUniform_4(const std::string& uniformName, const Uniform_4<float>& uniform)
-	{
-		SetUniform_4(uniformName, uniform.v0, uniform.v1, uniform.v2, uniform.v3);
-	}
-	void SetUniform_4(const std::string& uniform, const std::array<float, 4u>& values)
-	{
-		SetUniform_4(uniform, values[0], values[1], values[2], values[3]);
-	}
-	void SetUniform_4(const std::string& uniform, const std::initializer_list<float>& values)
-	{
-		if(values.size()!=4u)
-			throw std::invalid_argument("Wrong size of uniform arguments");
+	void SetUniform(const Uniform& uniform);
 
-		const float* valuesPointer = values.begin();
-		SetUniform_4(uniform, valuesPointer[0], valuesPointer[1], valuesPointer[2], valuesPointer[3]);
-	}
-	void SetUniform_4(const std::string& uniform, float v0, float v1, float v2, float v3);
+
 
 	bool operator == (const Shader& other) const;
 	bool operator != (const Shader& other) const;
