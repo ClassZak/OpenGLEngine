@@ -108,8 +108,8 @@ inline void Jelly::AnimateRoundedParts(long long millisecondsSinceEpoch, double 
 {
 	const auto ANIMATION_COEFFICIENT = millisecondsSinceEpoch * animationSpeed;
 
-	auto animatedIt = m_CircleSectors.begin();
-	auto createdIt = m_createdCircleSectors.begin();
+	auto animatedIt = m_OldCircleSectors.begin();
+	auto createdIt = m_createdOldCircleSectors.begin();
 
 	// Ey ý [0;1]
 	const double SHORT_COS_COEFFICIENT = (cos(ANIMATION_COEFFICIENT) + 1) / 2.;
@@ -119,7 +119,7 @@ inline void Jelly::AnimateRoundedParts(long long millisecondsSinceEpoch, double 
 	const double COS_COEFFICIENT = cos(ANIMATION_COEFFICIENT);
 	const double SIN_COEFFICIENT = sin(ANIMATION_COEFFICIENT);
 
-	while (createdIt != m_createdCircleSectors.end() && animatedIt != m_CircleSectors.end())
+	while (createdIt != m_createdOldCircleSectors.end() && animatedIt != m_OldCircleSectors.end())
 	{
 		auto& vertexes = animatedIt->GetVertexes();
 		auto& created_vertexes = createdIt->GetVertexes();
@@ -177,9 +177,9 @@ void Jelly::Init()
 
 		round_vertexes_list.push_back(vertexes);
 
-		m_createdCircleSectors.push_back
+		m_createdOldCircleSectors.push_back
 		(
-			CircleSector<float>
+			OldCircleSector<float>
 			(
 				ROUNDED_LINES_VERTEX_COUNT,
 				upper_vertex_x_delta / 2,
@@ -201,10 +201,10 @@ void Jelly::Init()
 		m_roundedLines.back().Init();
 	}
 
-	for (auto& el : m_createdCircleSectors)
+	for (auto& el : m_createdOldCircleSectors)
 	{
-		m_CircleSectors.push_back(el);
-		m_CircleSectors.back().Init();
+		m_OldCircleSectors.push_back(el);
+		m_OldCircleSectors.back().Init();
 	}
 
 
@@ -254,7 +254,7 @@ void Jelly::Init()
 			el.SetShaderUniformsProgram([location]()
 				{glUniform4f(location, 1., .0f, .0f, .0f); });
 
-		for(auto& el : m_CircleSectors)
+		for(auto& el : m_OldCircleSectors)
 			el.SetShaderUniformsProgram([location]()
 				{glUniform4f(location, 1., .0f, .0f, .0f); });
 	}
@@ -264,7 +264,7 @@ void Jelly::Draw()
 {
 	for(auto& el : m_quadrangles)
 		el.Draw();
-	for(auto& el : m_CircleSectors)
+	for(auto& el : m_OldCircleSectors)
 		el.Draw();
 
 

@@ -131,11 +131,11 @@ int main(int argc, char** argv)
 
 	SimpleRect rect(Vertex2D(-0.9f,-0.9f),0.5f, 0.5f);
 	Line line({Vertex2D(-1.f,-1.f), Vertex2D(1.f, 1.f)});
-	Circle circle(30, 0.2f, Vertex2D<float>(0.f,0.f));
+	CircleSector circleSector(30, 0.2f, Vertex2D<float>(0.f,0.f), 0, M_PI_2);
 	auto& rendererShader = Renderer::GetInstance().FindShader(3);
 	rect.SetShader(rendererShader);
 	line.SetShader(rendererShader);
-	circle.SetShader(rendererShader);
+	circleSector.SetShader(rendererShader);
 
 
 
@@ -172,6 +172,7 @@ int main(int argc, char** argv)
 				UniformVec4{(milliseconds_since_epoch.count() % 1000) / 1000.f, 0.f, 0.f, 1.f}
 			)
 		)
+		.Draw(&circleSector)
 		.Draw
 		(
 			&line,
@@ -180,8 +181,7 @@ int main(int argc, char** argv)
 				"u_Color",
 				UniformVec4{ 0.f, (milliseconds_since_epoch.count() % 1000) / 1000.f, 0.f, 1.f }
 			)
-		)
-		.Draw(&circle);
+		);
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);

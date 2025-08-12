@@ -4,7 +4,7 @@
 #include "OldLine.hpp"
 #include "OldCircle.hpp"
 #include "Quadrangle.hpp"
-#include "CircleSector.hpp"
+#include "OldCircleSector.hpp"
 
 #include <vector>
 #include <list>
@@ -22,8 +22,8 @@ protected:
 
 	std::list<Quadrangle<float>> m_createdQuadrangles;
 	std::list<Quadrangle<float>> m_quadrangles;
-	std::list<CircleSector<float>> m_createdCircleSectors;
-	std::list<CircleSector<float>> m_CircleSectors;
+	std::list<OldCircleSector<float>> m_createdOldCircleSectors;
+	std::list<OldCircleSector<float>> m_OldCircleSectors;
 
 
 	const float START_X = -0.75f;
