@@ -51,12 +51,34 @@ Renderer& Renderer::Draw
 }
 Renderer& Renderer::Draw(IDrawableOpenGL* object)
 {
-	if (auto* iHasVertexArrayObject = dynamic_cast<IHasVertexArrayObject*>(object))
+	auto* iHasVertexArrayObject = dynamic_cast<IHasVertexArrayObject*>(object);
+	auto* iHasVertexBufferObject = dynamic_cast<IHasVertexBufferObject*>(object);
+	auto* iHasIndexBufferObject = dynamic_cast<IHasIndexBufferObject*>(object);
+	
+	GLsizeiptr size = 0;
+	if (iHasIndexBufferObject)
+		size = iHasIndexBufferObject->GetIndexBufferObject()->GetCount();
+	else if (iHasVertexBufferObject)
+		size = iHasVertexBufferObject->GetVertexBufferObject()->GetCount();
+	else
+		throw std::invalid_argument("Wrong type");
+		
+	if(iHasVertexArrayObject)
 		iHasVertexArrayObject->GetVertexArrayObject().Bind();
-	if (auto* iHasVertexBufferObject = dynamic_cast<IHasVertexBufferObject*>(object))
+	if(iHasVertexBufferObject)
 		iHasVertexBufferObject->GetVertexBufferObject()->Bind();
-	if (auto* iHasIndexBufferObject = dynamic_cast<IHasIndexBufferObject*>(object))
+	if(iHasIndexBufferObject)
 		iHasIndexBufferObject->GetIndexBufferObject()->Bind();
+
+	// Фигурные скобки обязательно
+	if (iHasIndexBufferObject)
+	{
+		GLLogCall(glDrawElements(object->GetDrawMode(), size, GL_UNSIGNED_INT, nullptr));
+	}
+	else
+	{
+		GLLogCall(glDrawArrays(object->GetDrawMode(), 0, size));
+	}
 
 	return *this;
 }

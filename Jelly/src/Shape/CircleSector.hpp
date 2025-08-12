@@ -65,14 +65,14 @@ public:
 	/// <returns>Вершины для отрисовки</returns>
 	static std::vector<Vertex2D<T>> GenerateCircleSectorVertexes
 	(
-		std::size_t circlePointCount,
+		std::size_t OldCirclePointCount,
 		T radius,
 		const Vertex2D<T>& center,
 		double startDegree,
 		double endDegree
 	)
 	{
-		if (circlePointCount <= 1u)
+		if (OldCirclePointCount <= 1u)
 			throw std::invalid_argument("Division by zero");
 
 		if (radius < 0)
@@ -87,10 +87,10 @@ public:
 
 
 		std::vector<Vertex2D<T>> vertexes;
-		vertexes.reserve(circlePointCount);
-		T sector = (endDegree - startDegree) / (circlePointCount - 1);
+		vertexes.reserve(OldCirclePointCount);
+		T sector = (endDegree - startDegree) / (OldCirclePointCount - 1);
 
-		for (std::size_t i = 1; i <= circlePointCount; ++i)
+		for (std::size_t i = 1; i <= OldCirclePointCount; ++i)
 		{
 			T	x = static_cast<T>(cos((startDegree + sector) * (i - 1)) * radius),
 				y = static_cast<T>(sin((startDegree + sector) * (i - 1)) * radius);
@@ -109,17 +109,17 @@ public:
 	/// <param name="startDegree">Радианы для начала э [-2PI;2PI]</param>
 	/// <param name="endDegree">Радианы для конца э [-2PI;2PI]</param>
 	/// <returns>Вершины для отрисовки</returns>
-	static std::vector<unsigned int> GenerateCircleSectorVertexIndexes(unsigned int circlePointCount)
+	static std::vector<unsigned int> GenerateCircleSectorVertexIndexes(unsigned int OldCirclePointCount)
 	{
-		if (circlePointCount == 0u)
+		if (OldCirclePointCount == 0u)
 			throw std::invalid_argument("Division by zero exception");
 
 		std::vector<unsigned int> vertexesIndices;
-		for (int i = 0; i < circlePointCount - 1; i++)
+		for (int i = 0; i < OldCirclePointCount - 1; i++)
 		{
 			vertexesIndices.push_back(0); // Центральная вершина
 			vertexesIndices.push_back(1 + i); // Текущая вершина окружности
-			vertexesIndices.push_back(1 + (i + 1) % circlePointCount); // Следующая вершина окружности
+			vertexesIndices.push_back(1 + (i + 1) % OldCirclePointCount); // Следующая вершина окружности
 		}
 
 		return vertexesIndices;

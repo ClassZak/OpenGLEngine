@@ -167,6 +167,7 @@ add_executable(${PROJECT_NAME}
 	
 	${CMAKE_SOURCE_DIR}/src/Shape/AShape.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Circle.hpp
+	${CMAKE_SOURCE_DIR}/src/Shape/OldCircle.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/CircleSector.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Jelly.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Jelly.cpp

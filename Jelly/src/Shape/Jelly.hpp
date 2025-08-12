@@ -2,7 +2,7 @@
 #define _USE_MATH_DEFINES
 #include "Interfaces/IDrawable.hpp"
 #include "OldLine.hpp"
-#include "Circle.hpp"
+#include "OldCircle.hpp"
 #include "Quadrangle.hpp"
 #include "CircleSector.hpp"
 
@@ -23,7 +23,7 @@ protected:
 	std::list<Quadrangle<float>> m_createdQuadrangles;
 	std::list<Quadrangle<float>> m_quadrangles;
 	std::list<CircleSector<float>> m_createdCircleSectors;
-	std::list<CircleSector<float>> m_circleSectors;
+	std::list<CircleSector<float>> m_CircleSectors;
 
 
 	const float START_X = -0.75f;

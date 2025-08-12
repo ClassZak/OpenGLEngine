@@ -41,10 +41,4 @@ public:
 		this->m_vertexBufferObject.get()->UnBind();
 		this->m_indexBufferObject.get()->UnBind();
 	}
-	
-	
-	operator IDrawableOpenGL* ()
-	{
-		return dynamic_cast<IHasVertexArrayObject*>(this);
-	}
 };

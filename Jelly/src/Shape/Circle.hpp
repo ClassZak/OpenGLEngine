@@ -2,55 +2,51 @@
 #define _USE_MATH_DEFINES
 
 #include "AShape.hpp"
+#include "../OpenGLClass/Shader.hpp"
+#include "../Shape/Interfaces/IHasIndexBufferObject.hpp"
+#include "../Shape/Interfaces/IHasVertexBufferObject.hpp"
+#include "../Shape/Interfaces/IHasVertexArrayObject.hpp"
+#include "../Shape/Interfaces/IHasShader.hpp"
+#include "../Shape/Interfaces/IDrawable.hpp"
 #include "../Vertex/Vertex2D.hpp"
 
 #include <functional>
 #include <stdexcept>
 #include <cmath>
+#include <GL/glew.h>
 
 
-template<typename T>
-class Circle : public AShape<Vertex2D<T>>
+class Circle :
+	public IHasVertexArrayObject,
+	public IHasVertexBufferObject,
+	public IHasIndexBufferObject,
+	public IHasShader
 {
 public:
+	template<typename T>
 	Circle
 	(
 		std::size_t count,
 		T radius,
-		const Vertex2D<T>& center,
-		unsigned int VAO = 0u,
-		unsigned int VBO = 0u,
-		unsigned int IBO = 0u
+		const Vertex2D<T>& center
 	)
 	{
-		this->m_vertexes = GenerateCircleVertexes(count, radius, center);
-		this->m_indexes = GenerateCircleVertexIndexes(count);
+		VertexBufferObject* newVertexBufferObject =
+		new VertexBufferObject(GenerateCircleVertexes(count, radius, center));
+		this->m_vertexBufferObject.reset(newVertexBufferObject);
 
-		this->m_VAO = VAO;
-		this->m_VBO = VBO;
-		this->m_IBO = IBO;
+		// Attribute crafting
+		VertexBufferLayout layout;
+		layout.Push<T>(2);
+		this->m_vertexArrayObject.AddBuffer(*this->m_vertexBufferObject.get(), layout);
+		
+		IndexBufferObject* newIndexBufferObject = new IndexBufferObject(GenerateCircleVertexIndexes(count));
+		this->m_indexBufferObject.reset(newIndexBufferObject);
+		
+		this->m_vertexArrayObject.UnBind();
+		this->m_vertexBufferObject.get()->UnBind();
+		this->m_indexBufferObject.get()->UnBind();
 	}
-	Circle
-	(
-		std::size_t count,
-		T radius,
-		const Vertex2D<T>& center,
-		const std::function<void(void)>& shaderUniformsProgram,
-		unsigned int VAO = 0u,
-		unsigned int VBO = 0u,
-		unsigned int IBO = 0u
-	) : Circle(count, radius, center, VAO, VBO, IBO)
-	{
-		this->SetShaderUniformsProgram(shaderUniformsProgram);
-	}
-
-	~Circle() = default;
-
-	void Init() override;
-	void Draw() override;
-
-public:
-
 	/// <summary>
 	/// 
 	/// </summary>
@@ -58,6 +54,7 @@ public:
 	/// <param name="radius">Радиус (больше 0)</param>
 	/// <param name="center">Центр</param>
 	/// <returns>Вершины для отрисовки</returns>
+	template<typename T>
 	static std::vector<Vertex2D<T>> GenerateCircleVertexes
 	(std::size_t count, T radius, const Vertex2D<T>& center)
 	{
@@ -118,6 +115,7 @@ public:
 	/// <param name="startDegree">Радианы для начала э [-2PI;2PI]</param>
 	/// <param name="endDegree">Радианы для конца э [-2PI;2PI]</param>
 	/// <returns>Вершины для отрисовки</returns>
+	template<typename T>
 	static std::vector<Vertex2D<T>> GenerateRoundVertexes
 	(
 		std::size_t circlePointCount,
@@ -155,69 +153,3 @@ public:
 		return vertexes;
 	}
 };
-
-
-
-template<class T>
-inline void Circle<T>::Init()
-{
-	if (!this->m_VAO)
-		GLLogCall(glGenVertexArrays(1, &this->m_VAO));
-	GLLogCall(glBindVertexArray(this->m_VAO));
-
-	if (!this->m_VBO)
-		GLLogCall(glGenBuffers(1, &this->m_VBO));
-	GLLogCall(glBindBuffer(GL_ARRAY_BUFFER, this->m_VBO));
-
-	glBufferData
-	(
-		GL_ARRAY_BUFFER,
-		this->m_vertexes.size() * sizeof(Vertex2D<T>),
-		this->m_vertexes.data(),
-		GL_STATIC_DRAW
-	);
-
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer
-	(0, VERTEX_ATTRIBUTE_SIZE, GL_FLOAT, GL_FALSE, sizeof(T) * VERTEX_ATTRIBUTE_SIZE, 0);
-
-	if (!this->m_IBO)
-		glGenBuffers(1, &this->m_IBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->m_IBO);
-
-	glBufferData
-	(
-		GL_ELEMENT_ARRAY_BUFFER,
-		this->m_indexes.size() * sizeof(unsigned int),
-		this->m_indexes.data(),
-		GL_STATIC_DRAW
-	);
-}
-template<class T>
-inline void Circle<T>::Draw()
-{
-	GLLogCall(glBindVertexArray(this->m_VAO));
-	GLLogCall(glBindBuffer(GL_ARRAY_BUFFER, this->m_VBO));
-
-	GLLogCall(glBufferData
-	(
-		GL_ARRAY_BUFFER,
-		this->m_vertexes.size() * sizeof(std::vector<Vertex2D<float>>::value_type),
-		this->m_vertexes.data(),
-		GL_STATIC_DRAW
-	));
-	GLLogCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->m_IBO));
-
-	if (this->m_shaderUniformsProgram)
-		this->m_shaderUniformsProgram();
-
-	GLLogCall(glBufferData
-	(
-		GL_ELEMENT_ARRAY_BUFFER,
-		this->m_indexes.size() * sizeof(std::vector<unsigned int>::value_type),
-		this->m_indexes.data(),
-		GL_STATIC_DRAW
-	));
-
-	GLLogCall(glDrawElements(GL_TRIANGLES, this->m_indexes.size(), GL_UNSIGNED_INT, nullptr));
-}

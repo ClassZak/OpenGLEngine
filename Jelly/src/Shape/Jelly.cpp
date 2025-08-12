@@ -108,7 +108,7 @@ inline void Jelly::AnimateRoundedParts(long long millisecondsSinceEpoch, double 
 {
 	const auto ANIMATION_COEFFICIENT = millisecondsSinceEpoch * animationSpeed;
 
-	auto animatedIt = m_circleSectors.begin();
+	auto animatedIt = m_CircleSectors.begin();
 	auto createdIt = m_createdCircleSectors.begin();
 
 	// Ey ý [0;1]
@@ -119,7 +119,7 @@ inline void Jelly::AnimateRoundedParts(long long millisecondsSinceEpoch, double 
 	const double COS_COEFFICIENT = cos(ANIMATION_COEFFICIENT);
 	const double SIN_COEFFICIENT = sin(ANIMATION_COEFFICIENT);
 
-	while (createdIt != m_createdCircleSectors.end() && animatedIt != m_circleSectors.end())
+	while (createdIt != m_createdCircleSectors.end() && animatedIt != m_CircleSectors.end())
 	{
 		auto& vertexes = animatedIt->GetVertexes();
 		auto& created_vertexes = createdIt->GetVertexes();
@@ -168,7 +168,7 @@ void Jelly::Init()
 		float upper_vertex_x_delta = abs(next_upper_vertex_x - upper_vertex_x);
 
 		auto vertexes = 
-		Circle<float>::GenerateRoundVertexes
+		OldCircle<float>::GenerateRoundVertexes
 		(
 			ROUNDED_LINES_VERTEX_COUNT,
 			upper_vertex_x_delta/2,
@@ -203,8 +203,8 @@ void Jelly::Init()
 
 	for (auto& el : m_createdCircleSectors)
 	{
-		m_circleSectors.push_back(el);
-		m_circleSectors.back().Init();
+		m_CircleSectors.push_back(el);
+		m_CircleSectors.back().Init();
 	}
 
 
@@ -254,7 +254,7 @@ void Jelly::Init()
 			el.SetShaderUniformsProgram([location]()
 				{glUniform4f(location, 1., .0f, .0f, .0f); });
 
-		for(auto& el : m_circleSectors)
+		for(auto& el : m_CircleSectors)
 			el.SetShaderUniformsProgram([location]()
 				{glUniform4f(location, 1., .0f, .0f, .0f); });
 	}
@@ -264,7 +264,7 @@ void Jelly::Draw()
 {
 	for(auto& el : m_quadrangles)
 		el.Draw();
-	for(auto& el : m_circleSectors)
+	for(auto& el : m_CircleSectors)
 		el.Draw();
 
 
