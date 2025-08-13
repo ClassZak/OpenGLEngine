@@ -23,17 +23,8 @@ public:
 	}
 
 
-	void SetVertexBufferObject(VertexBufferObject vertexBufferObject)
+	void SetVertexBufferObject(VertexBufferObject* vertexBufferObject)
 	{
-		m_vertexBufferObject.reset(&vertexBufferObject);
-	}
-	template<class T>
-	void SetVertexBufferObject(const std::vector<T>& dataVector)
-	{
-		SetVertexBufferObject(VertexBufferObject(dataVector));
-	}
-	void SetVertexBufferObject(const void* data, GLsizeiptr size)
-	{
-		SetVertexBufferObject(VertexBufferObject(data, size));
+		m_vertexBufferObject.reset(vertexBufferObject);
 	}
 };

@@ -23,11 +23,12 @@ void Renderer::AddShader(const std::string& filepath)
 Renderer& Renderer::Draw(const VertexBufferObject& vertexBufferObject)
 {
 	vertexBufferObject.Bind();
-	GLLogCall(glDrawElements(GL_TRIANGLES, vertexBufferObject.GetCount(), GL_UNSIGNED_INT, nullptr));
+	GLLogCall(glDrawElements(GL_TRIANGLES, vertexBufferObject.GetSize(), GL_UNSIGNED_INT, nullptr));
 
 	return *this;
 }
-Renderer& Renderer::Draw(const VertexBufferObject& vertexBufferObject, const IndexBufferObject& indexBufferObject)
+Renderer& Renderer::Draw
+(const VertexBufferObject& vertexBufferObject, const IndexBufferObject& indexBufferObject)
 {
 	vertexBufferObject.Bind();
 	indexBufferObject.Bind();
@@ -55,12 +56,7 @@ Renderer& Renderer::Draw(IDrawableOpenGL* object)
 	auto* iHasVertexBufferObject = dynamic_cast<IHasVertexBufferObject*>(object);
 	auto* iHasIndexBufferObject = dynamic_cast<IHasIndexBufferObject*>(object);
 	
-	GLsizeiptr size = 0;
-	if (iHasIndexBufferObject)
-		size = iHasIndexBufferObject->GetIndexBufferObject()->GetCount();
-	else if (iHasVertexBufferObject)
-		size = iHasVertexBufferObject->GetVertexBufferObject()->GetCount();
-	else
+	if (not (iHasIndexBufferObject || iHasVertexBufferObject))
 		throw std::invalid_argument("Wrong type");
 		
 	if(iHasVertexArrayObject)
@@ -73,11 +69,21 @@ Renderer& Renderer::Draw(IDrawableOpenGL* object)
 	// Фигурные скобки обязательно
 	if (iHasIndexBufferObject)
 	{
-		GLLogCall(glDrawElements(object->GetDrawMode(), size, GL_UNSIGNED_INT, nullptr));
+		GLLogCall
+		(
+			glDrawElements
+			(
+				object->GetDrawMode(),
+				iHasIndexBufferObject->GetIndexBufferObject()->GetCount(),
+				GL_UNSIGNED_INT,
+				nullptr
+			)
+		);
 	}
-	else
+	else if(iHasVertexBufferObject)
 	{
-		GLLogCall(glDrawArrays(object->GetDrawMode(), 0, size));
+		GLLogCall
+		(glDrawArrays(object->GetDrawMode(), 0, iHasVertexBufferObject->GetVertexBufferObject()->GetSize()));
 	}
 
 	return *this;
@@ -99,7 +105,7 @@ Renderer& Renderer::Draw(IDrawableOpenGL* object, const std::vector<Uniform>& un
 	if (iHasIndexBufferObject)
 		size = iHasIndexBufferObject->GetIndexBufferObject()->GetCount();
 	else if (iHasVertexBufferObject)
-		size = iHasVertexBufferObject->GetVertexBufferObject()->GetCount();
+		size = iHasVertexBufferObject->GetVertexBufferObject()->GetSize();
 	else
 		throw std::invalid_argument("Wrong type");
 

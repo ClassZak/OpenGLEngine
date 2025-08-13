@@ -18,11 +18,11 @@ public:
 		: IndexBufferObject(std::vector<GLuint>(dataVector))
 	{}
 	IndexBufferObject(const std::vector<GLuint>& dataVector)
-		: IndexBufferObject(dataVector.data(), dataVector.size() * sizeof(GLuint))
+		: IndexBufferObject(dataVector.data(), dataVector.size())
 	{}
-	IndexBufferObject(const GLuint* data, GLsizeiptr size)
+	IndexBufferObject(const GLuint* data, GLsizeiptr count)
 	{
-		Init(data, size);
+		Init(data, count);
 	}
 
 	~IndexBufferObject()

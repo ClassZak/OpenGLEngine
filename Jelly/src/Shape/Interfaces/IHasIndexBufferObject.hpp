@@ -23,20 +23,8 @@ public:
 	}
 
 
-	void SetIndexBufferObject(IndexBufferObject indexBufferObject)
+	void SetIndexBufferObject(IndexBufferObject* indexBufferObject)
 	{
-		m_indexBufferObject.reset(&indexBufferObject);
-	}
-	void SetIndexBufferObject(const std::initializer_list<GLuint>& dataVector)
-	{
-		SetIndexBufferObject(IndexBufferObject(dataVector));
-	}
-	void SetIndexBufferObject(const std::vector<GLuint>& dataVector)
-	{
-		SetIndexBufferObject(IndexBufferObject(dataVector));
-	}
-	void SetIndexBufferObject(const GLuint* data, GLsizeiptr size)
-	{
-		SetIndexBufferObject(IndexBufferObject(data, size));
+		m_indexBufferObject.reset(indexBufferObject);
 	}
 };

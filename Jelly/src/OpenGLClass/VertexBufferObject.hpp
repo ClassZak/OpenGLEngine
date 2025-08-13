@@ -10,7 +10,7 @@
 
 class VertexBufferObject : public AOpenGLClass
 {
-	GLsizei m_count;
+	GLsizei m_size;
 public:
 	template<class T>
 	VertexBufferObject(const std::vector<T>& dataVector)
@@ -33,7 +33,7 @@ public:
 	}
 	void Init(const void* data, GLsizeiptr size)
 	{
-		m_count = size;
+		m_size = size;
 		GLLogCall(glGenBuffers(1, &this->m_index));
 		GLLogCall(glBindBuffer(GL_ARRAY_BUFFER, this->m_index));
 		glBufferData
@@ -56,9 +56,9 @@ public:
 		GLLogCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 	}
 
-	GLsizei GetCount() const
+	GLsizei GetSize() const
 	{
-		return m_count;
+		return m_size;
 	}
 };
 
