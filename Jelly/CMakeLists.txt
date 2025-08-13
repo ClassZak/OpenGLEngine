@@ -175,6 +175,7 @@ add_executable(${PROJECT_NAME}
 	${CMAKE_SOURCE_DIR}/src/Shape/OldLine.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Line.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Quadrangle.hpp
+	${CMAKE_SOURCE_DIR}/src/Shape/OldQuadrangle.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/SimpleRect.hpp
 	
 	

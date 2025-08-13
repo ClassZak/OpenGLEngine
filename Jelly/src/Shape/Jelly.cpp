@@ -73,8 +73,8 @@ inline void Jelly::AnimateParts(long long millisecondsSinceEpoch, double animati
 {
 	const auto ANIMATION_COEFFICIENT = millisecondsSinceEpoch * animationSpeed;
 
-	auto animatedIt = m_quadrangles.begin();
-	auto createdIt = m_createdQuadrangles.begin();
+	auto animatedIt = m_OldQuadrangles.begin();
+	auto createdIt = m_createdOldQuadrangles.begin();
 
 	// Ey ý [0;1]
 	const double SHORT_COS_COEFFICIENT = (cos(ANIMATION_COEFFICIENT) + 1) / 2.;
@@ -84,7 +84,7 @@ inline void Jelly::AnimateParts(long long millisecondsSinceEpoch, double animati
 	const double COS_COEFFICIENT = cos(ANIMATION_COEFFICIENT);
 	const double SIN_COEFFICIENT = sin(ANIMATION_COEFFICIENT);
 
-	while (createdIt != m_createdQuadrangles.end() && animatedIt != m_quadrangles.end())
+	while (createdIt != m_createdOldQuadrangles.end() && animatedIt != m_OldQuadrangles.end())
 	{
 		auto& vertexes = animatedIt->GetVertexes();
 		auto& created_vertexes = createdIt->GetVertexes();
@@ -228,7 +228,7 @@ void Jelly::Init()
 
 		float upper_vertex_x_delta = abs(next_upper_vertex_x - upper_vertex_x);
 
-		m_createdQuadrangles.push_back(
+		m_createdOldQuadrangles.push_back(
 		{
 			Vertex2D(x,START_Y),
 			Vertex2D(upper_vertex_x , END_Y),
@@ -236,8 +236,8 @@ void Jelly::Init()
 			Vertex2D(next_x,START_Y)
 		});
 
-		m_quadrangles.push_back(m_createdQuadrangles.back());
-		m_quadrangles.back().Init();
+		m_OldQuadrangles.push_back(m_createdOldQuadrangles.back());
+		m_OldQuadrangles.back().Init();
 	}
 
 
@@ -250,7 +250,7 @@ void Jelly::Init()
 		m_bottomLine->SetShaderUniformsProgram([location]()
 			{glUniform4f(location, .0f, .0f, .0f, .0f); });
 
-		for(auto& el : m_quadrangles)
+		for(auto& el : m_OldQuadrangles)
 			el.SetShaderUniformsProgram([location]()
 				{glUniform4f(location, 1., .0f, .0f, .0f); });
 
@@ -262,7 +262,7 @@ void Jelly::Init()
 
 void Jelly::Draw()
 {
-	for(auto& el : m_quadrangles)
+	for(auto& el : m_OldQuadrangles)
 		el.Draw();
 	for(auto& el : m_OldCircleSectors)
 		el.Draw();

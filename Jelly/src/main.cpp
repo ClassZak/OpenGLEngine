@@ -43,6 +43,7 @@
 #include "Shape/Circle.hpp"
 #include "Shape/OldLine.hpp"
 #include "Shape/Jelly.hpp"
+#include "Shape/OldQuadrangle.hpp"
 #include "Shape/Quadrangle.hpp"
 #include "Shape/CircleSector.hpp"
 #include "Shape/SimpleRect.hpp"
@@ -132,10 +133,12 @@ int main(int argc, char** argv)
 	SimpleRect rect(Vertex2D(-0.9f,-0.9f),0.5f, 0.5f);
 	Line line({Vertex2D(-1.f,-1.f), Vertex2D(1.f, 1.f)});
 	CircleSector circleSector(30, 0.2f, Vertex2D<float>(0.f,0.f), 0, M_PI_2);
+	Quadrangle quadrangle({Vertex2D(1.f,.9f), Vertex2D(0.f,.9f), Vertex2D(0.2f, 0.6f), Vertex2D(0.2f, 0.3f)});
 	auto& rendererShader = Renderer::GetInstance().FindShader(3);
 	rect.SetShader(rendererShader);
 	line.SetShader(rendererShader);
 	circleSector.SetShader(rendererShader);
+	quadrangle.SetShader(rendererShader);
 
 
 
@@ -180,6 +183,15 @@ int main(int argc, char** argv)
 			(
 				"u_Color",
 				UniformVec4{ 0.f, (milliseconds_since_epoch.count() % 1000) / 1000.f, 0.f, 1.f }
+			)
+		)
+		.Draw
+		(
+			&quadrangle,
+			Uniform
+			(
+				"u_Color",
+				UniformVec4{ 0.f, (milliseconds_since_epoch.count() % 100) / 100.f, 0.f, 1.f }
 			)
 		);
 

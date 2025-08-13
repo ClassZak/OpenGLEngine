@@ -3,7 +3,7 @@
 #include "Interfaces/IDrawable.hpp"
 #include "OldLine.hpp"
 #include "OldCircle.hpp"
-#include "Quadrangle.hpp"
+#include "OldQuadrangle.hpp"
 #include "OldCircleSector.hpp"
 
 #include <vector>
@@ -20,8 +20,8 @@ protected:
 	std::list<OldLine<float>> m_createdRoundedLines;
 	std::list<OldLine<float>> m_roundedLines;
 
-	std::list<Quadrangle<float>> m_createdQuadrangles;
-	std::list<Quadrangle<float>> m_quadrangles;
+	std::list<OldQuadrangle<float>> m_createdOldQuadrangles;
+	std::list<OldQuadrangle<float>> m_OldQuadrangles;
 	std::list<OldCircleSector<float>> m_createdOldCircleSectors;
 	std::list<OldCircleSector<float>> m_OldCircleSectors;
 
