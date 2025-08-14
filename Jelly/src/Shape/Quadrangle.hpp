@@ -7,35 +7,37 @@
 #include "../Shape/Interfaces/IHasVertexArrayObject.hpp"
 #include "../Shape/Interfaces/IHasShader.hpp"
 #include "../Shape/Interfaces/IDrawable.hpp"
+
+#include "../Shape/Interfaces/IHasVertexVector.hpp"
 #include "../Vertex/Vertex2D.hpp"
 
 #include <functional>
 #include <stdexcept>
+#include <array>
 #include <cmath>
 
 
+template <typename T>
 class Quadrangle : 
-	public IHasVertexArrayObject,
-	public IHasVertexBufferObject,
+	public IHasVertexVector<T>,
 	public IHasIndexBufferObject,
 	public IHasShader
 {
 public:
-	template<typename T>
-	Quadrangle
-	(
-		std::initializer_list<Vertex2D<T>> vertices
-	) : Quadrangle(std::vector<Vertex2D<T>>(vertices))
+	Quadrangle(std::initializer_list<Vertex2D<T>> vertices) :
+	Quadrangle(std::vector<Vertex2D<T>>(vertices))
 	{
 	}
-	template<typename T>
-	Quadrangle
-	(
-		const std::vector<Vertex2D<T>>& vertices
-	)
+	Quadrangle(const std::array<Vertex2D<T>, 4u>& vertices) : 
+	Quadrangle({vertices[0], vertices[1], vertices[2], vertices[3]})
+	{
+	}
+	Quadrangle(const std::vector<Vertex2D<T>>& vertices)
 	{
 		if(vertices.size()!=4u)
 			throw std::invalid_argument("Wrong size of vector");
+
+		this->Init(vertices);
 
 		VertexBufferObject* newVertexBufferObject = new VertexBufferObject(vertices);
 		this->m_vertexBufferObject.reset(newVertexBufferObject);

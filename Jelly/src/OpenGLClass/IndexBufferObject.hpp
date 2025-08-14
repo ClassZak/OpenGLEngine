@@ -14,15 +14,15 @@ private:
 	GLsizeiptr m_count = 0;
 
 public:
-	IndexBufferObject(const std::initializer_list<GLuint>& dataVector)
-		: IndexBufferObject(std::vector<GLuint>(dataVector))
+	IndexBufferObject(const std::initializer_list<GLuint>& dataVector, GLenum usage = GL_STATIC_DRAW)
+		: IndexBufferObject(std::vector<GLuint>(dataVector), usage)
 	{}
-	IndexBufferObject(const std::vector<GLuint>& dataVector)
+	IndexBufferObject(const std::vector<GLuint>& dataVector, GLenum usage = GL_STATIC_DRAW)
 		: IndexBufferObject(dataVector.data(), dataVector.size())
 	{}
-	IndexBufferObject(const GLuint* data, GLsizeiptr count)
+	IndexBufferObject(const GLuint* data, GLsizeiptr count, GLenum usage = GL_STATIC_DRAW)
 	{
-		Init(data, count);
+		Init(data, count, usage);
 	}
 
 	~IndexBufferObject()
@@ -30,12 +30,12 @@ public:
 		glDeleteBuffers(1, &this->m_index);
 	}
 
-	void Init(const std::vector<GLuint>& dataVector)
+	void Init(const std::vector<GLuint>& dataVector, GLenum usage = GL_STATIC_DRAW)
 	{
-		Init(dataVector.data(), dataVector.size());
+		Init(dataVector.data(), dataVector.size(), usage);
 	}
 
-	void Init(const GLuint* data, GLsizeiptr count)
+	void Init(const GLuint* data, GLsizeiptr count, GLenum usage = GL_STATIC_DRAW)
 	{
 		m_count = count;
 		GLLogCall(glGenBuffers(1, &this->m_index));
@@ -45,7 +45,7 @@ public:
 			GL_ELEMENT_ARRAY_BUFFER,
 			count * sizeof(GLuint),
 			data,
-			GL_STATIC_DRAW
+			usage
 		);
 	}
 

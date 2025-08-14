@@ -133,7 +133,7 @@ int main(int argc, char** argv)
 	SimpleRect rect(Vertex2D(-0.9f,-0.9f),0.5f, 0.5f);
 	Line line({Vertex2D(-1.f,-1.f), Vertex2D(1.f, 1.f)});
 	CircleSector circleSector(30, 0.2f, Vertex2D<float>(0.f,0.f), 0, M_PI_2);
-	Quadrangle quadrangle({Vertex2D(1.f,.9f), Vertex2D(0.f,.9f), Vertex2D(0.2f, 0.6f), Vertex2D(0.2f, 0.3f)});
+	Quadrangle quadrangle({Vertex2D(1.f,.9f), Vertex2D(-.4f,.9f), Vertex2D(0.2f, 0.6f), Vertex2D(0.2f, 0.3f)});
 	auto& rendererShader = Renderer::GetInstance().FindShader(3);
 	rect.SetShader(rendererShader);
 	line.SetShader(rendererShader);
@@ -159,6 +159,12 @@ int main(int argc, char** argv)
 			(std::chrono::system_clock::now() - now).count();
 		}
 #endif  // FPS <= 1000
+
+
+
+		/* Animate here */
+		quadrangle.GetVertices()[0].x = sin(milliseconds_since_epoch.count() * ANIMATION_SPEED / 10);
+		quadrangle.ReBind();
 
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -194,6 +200,10 @@ int main(int argc, char** argv)
 				UniformVec4{ 0.f, (milliseconds_since_epoch.count() % 100) / 100.f, 0.f, 1.f }
 			)
 		);
+
+
+
+		
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
