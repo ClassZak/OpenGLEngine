@@ -59,7 +59,7 @@
 #define FPS 60
 #define VERTEX_ATTRIBUTE_SIZE 2
 
-#define ANIMATION_SPEED 1.e-2
+#define ANIMATION_SPEED 1.e-3
 
 
 std::vector<std::function<void(GLFWwindow* window, double xpos, double ypos)>> mouseMovingProcs;
@@ -166,8 +166,11 @@ int main(int argc, char** argv)
 		quadrangle.GetVertices()[0].x = sin(milliseconds_since_epoch.count() * ANIMATION_SPEED / 10);
 		quadrangle.ReBind();
 		rect.SetHeight(sin(milliseconds_since_epoch.count() * ANIMATION_SPEED));
-		line.GetVertices()[0].x = sin(milliseconds_since_epoch.count() * ANIMATION_SPEED / 10);
-		line.GetVertices()[0].y = sin(milliseconds_since_epoch.count() * ANIMATION_SPEED / 10);
+
+		line.GetVertices()[0].x = cos(milliseconds_since_epoch.count() * ANIMATION_SPEED);
+		line.GetVertices()[0].y = sin(milliseconds_since_epoch.count() * ANIMATION_SPEED);
+		line.GetVertices()[1].x = -cos(milliseconds_since_epoch.count() * ANIMATION_SPEED);
+		line.GetVertices()[1].y = -sin(milliseconds_since_epoch.count() * ANIMATION_SPEED);
 		line.ReBind();
 
 		/* Render here */

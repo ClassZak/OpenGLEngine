@@ -11,16 +11,17 @@
 class VertexBufferObject : public AOpenGLClass
 {
 	GLsizei m_size;
+	GLsizei m_count;
 	GLenum m_usage;
 public:
 	template<class T>
 	VertexBufferObject(const std::vector<T>& dataVector, GLenum usage = GL_DYNAMIC_DRAW)
-	: VertexBufferObject(dataVector.data(), dataVector.size() * sizeof(T), usage)
+	: VertexBufferObject(dataVector.data(), dataVector.size() * sizeof(T), dataVector.size(), usage)
 	{ }
-	VertexBufferObject(const void* data, GLsizeiptr size, GLenum usage = GL_DYNAMIC_DRAW) :
+	VertexBufferObject(const void* data, GLsizeiptr size, GLsizei count, GLenum usage = GL_DYNAMIC_DRAW) :
 	m_usage(usage)
 	{
-		Init(data, size);
+		Init(data, size, count);
 	}
 
 	~VertexBufferObject()
@@ -31,11 +32,12 @@ public:
 	template<class T>
 	void Init(const std::vector<T>& dataVector)
 	{
-		Init(dataVector.data(), dataVector.size() * sizeof(T));
+		Init(dataVector.data(), dataVector.size() * sizeof(T), dataVector.size());
 	}
-	void Init(const void* data, GLsizeiptr size, GLenum	usage = GL_DYNAMIC_DRAW)
+	void Init(const void* data, GLsizeiptr size, GLsizei count, GLenum usage = GL_DYNAMIC_DRAW)
 	{
 		m_size = size;
+		m_count = count;
 		GLLogCall(glGenBuffers(1, &this->m_index));
 		GLLogCall(glBindBuffer(GL_ARRAY_BUFFER, this->m_index));
 		GLLogCall(
@@ -86,6 +88,10 @@ public:
 	GLsizei GetSize() const
 	{
 		return m_size;
+	}
+	GLsizei GetCount() const
+	{
+		return m_count;
 	}
 };
 

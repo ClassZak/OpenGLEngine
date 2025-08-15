@@ -105,7 +105,7 @@ Renderer& Renderer::Draw(IDrawableOpenGL* object, const std::vector<Uniform>& un
 	if (iHasIndexBufferObject)
 		size = iHasIndexBufferObject->GetIndexBufferObject()->GetCount();
 	else if (iHasVertexBufferObject)
-		size = static_cast<GLsizei>(iHasVertexBufferObject->GetVertexBufferObject()->GetSize());
+		size = iHasVertexBufferObject->GetVertexBufferObject()->GetCount();
 	else
 		throw std::invalid_argument("Wrong type");
 
