@@ -105,7 +105,7 @@ Renderer& Renderer::Draw(IDrawableOpenGL* object, const std::vector<Uniform>& un
 	if (iHasIndexBufferObject)
 		size = iHasIndexBufferObject->GetIndexBufferObject()->GetCount();
 	else if (iHasVertexBufferObject)
-		size = iHasVertexBufferObject->GetVertexBufferObject()->GetSize();
+		size = static_cast<GLsizei>(iHasVertexBufferObject->GetVertexBufferObject()->GetSize());
 	else
 		throw std::invalid_argument("Wrong type");
 
@@ -130,7 +130,7 @@ Renderer& Renderer::Draw(IDrawableOpenGL* object, const std::vector<Uniform>& un
 	{
 		if (object->GetDrawMode() == GL_LINE_STRIP)
 		{
-			if (Line* line = dynamic_cast<Line*>(object))
+			if (Line<float>* line = dynamic_cast<Line<float>*>(object))
 			{
 				// m_lineWidth != 1
 				if (abs((double)line->GetWidth() - 1) > 1e-10)

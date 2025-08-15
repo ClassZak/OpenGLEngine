@@ -8,18 +8,20 @@
 #include "../Shape/Interfaces/IHasVertexArrayObject.hpp"
 #include "../Shape/Interfaces/IHasShader.hpp"
 #include "../Shape/Interfaces/IDrawable.hpp"
+#include "../Shape/Interfaces/IHasVertexVector.hpp"
+
 #include "../Vertex/Vertex2D.hpp"
 
 
-
+template <typename T>
 class CircleSector :
-	public IHasVertexArrayObject,
-	public IHasVertexBufferObject,
-	public IHasIndexBufferObject,
-	public IHasShader
+	public virtual IHasVertexArrayObject,
+	public virtual IHasVertexBufferObject,
+	public virtual IHasIndexBufferObject,
+	public virtual IHasShader,
+	public virtual IHasVertexVector<T>
 {
 public:
-	template<typename T>
 	CircleSector
 	(
 		std::size_t count,
@@ -32,6 +34,9 @@ public:
 		std::vector<Vertex2D<T>> vertices=
 		GenerateCircleSectorVertexes(count, radius, center, startDegree, endDegree);
 		vertices.insert(vertices.begin(), center);
+
+		::IHasVertexVector<T>::Init(vertices);
+
 		VertexBufferObject* newVertexBufferObject = 
 		new VertexBufferObject(vertices);
 		this->m_vertexBufferObject.reset(newVertexBufferObject);
@@ -58,7 +63,6 @@ public:
 	/// <param name="startDegree">Радианы для начала э [-2PI;2PI]</param>
 	/// <param name="endDegree">Радианы для конца э [-2PI;2PI]</param>
 	/// <returns>Вершины для отрисовки</returns>
-	template<typename T>
 	static std::vector<Vertex2D<T>> GenerateCircleSectorVertexes
 	(
 		std::size_t OldCirclePointCount,

@@ -11,14 +11,16 @@
 class VertexBufferObject : public AOpenGLClass
 {
 	GLsizei m_size;
+	GLenum m_usage;
 public:
 	template<class T>
 	VertexBufferObject(const std::vector<T>& dataVector, GLenum usage = GL_DYNAMIC_DRAW)
 	: VertexBufferObject(dataVector.data(), dataVector.size() * sizeof(T), usage)
 	{ }
-	VertexBufferObject(const void* data, GLsizeiptr size, GLenum usage = GL_DYNAMIC_DRAW)
+	VertexBufferObject(const void* data, GLsizeiptr size, GLenum usage = GL_DYNAMIC_DRAW) :
+	m_usage(usage)
 	{
-		Init(data, size, usage);
+		Init(data, size);
 	}
 
 	~VertexBufferObject()
@@ -42,7 +44,7 @@ public:
 			GL_ARRAY_BUFFER,
 			size,
 			data,
-			usage
+			m_usage
 		));
 	}
 
@@ -59,7 +61,7 @@ public:
 
 
 	template<class T>
-	inline void ReBind(const std::vector<T>& dataVector,std::size_t count, GLintptr offset = 0)
+	void ReBind(const std::vector<T>& dataVector,std::size_t count, GLintptr offset = 0)
 	{
 		if(count > dataVector.size())
 			throw std::invalid_argument("Count of vertices grater than size of vector");
@@ -69,17 +71,16 @@ public:
 		UnBind();
 	}
 	template<class T>
-	inline void ReBind(const std::vector<T>& dataVector, GLintptr offset = 0)
+	void ReBind(const std::vector<T>& dataVector, GLintptr offset = 0)
 	{
 		Bind();
-		ReBind(dataVector.data(), dataVector.size() * sizeof(T), offset);
+		ReBind(dataVector.data(), dataVector.size() * sizeof(T) - offset, offset);
 		UnBind();
 	}
-	inline void ReBind(const void* data, const GLsizeiptr size, GLintptr offset = 0)
+	void ReBind(const void* data, const GLsizeiptr size, GLintptr offset = 0)
 	{
-		glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
+		GLLogCall(glBufferSubData(GL_ARRAY_BUFFER, offset, size, data));
 	}
-	
 
 
 	GLsizei GetSize() const

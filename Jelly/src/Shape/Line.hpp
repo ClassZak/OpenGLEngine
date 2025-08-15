@@ -5,6 +5,8 @@
 #include "../Shape/Interfaces/IHasVertexArrayObject.hpp"
 #include "../Shape/Interfaces/IHasShader.hpp"
 #include "../Shape/Interfaces/IDrawable.hpp"
+
+#include "../Shape/Interfaces/IHasVertexVector.hpp"
 #include "../Vertex/Vertex2D.hpp"
 
 #include <functional>
@@ -12,9 +14,9 @@
 #include <GL/glew.h>
 
 
+template<typename T>
 class Line :
-	public IHasVertexArrayObject,
-	public IHasVertexBufferObject,
+	public IHasVertexVector<T>,
 	public IHasShader
 {
 protected:
@@ -22,7 +24,6 @@ protected:
 	double m_lineWidth;
 	bool m_isSmooth;
 
-	template<typename T>
 	void Init(const std::vector<Vertex2D<T>>& vertices)
 	{
 		VertexBufferObject* newVertexBufferObject = new VertexBufferObject(vertices);
@@ -37,7 +38,6 @@ protected:
 		this->m_vertexBufferObject.get()->UnBind();
 	}
 public:
-	template<typename T>
 	Line
 	(
 		std::initializer_list<Vertex2D<T>> vertices,
@@ -52,7 +52,6 @@ public:
 		isSmooth
 	) { }
 
-	template<typename T>
 	Line
 	(
 		const std::vector<Vertex2D<T>>& vertices,
@@ -64,6 +63,7 @@ public:
 	m_isSmooth(isSmooth)
 	{
 		::IHasVertexBufferObject::m_drawMode = drawMode;
+		::IHasVertexVector<T>::Init(vertices);
 		Init(vertices);
 	}
 

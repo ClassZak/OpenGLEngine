@@ -130,8 +130,8 @@ int main(int argc, char** argv)
 	Renderer::GetInstance().AddShader("../res/shaders/shader.shader");
 
 
+	Line line({Vertex2D(-1.f,-1.f), Vertex2D(0.5f, 1.f)});
 	SimpleRect rect(Vertex2D(-0.9f,-0.9f),0.5f, 0.5f);
-	Line line({Vertex2D(-1.f,-1.f), Vertex2D(1.f, 1.f)});
 	CircleSector circleSector(30, 0.2f, Vertex2D<float>(0.f,0.f), 0, M_PI_2);
 	Quadrangle quadrangle({Vertex2D(1.f,.9f), Vertex2D(-.4f,.9f), Vertex2D(0.2f, 0.6f), Vertex2D(0.2f, 0.3f)});
 	auto& rendererShader = Renderer::GetInstance().FindShader(3);
@@ -165,14 +165,18 @@ int main(int argc, char** argv)
 		/* Animate here */
 		quadrangle.GetVertices()[0].x = sin(milliseconds_since_epoch.count() * ANIMATION_SPEED / 10);
 		quadrangle.ReBind();
+		rect.SetHeight(sin(milliseconds_since_epoch.count() * ANIMATION_SPEED));
+		line.GetVertices()[0].x = sin(milliseconds_since_epoch.count() * ANIMATION_SPEED / 10);
+		line.GetVertices()[0].y = sin(milliseconds_since_epoch.count() * ANIMATION_SPEED / 10);
+		line.ReBind();
 
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
 		glClearColor(.7f,.7f,.7f,1.f);
 
 		
-		Renderer::GetInstance().
-		Draw
+		Renderer::GetInstance()
+		/*.Draw
 		(
 			&rect,
 			Uniform
@@ -181,7 +185,7 @@ int main(int argc, char** argv)
 				UniformVec4{(milliseconds_since_epoch.count() % 1000) / 1000.f, 0.f, 0.f, 1.f}
 			)
 		)
-		.Draw(&circleSector)
+		.Draw(&circleSector)*/
 		.Draw
 		(
 			&line,
@@ -191,7 +195,7 @@ int main(int argc, char** argv)
 				UniformVec4{ 0.f, (milliseconds_since_epoch.count() % 1000) / 1000.f, 0.f, 1.f }
 			)
 		)
-		.Draw
+		/*.Draw
 		(
 			&quadrangle,
 			Uniform
@@ -199,7 +203,7 @@ int main(int argc, char** argv)
 				"u_Color",
 				UniformVec4{ 0.f, (milliseconds_since_epoch.count() % 100) / 100.f, 0.f, 1.f }
 			)
-		);
+		)*/;
 
 
 

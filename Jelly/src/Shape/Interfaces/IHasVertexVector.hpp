@@ -5,9 +5,10 @@
 #include "IHasVertexBufferObject.hpp"
 #include "../../Vertex/Vertex2D.hpp"
 
-template
-<typename T>
-class IHasVertexVector : virtual public IHasVertexBufferObject, virtual public IHasVertexArrayObject
+template <typename T>
+class IHasVertexVector : 
+	virtual public IHasVertexBufferObject,
+	virtual public IHasVertexArrayObject
 {
 protected:
 	std::vector<Vertex2D<T>> m_vertices;
@@ -35,7 +36,7 @@ public:
 		return m_vertices;
 	}
 
-	void ReBind(std::size_t count, GLintptr offset = 0)
+	void ReBind(std::size_t count, GLintptr offset)
 	{
 		this->m_vertexArrayObject.Bind();
 		this->m_vertexBufferObject.get()->ReBind(m_vertices, count, offset);

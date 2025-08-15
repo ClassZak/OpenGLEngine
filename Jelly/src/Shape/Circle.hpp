@@ -8,6 +8,8 @@
 #include "../Shape/Interfaces/IHasVertexArrayObject.hpp"
 #include "../Shape/Interfaces/IHasShader.hpp"
 #include "../Shape/Interfaces/IDrawable.hpp"
+#include "../Shape/Interfaces/IHasVertexVector.hpp"
+
 #include "../Vertex/Vertex2D.hpp"
 
 #include <functional>
@@ -16,14 +18,15 @@
 #include <GL/glew.h>
 
 
+template<typename T>
 class Circle :
-	public IHasVertexArrayObject,
-	public IHasVertexBufferObject,
-	public IHasIndexBufferObject,
-	public IHasShader
+	public virtual IHasVertexArrayObject,
+	public virtual IHasVertexBufferObject,
+	public virtual IHasIndexBufferObject,
+	public virtual IHasShader,
+	public virtual IHasVertexVector<T>
 {
 public:
-	template<typename T>
 	Circle
 	(
 		std::size_t count,
@@ -31,8 +34,11 @@ public:
 		const Vertex2D<T>& center
 	)
 	{
+		std::vector<Vertex2D<T>> vertices = GenerateCircleVertexes(count, radius, center);
+		::IHasVertexVector<T>::Init(vertices);
+
 		VertexBufferObject* newVertexBufferObject =
-		new VertexBufferObject(GenerateCircleVertexes(count, radius, center));
+		new VertexBufferObject(vertices);
 		this->m_vertexBufferObject.reset(newVertexBufferObject);
 
 		// Attribute crafting
@@ -54,7 +60,6 @@ public:
 	/// <param name="radius">Радиус (больше 0)</param>
 	/// <param name="center">Центр</param>
 	/// <returns>Вершины для отрисовки</returns>
-	template<typename T>
 	static std::vector<Vertex2D<T>> GenerateCircleVertexes
 	(std::size_t count, T radius, const Vertex2D<T>& center)
 	{
@@ -115,7 +120,6 @@ public:
 	/// <param name="startDegree">Радианы для начала э [-2PI;2PI]</param>
 	/// <param name="endDegree">Радианы для конца э [-2PI;2PI]</param>
 	/// <returns>Вершины для отрисовки</returns>
-	template<typename T>
 	static std::vector<Vertex2D<T>> GenerateRoundVertexes
 	(
 		std::size_t circlePointCount,
