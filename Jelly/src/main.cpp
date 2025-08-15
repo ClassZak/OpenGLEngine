@@ -163,9 +163,10 @@ int main(int argc, char** argv)
 
 
 		/* Animate here */
-		quadrangle.GetVertices()[0].x = sin(milliseconds_since_epoch.count() * ANIMATION_SPEED / 10);
+		quadrangle.GetVertices()[0].x = sin(milliseconds_since_epoch.count() * ANIMATION_SPEED);
 		quadrangle.ReBind();
-		rect.SetHeight(sin(milliseconds_since_epoch.count() * ANIMATION_SPEED));
+		rect.SetHeight	(abs(sin(milliseconds_since_epoch.count() * ANIMATION_SPEED)));
+		rect.SetWidth	(abs(cos(milliseconds_since_epoch.count() * ANIMATION_SPEED)));
 
 		line.GetVertices()[0].x = cos(milliseconds_since_epoch.count() * ANIMATION_SPEED);
 		line.GetVertices()[0].y = sin(milliseconds_since_epoch.count() * ANIMATION_SPEED);
@@ -179,7 +180,7 @@ int main(int argc, char** argv)
 
 		
 		Renderer::GetInstance()
-		/*.Draw
+		.Draw
 		(
 			&rect,
 			Uniform
@@ -188,7 +189,7 @@ int main(int argc, char** argv)
 				UniformVec4{(milliseconds_since_epoch.count() % 1000) / 1000.f, 0.f, 0.f, 1.f}
 			)
 		)
-		.Draw(&circleSector)*/
+		.Draw(&circleSector)
 		.Draw
 		(
 			&line,
@@ -198,7 +199,7 @@ int main(int argc, char** argv)
 				UniformVec4{ 0.f, (milliseconds_since_epoch.count() % 1000) / 1000.f, 0.f, 1.f }
 			)
 		)
-		/*.Draw
+		.Draw
 		(
 			&quadrangle,
 			Uniform
@@ -206,7 +207,7 @@ int main(int argc, char** argv)
 				"u_Color",
 				UniformVec4{ 0.f, (milliseconds_since_epoch.count() % 100) / 100.f, 0.f, 1.f }
 			)
-		)*/;
+		);
 
 
 

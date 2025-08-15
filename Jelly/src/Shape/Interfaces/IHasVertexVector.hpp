@@ -22,6 +22,24 @@ protected:
 	{
 		m_vertices.assign(vertices.begin(), vertices.end());
 	}
+
+	/// <summary>
+	/// Перепривязка данных
+	/// </summary>
+	/// <param name="startIndex">Индекс первого элемента</param>
+	/// <param name="count">Количество перерисовываемых элементов</param>
+	inline void ReBind(size_t startIndex, size_t count)
+	{
+		this->m_vertexArrayObject.Bind();
+		this->m_vertexBufferObject->Bind();
+		this->m_vertexBufferObject->ReBind
+		(
+			m_vertices.data() + startIndex,
+			count * sizeof(Vertex2D<T>),
+			startIndex * sizeof(Vertex2D<T>)
+		);
+		this->m_vertexArrayObject.UnBind();
+	}
 public:
 	IHasVertexVector(const std::initializer_list<Vertex2D<T>>& vertices) :
 	IHasVertexVector(std::vector<Vertex2D<T>>(vertices))
@@ -36,16 +54,9 @@ public:
 		return m_vertices;
 	}
 
-	void ReBind(std::size_t count, GLintptr offset)
+
+	virtual void ReBind()
 	{
-		this->m_vertexArrayObject.Bind();
-		this->m_vertexBufferObject.get()->ReBind(m_vertices, count, offset);
-		this->m_vertexArrayObject.UnBind();
-	}
-	void ReBind(GLintptr offset = 0)
-	{
-		this->m_vertexArrayObject.Bind();
-		this->m_vertexBufferObject.get()->ReBind(m_vertices, offset);
-		this->m_vertexArrayObject.UnBind();
+		ReBind(0, m_vertices.size());
 	}
 };

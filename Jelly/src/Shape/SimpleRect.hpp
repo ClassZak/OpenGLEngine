@@ -55,18 +55,18 @@ public:
 		this->m_vertices[1] = Vertex2D<T>(m_pos.x, m_pos.y + sizes.y);
 		this->m_vertices[2] = m_pos + Vertex2D<T>(sizes.x, sizes.y);
 		this->m_vertices[3] = Vertex2D<T>(m_pos.x + sizes.x, sizes.y);
-		this->ReBind(1);
+		::IHasVertexVector<T>::ReBind(1, 3);
 	}
 	inline void SetWidth(const T width)
 	{
 		this->m_vertices[2].x = m_pos.x + width;
 		this->m_vertices[3].x = m_pos.x + width;
-		this->ReBind(2, sizeof(Vertex2D<T>) * 2);
+		::IHasVertexVector<T>::ReBind(2, 2);
 	}
 	inline void SetHeight(const T height)
 	{
 		this->m_vertices[1].y = m_pos.y + height;
 		this->m_vertices[2].y = m_pos.y + height;
-		this->ReBind(2, 0);
+		::IHasVertexVector<T>::ReBind(1, 2);
 	}
 };
