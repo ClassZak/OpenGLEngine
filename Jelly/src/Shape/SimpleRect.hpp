@@ -52,11 +52,17 @@ public:
 
 	inline void SetSizes(const Vertex2D<T>& sizes)
 	{
-		this->m_vertices[1] = Vertex2D<T>(m_pos.x, m_pos.y + sizes.y);
-		this->m_vertices[2] = m_pos + Vertex2D<T>(sizes.x, sizes.y);
-		this->m_vertices[3] = Vertex2D<T>(m_pos.x + sizes.x, sizes.y);
+		this->m_vertices[1].y = m_pos.y + sizes.y;
+		this->m_vertices[2].x = m_pos.x + sizes.x;
+		this->m_vertices[2].y = m_pos.y + sizes.y;
+		this->m_vertices[3].x = m_pos.x + sizes.x;
 		::IHasVertexVector<T>::ReBind(1, 3);
 	}
+	inline void SetSizes(T width, T height)
+	{
+		SetSizes(Vertex2D<T>((T)width, (T)height));
+	}
+
 	inline void SetWidth(const T width)
 	{
 		this->m_vertices[2].x = m_pos.x + width;

@@ -165,8 +165,13 @@ int main(int argc, char** argv)
 		/* Animate here */
 		quadrangle.GetVertices()[0].x = sin(milliseconds_since_epoch.count() * ANIMATION_SPEED);
 		quadrangle.ReBind();
-		rect.SetHeight	(abs(sin(milliseconds_since_epoch.count() * ANIMATION_SPEED)));
-		rect.SetWidth	(abs(cos(milliseconds_since_epoch.count() * ANIMATION_SPEED)));
+		/*rect.SetHeight	(abs(sin(milliseconds_since_epoch.count() * ANIMATION_SPEED)));
+		rect.SetWidth	(abs(cos(milliseconds_since_epoch.count() * ANIMATION_SPEED)));*/
+		rect.SetSizes
+		(
+			abs(cos(milliseconds_since_epoch.count() * ANIMATION_SPEED)),
+			abs(sin(milliseconds_since_epoch.count() * ANIMATION_SPEED))
+		);
 
 		line.GetVertices()[0].x = cos(milliseconds_since_epoch.count() * ANIMATION_SPEED);
 		line.GetVertices()[0].y = sin(milliseconds_since_epoch.count() * ANIMATION_SPEED);
