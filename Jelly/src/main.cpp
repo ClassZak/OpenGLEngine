@@ -127,16 +127,17 @@ int main(int argc, char** argv)
 	Renderer::GetInstance().AddShader("../res/shaders/shader.shader");
 
 
-	Line line({Vertex2D(-1.f,-1.f), Vertex2D(0.5f, 1.f)});
+	/*Line line({Vertex2D(-1.f,-1.f), Vertex2D(0.5f, 1.f)});
 	SimpleRect rect(Vertex2D(-0.9f,-0.9f),0.5f, 0.5f);
 	CircleSector circleSector(30, 0.2f, Vertex2D<float>(0.f,0.f), 0, M_PI_2);
-	Quadrangle quadrangle({Vertex2D(1.f,.9f), Vertex2D(-.4f,.9f), Vertex2D(0.2f, 0.6f), Vertex2D(0.2f, 0.3f)});
+	Quadrangle quadrangle({Vertex2D(1.f,.9f), Vertex2D(-.4f,.9f), Vertex2D(0.2f, 0.6f), Vertex2D(0.2f, 0.3f)});*/
 	Jelly jelly;
-	auto& rendererShader = Renderer::GetInstance().FindShader(3);
+	jelly.Init();
+	/*auto& rendererShader = Renderer::GetInstance().FindShader(3);
 	rect.SetShader(rendererShader);
 	line.SetShader(rendererShader);
 	circleSector.SetShader(rendererShader);
-	quadrangle.SetShader(rendererShader);
+	quadrangle.SetShader(rendererShader);*/
 
 
 
@@ -161,10 +162,8 @@ int main(int argc, char** argv)
 
 
 		/* Animate here */
-		quadrangle.GetVertices()[0].x = sin(milliseconds_since_epoch.count() * ANIMATION_SPEED);
+		/*quadrangle.GetVertices()[0].x = sin(milliseconds_since_epoch.count() * ANIMATION_SPEED);
 		quadrangle.ReBind();
-		/*rect.SetHeight	(abs(sin(milliseconds_since_epoch.count() * ANIMATION_SPEED)));
-		rect.SetWidth	(abs(cos(milliseconds_since_epoch.count() * ANIMATION_SPEED)));*/
 		rect.SetSizes
 		(
 			abs(cos(milliseconds_since_epoch.count() * ANIMATION_SPEED)),
@@ -175,14 +174,14 @@ int main(int argc, char** argv)
 		line.GetVertices()[0].y = sin(milliseconds_since_epoch.count() * ANIMATION_SPEED);
 		line.GetVertices()[1].x = -cos(milliseconds_since_epoch.count() * ANIMATION_SPEED);
 		line.GetVertices()[1].y = -sin(milliseconds_since_epoch.count() * ANIMATION_SPEED);
-		line.ReBind();
+		line.ReBind();*/
 
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
 		glClearColor(.7f,.7f,.7f,1.f);
 
 		
-		Renderer::GetInstance()
+		/*Renderer::GetInstance()
 		.Draw
 		(
 			&rect,
@@ -210,7 +209,7 @@ int main(int argc, char** argv)
 				"u_Color",
 				UniformVec4{ 0.f, (milliseconds_since_epoch.count() % 100) / 100.f, 0.f, 1.f }
 			)
-		);
+		);*/
 		jelly.Draw();
 
 

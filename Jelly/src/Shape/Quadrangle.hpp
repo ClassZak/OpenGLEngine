@@ -23,21 +23,13 @@ class Quadrangle :
 	public IHasIndexBufferObject,
 	public IHasShader
 {
-public:
-	Quadrangle(std::initializer_list<Vertex2D<T>> vertices) :
-	Quadrangle(std::vector<Vertex2D<T>>(vertices))
-	{
-	}
-	Quadrangle(const std::array<Vertex2D<T>, 4u>& vertices) : 
-	Quadrangle({vertices[0], vertices[1], vertices[2], vertices[3]})
-	{
-	}
-	Quadrangle(const std::vector<Vertex2D<T>>& vertices)
+protected:
+	void Init(const std::vector<Vertex2D<T>>& vertices)
 	{
 		if(vertices.size()!=4u)
 			throw std::invalid_argument("Wrong size of vector");
 
-		this->Init(vertices);
+		::IHasVertexVector<T>::Init(vertices);
 
 		VertexBufferObject* newVertexBufferObject = new VertexBufferObject(vertices);
 		this->m_vertexBufferObject.reset(newVertexBufferObject);
@@ -49,5 +41,31 @@ public:
 
 		IndexBufferObject* newIndexBufferObject = new IndexBufferObject({ 0, 1, 2, 0, 2, 3});
 		this->m_indexBufferObject.reset(newIndexBufferObject);
+	}
+public:
+	Quadrangle(std::initializer_list<Vertex2D<T>> vertices) :
+	Quadrangle(std::vector<Vertex2D<T>>(vertices))
+	{
+	}
+	Quadrangle(const std::array<Vertex2D<T>, 4u>& vertices) : 
+	Quadrangle({vertices[0], vertices[1], vertices[2], vertices[3]})
+	{
+	}
+
+	Quadrangle(const std::vector<Vertex2D<T>>& vertices)
+	{
+		Init(vertices);
+	}
+
+	Quadrangle(const Quadrangle<T>& other)
+	{
+		Init(other.m_vertices);
+	}
+	Quadrangle& operator=(const Quadrangle<T>& other)
+	{
+		if(this != &other)
+			::IHasVertexVector<T>::Init(other.m_vertices);
+
+		return *this;
 	}
 };
