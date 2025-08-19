@@ -1,44 +1,29 @@
 #pragma once
 #define _USE_MATH_DEFINES
-#include "../OpenGLClass/VertexArrayObject.hpp"
-#include "../OpenGLClass/VertexBufferObject.hpp"
-#include "../OpenGLClass/VertexBufferLayout.hpp"
-#include "../OpenGLClass/IndexBufferObject.hpp"
-#include "../OpenGLClass/Shader.hpp"
-
-#include "../OpenGLClass/Renderer.hpp"
-
-#include "Interfaces/IHasIndexBufferObject.hpp"
-#include "Interfaces/IHasVertexBufferObject.hpp"
-#include "Interfaces/IHasVertexArrayObject.hpp"
-#include "Interfaces/IHasShader.hpp"
 #include "Interfaces/IDrawable.hpp"
-
-#include "Line.hpp"
-#include "Circle.hpp"
-#include "Quadrangle.hpp"
-#include "CircleSector.hpp"
+#include "OldLine.hpp"
+#include "OldCircle.hpp"
+#include "OldQuadrangle.hpp"
+#include "OldCircleSector.hpp"
 
 #include <vector>
 #include <list>
 #include <stdlib.h>
 
-#include <gl/GL.h>
 
-
-class Jelly
+class OldJelly : public IDrawable
 {
 protected:
 
-	std::list<Line<float>> m_createdLines;
-	std::list<Line<float>> m_lines;
-	std::list<Line<float>> m_createdRoundedLines;
-	std::list<Line<float>> m_roundedLines;
+	std::list<OldLine<float>> m_createdLines;
+	std::list<OldLine<float>> m_lines;
+	std::list<OldLine<float>> m_createdRoundedLines;
+	std::list<OldLine<float>> m_roundedLines;
 
-	std::list<Quadrangle<float>> m_createdQuadrangles;
-	std::list<Quadrangle<float>> m_quadrangles;
-	std::list<CircleSector<float>> m_createdCircleSectors;
-	std::list<CircleSector<float>> m_circleSectors;
+	std::list<OldQuadrangle<float>> m_createdOldQuadrangles;
+	std::list<OldQuadrangle<float>> m_OldQuadrangles;
+	std::list<OldCircleSector<float>> m_createdOldCircleSectors;
+	std::list<OldCircleSector<float>> m_OldCircleSectors;
 
 
 	const float START_X = -0.75f;
@@ -58,7 +43,7 @@ protected:
 	const float ROUNDED_LINES_VERTEX_COUNT = 20;
 
 	GLuint m_shaderProgram=0;
-	Line<float>* m_bottomLine= new Line<float>({Vertex2D<float>(START_X, START_Y), Vertex2D<float>(END_X, START_Y)});
+	OldLine<float>* m_bottomLine= new OldLine<float>({Vertex2D<float>(START_X, START_Y), Vertex2D<float>(END_X, START_Y)});
 
 
 
@@ -67,14 +52,14 @@ protected:
 	inline void AnimateParts(long long millisecondsSinceEpoch, double animationSpeed = 1e-3);
 	inline void AnimateRoundedParts(long long millisecondsSinceEpoch, double animationSpeed = 1e-3);
 public:
-	Jelly()=default;
-	Jelly(GLuint shaderProgram) : Jelly()
+	OldJelly()=default;
+	OldJelly(GLuint shaderProgram) : OldJelly()
 	{
 		m_shaderProgram=shaderProgram;
 	}
 
-	void Init();
-	void Draw();
+	void Init() override;
+	void Draw() override;
 
 	/// <summary>
 	/// Метод для дёрганья желе по времени

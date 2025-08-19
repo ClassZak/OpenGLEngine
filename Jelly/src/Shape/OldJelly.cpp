@@ -1,6 +1,6 @@
-#include "Jelly.hpp"
+#include "OldJelly.hpp"
 
-inline void Jelly::AnimateLines(long long millisecondsSinceEpoch, double animationSpeed)
+inline void OldJelly::AnimateLines(long long millisecondsSinceEpoch, double animationSpeed)
 {
 	const auto ANIMATION_COEFFICIENT = millisecondsSinceEpoch * animationSpeed;
 
@@ -17,8 +17,8 @@ inline void Jelly::AnimateLines(long long millisecondsSinceEpoch, double animati
 
 	while (createdIt != m_createdLines.end() && animatedIt != m_lines.end())
 	{
-		auto& vertexes = animatedIt->GetVertices();
-		auto& created_vertexes = createdIt->GetVertices();
+		auto& vertexes = animatedIt->GetVertexes();
+		auto& created_vertexes = createdIt->GetVertexes();
 
 
 		auto vertex_it = std::next(vertexes.begin());
@@ -32,7 +32,7 @@ inline void Jelly::AnimateLines(long long millisecondsSinceEpoch, double animati
 	}
 }
 
-inline void Jelly::AnimateRoundedLines(long long millisecondsSinceEpoch, double animationSpeed)
+inline void OldJelly::AnimateRoundedLines(long long millisecondsSinceEpoch, double animationSpeed)
 {
 	const auto ANIMATION_COEFFICIENT = millisecondsSinceEpoch * animationSpeed;
 
@@ -49,11 +49,11 @@ inline void Jelly::AnimateRoundedLines(long long millisecondsSinceEpoch, double 
 
 	while (createdIt != m_createdRoundedLines.end() && animatedIt != m_roundedLines.end())
 	{
-		auto& vertexes = animatedIt->GetVertices();
-		auto& created_vertexes = createdIt->GetVertices();
+		auto& vertexes = animatedIt->GetVertexes();
+		auto& created_vertexes = createdIt->GetVertexes();
 		
 		
-		for (std::size_t i = 0; i != created_vertexes.size() && i != vertexes.size(); ++i)
+		for (std::size_t i = 0; i != created_vertexes.size() and i != vertexes.size(); ++i)
 		{
 			vertexes[i].x =
 			created_vertexes[i].x * 
@@ -69,12 +69,12 @@ inline void Jelly::AnimateRoundedLines(long long millisecondsSinceEpoch, double 
 	}
 }
 
-inline void Jelly::AnimateParts(long long millisecondsSinceEpoch, double animationSpeed)
+inline void OldJelly::AnimateParts(long long millisecondsSinceEpoch, double animationSpeed)
 {
 	const auto ANIMATION_COEFFICIENT = millisecondsSinceEpoch * animationSpeed;
 
-	auto animatedIt = m_quadrangles.begin();
-	auto createdIt = m_createdQuadrangles.begin();
+	auto animatedIt = m_OldQuadrangles.begin();
+	auto createdIt = m_createdOldQuadrangles.begin();
 
 	// Ey э [0;1]
 	const double SHORT_COS_COEFFICIENT = (cos(ANIMATION_COEFFICIENT) + 1) / 2.;
@@ -84,10 +84,10 @@ inline void Jelly::AnimateParts(long long millisecondsSinceEpoch, double animati
 	const double COS_COEFFICIENT = cos(ANIMATION_COEFFICIENT);
 	const double SIN_COEFFICIENT = sin(ANIMATION_COEFFICIENT);
 
-	while (createdIt != m_createdQuadrangles.end() && animatedIt != m_quadrangles.end())
+	while (createdIt != m_createdOldQuadrangles.end() && animatedIt != m_OldQuadrangles.end())
 	{
-		auto& vertexes = animatedIt->GetVertices();
-		auto& created_vertexes = createdIt->GetVertices();
+		auto& vertexes = animatedIt->GetVertexes();
+		auto& created_vertexes = createdIt->GetVertexes();
 
 
 		auto vertex_it = std::next(vertexes.begin(),1);
@@ -104,12 +104,12 @@ inline void Jelly::AnimateParts(long long millisecondsSinceEpoch, double animati
 	}
 }
 
-inline void Jelly::AnimateRoundedParts(long long millisecondsSinceEpoch, double animationSpeed)
+inline void OldJelly::AnimateRoundedParts(long long millisecondsSinceEpoch, double animationSpeed)
 {
 	const auto ANIMATION_COEFFICIENT = millisecondsSinceEpoch * animationSpeed;
 
-	auto animatedIt = m_circleSectors.begin();
-	auto createdIt = m_createdCircleSectors.begin();
+	auto animatedIt = m_OldCircleSectors.begin();
+	auto createdIt = m_createdOldCircleSectors.begin();
 
 	// Ey э [0;1]
 	const double SHORT_COS_COEFFICIENT = (cos(ANIMATION_COEFFICIENT) + 1) / 2.;
@@ -119,13 +119,13 @@ inline void Jelly::AnimateRoundedParts(long long millisecondsSinceEpoch, double 
 	const double COS_COEFFICIENT = cos(ANIMATION_COEFFICIENT);
 	const double SIN_COEFFICIENT = sin(ANIMATION_COEFFICIENT);
 
-	while (createdIt != m_createdCircleSectors.end() && animatedIt != m_circleSectors.end())
+	while (createdIt != m_createdOldCircleSectors.end() && animatedIt != m_OldCircleSectors.end())
 	{
-		auto& vertexes = animatedIt->GetVertices();
-		auto& created_vertexes = createdIt->GetVertices();
+		auto& vertexes = animatedIt->GetVertexes();
+		auto& created_vertexes = createdIt->GetVertexes();
 
 
-		for (std::size_t i = 0; i != created_vertexes.size() && i != vertexes.size(); ++i)
+		for (std::size_t i = 0; i != created_vertexes.size() and i != vertexes.size(); ++i)
 		{
 			vertexes[i].x =
 				created_vertexes[i].x *
@@ -146,13 +146,15 @@ inline void Jelly::AnimateRoundedParts(long long millisecondsSinceEpoch, double 
 
 
 
-void Jelly::Init()
+void OldJelly::Init()
 {
+	m_bottomLine->Init();
+
 	for (int i = 0; i <= PARTS_COUNT; ++i)
 	{
 		float x= START_X + i * PART_SIZE;
 		m_createdLines.push_back
-		(Line<float>({ Vertex2D<float>(x,START_Y),Vertex2D<float>(x * MULTIPLE_COEFFICIENT,END_Y) }));
+		(OldLine<float>({ Vertex2D(x,START_Y),Vertex2D(x * MULTIPLE_COEFFICIENT,END_Y) }));
 	}
 
 	std::list<std::vector<Vertex2D<float>>> round_vertexes_list;
@@ -166,7 +168,7 @@ void Jelly::Init()
 		float upper_vertex_x_delta = abs(next_upper_vertex_x - upper_vertex_x);
 
 		auto vertexes = 
-		Circle<float>::GenerateRoundVertexes
+		OldCircle<float>::GenerateRoundVertexes
 		(
 			ROUNDED_LINES_VERTEX_COUNT,
 			upper_vertex_x_delta/2,
@@ -175,9 +177,9 @@ void Jelly::Init()
 
 		round_vertexes_list.push_back(vertexes);
 
-		m_createdCircleSectors.push_back
+		m_createdOldCircleSectors.push_back
 		(
-			CircleSector<float>
+			OldCircleSector<float>
 			(
 				ROUNDED_LINES_VERTEX_COUNT,
 				upper_vertex_x_delta / 2,
@@ -190,17 +192,19 @@ void Jelly::Init()
 	for (auto& el : round_vertexes_list)
 	{
 		for(std::size_t i=0; i+1<el.size();++i)
-			m_createdRoundedLines.push_back(Line<float>({el[i],el[i+1]}));
+			m_createdRoundedLines.push_back(OldLine({el[i],el[i+1]}));
 	}
 
 	for (auto& el : m_createdRoundedLines)
 	{
 		m_roundedLines.push_back(el);
+		m_roundedLines.back().Init();
 	}
 
-	for (auto& el : m_createdCircleSectors)
+	for (auto& el : m_createdOldCircleSectors)
 	{
-		m_circleSectors.push_back(el);
+		m_OldCircleSectors.push_back(el);
+		m_OldCircleSectors.back().Init();
 	}
 
 
@@ -209,6 +213,7 @@ void Jelly::Init()
 	for (auto& el : m_createdLines)
 	{
 		m_lines.push_back(el);
+		m_lines.back().Init();
 	}
 
 
@@ -223,51 +228,56 @@ void Jelly::Init()
 
 		float upper_vertex_x_delta = abs(next_upper_vertex_x - upper_vertex_x);
 
-		m_createdQuadrangles.push_back(
+		m_createdOldQuadrangles.push_back(
 		{
-			Vertex2D<float>(x,START_Y),
-			Vertex2D<float>(upper_vertex_x , END_Y),
-			Vertex2D<float>(next_upper_vertex_x ,END_Y),
-			Vertex2D<float>(next_x,START_Y)
+			Vertex2D(x,START_Y),
+			Vertex2D(upper_vertex_x , END_Y),
+			Vertex2D(next_upper_vertex_x ,END_Y),
+			Vertex2D(next_x,START_Y)
 		});
 
-		m_quadrangles.push_back(m_createdQuadrangles.back());
+		m_OldQuadrangles.push_back(m_createdOldQuadrangles.back());
+		m_OldQuadrangles.back().Init();
 	}
 
-	auto& rendererShader = Renderer::GetInstance().FindShader(3);
-	m_bottomLine->SetShader(rendererShader);
-	for(auto& el : m_lines)
-		el.SetShader(rendererShader);
-	for(auto& el : m_roundedLines)
-		el.SetShader(rendererShader);
+
+	if (m_shaderProgram)
+	{
+		int location = glGetUniformLocation(m_shaderProgram, "u_Color");
+		GL_ASSERT(location != -1);
+		
+		// Для очистки от предыдущего использования
+		m_bottomLine->SetShaderUniformsProgram([location]()
+			{glUniform4f(location, .0f, .0f, .0f, .0f); });
+
+		for(auto& el : m_OldQuadrangles)
+			el.SetShaderUniformsProgram([location]()
+				{glUniform4f(location, 1., .0f, .0f, .0f); });
+
+		for(auto& el : m_OldCircleSectors)
+			el.SetShaderUniformsProgram([location]()
+				{glUniform4f(location, 1., .0f, .0f, .0f); });
+	}
 }
 
-void Jelly::Draw()
+void OldJelly::Draw()
 {
-	const Uniform RED_COLOR_UNIFORM = Uniform("u_Color", UniformVec4{ 1.f, 0.f, 0.f, 1.f });
-	const Uniform BLACK_COLOR_UNIFORM = Uniform("u_Color", UniformVec4{ 0.f, 0.f, 0.f, 1.f });
-
-	std::for_each
-	(m_quadrangles.begin(), m_quadrangles.end(), [&RED_COLOR_UNIFORM](Quadrangle<float>& arg) -> void
-		{Renderer::GetInstance().Draw(&arg, RED_COLOR_UNIFORM);});
-	std::for_each
-	(m_circleSectors.begin(), m_circleSectors.end(), [&RED_COLOR_UNIFORM](CircleSector<float>& arg) -> void
-		{Renderer::GetInstance().Draw(&arg, RED_COLOR_UNIFORM);});
+	for(auto& el : m_OldQuadrangles)
+		el.Draw();
+	for(auto& el : m_OldCircleSectors)
+		el.Draw();
 
 
-	Renderer::GetInstance().Draw(m_bottomLine, Uniform("u_Color", UniformVec4{ 0.f, 0.f, 0.f, 1.f }));
+	m_bottomLine->Draw();
 
-
-	std::for_each
-	(m_lines.begin(), m_lines.end(), [&BLACK_COLOR_UNIFORM](Line<float>& arg) -> void
-		{Renderer::GetInstance().Draw(&arg, BLACK_COLOR_UNIFORM); });
-	std::for_each
-	(m_roundedLines.begin(), m_roundedLines.end(), [&BLACK_COLOR_UNIFORM](Line<float>& arg) -> void
-		{Renderer::GetInstance().Draw(&arg, BLACK_COLOR_UNIFORM); });
+	for (auto& el : m_lines)
+		el.Draw();
+	for (auto& el : m_roundedLines)
+		el.Draw();
 }
 
 
-void Jelly::Animate(long long millisecondsSinceEpoch, double animationSpeed)
+void OldJelly::Animate(long long millisecondsSinceEpoch, double animationSpeed)
 {
 	AnimateLines(millisecondsSinceEpoch, animationSpeed);
 	AnimateRoundedLines(millisecondsSinceEpoch, animationSpeed);

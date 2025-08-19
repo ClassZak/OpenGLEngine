@@ -39,11 +39,8 @@
 #include "Vertex/VertexUtils.hpp"
 
 #include "OpenGLClass/Shader.hpp"
-#include "Shape/OldCircle.hpp"
 #include "Shape/Circle.hpp"
-#include "Shape/OldLine.hpp"
 #include "Shape/Jelly.hpp"
-#include "Shape/OldQuadrangle.hpp"
 #include "Shape/Quadrangle.hpp"
 #include "Shape/CircleSector.hpp"
 #include "Shape/SimpleRect.hpp"
@@ -84,7 +81,7 @@ int main(int argc, char** argv)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 
-	window = glfwCreateWindow(windowWidth, windowHeight, "Jelly", NULL, NULL);
+	window = glfwCreateWindow(windowWidth, windowHeight, "OldJelly", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -134,6 +131,7 @@ int main(int argc, char** argv)
 	SimpleRect rect(Vertex2D(-0.9f,-0.9f),0.5f, 0.5f);
 	CircleSector circleSector(30, 0.2f, Vertex2D<float>(0.f,0.f), 0, M_PI_2);
 	Quadrangle quadrangle({Vertex2D(1.f,.9f), Vertex2D(-.4f,.9f), Vertex2D(0.2f, 0.6f), Vertex2D(0.2f, 0.3f)});
+	Jelly jelly;
 	auto& rendererShader = Renderer::GetInstance().FindShader(3);
 	rect.SetShader(rendererShader);
 	line.SetShader(rendererShader);
@@ -213,6 +211,7 @@ int main(int argc, char** argv)
 				UniformVec4{ 0.f, (milliseconds_since_epoch.count() % 100) / 100.f, 0.f, 1.f }
 			)
 		);
+		jelly.Draw();
 
 
 

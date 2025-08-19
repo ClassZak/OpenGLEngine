@@ -8,6 +8,7 @@
 #include <memory>
 #include <sstream>
 #include <cctype>
+#include <concepts>
 #include <utility>
 #include <array>
 #include <vector>
@@ -25,6 +26,7 @@
 #include "../Shape/Interfaces/IDrawable.hpp"
 
 #include "../Shape/Line.hpp"
+#include "../Shape/ShapeWithUniform.hpp"
 
 class Renderer
 {
@@ -86,7 +88,7 @@ public:
 
 
 
-	
+
 	Renderer& Draw(IDrawableOpenGL* object, const Uniform& uniform)
 	{
 		std::vector<Uniform> uniformsVector;
@@ -101,5 +103,55 @@ public:
 		return Draw(object, uniformsVector);
 	}
 	Renderer& Draw(IDrawableOpenGL* object, const std::vector<Uniform>& uniforms);
+
+
+
+
+	template <class Container>
+		requires requires(const Container& c)
+		{
+			{ *std::begin(c) } -> std::convertible_to<IDrawableOpenGL*>;
+		}
+
+	inline Renderer& Draw(const Container& container)
+	{
+		for (auto& el : container)
+			Draw(el);
+	}
+
+
+	template <class ShapeContainer, class UniformContainer>
+		requires requires(const ShapeContainer& sc, const UniformContainer& uc)
+		{
+			{ *std::begin(sc) } -> std::convertible_to<IDrawableOpenGL*>;
+			{ *std::begin(uc) } -> std::convertible_to<Uniform*>;
+		}
+	inline Renderer& Draw(const ShapeContainer& container, const UniformContainer& uniformContainer)
+	{
+		if(container.size() != uniformContainer.size())
+			throw std::invalid_argument("Несоответсвие количества объектов числу униформ");
+
+		auto containerIt = container.begin();
+		auto uniformIt = uniformContainer.begin();
+		while (containerIt != container.end() && uniformIt != uniformContainer.end())
+		{
+			Draw(*containerIt, **uniformIt);
+			
+			++containerIt;
+			++uniformIt;
+		}
+	}
+
+
+	template <class Container>
+		requires requires(Container& c)
+		{
+			{ *std::begin(c) } -> std::convertible_to<IDrawableOpenGL*>;
+		}
+	inline Renderer& Draw(Container& container, const Uniform& uniform)
+	{
+		for (auto& el : container)
+			Draw(el, uniform);
+	}
 };
 
