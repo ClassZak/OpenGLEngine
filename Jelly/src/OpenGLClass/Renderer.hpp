@@ -107,6 +107,8 @@ public:
 
 
 
+
+	/*---==== C++ 20 required ====----*/
 	template <class Container>
 		requires requires(const Container& c)
 		{
@@ -117,6 +119,8 @@ public:
 	{
 		for (auto& el : container)
 			Draw(el);
+
+		return *this;
 	}
 
 
@@ -140,6 +144,8 @@ public:
 			++containerIt;
 			++uniformIt;
 		}
+
+		return *this;
 	}
 
 
@@ -152,6 +158,64 @@ public:
 	{
 		for (auto& el : container)
 			Draw(el, uniform);
+
+		return *this;
 	}
+
+
+
+
+
+
+
+
+	template <class ShapeContainer, typename T, class UniformContainer>
+		requires requires(const ShapeContainer& sc, const UniformContainer& uc)
+		{
+			{ *std::begin(sc) } -> std::convertible_to<T>;
+			{ *std::begin(uc) } -> std::convertible_to<Uniform>;
+		}
+	inline Renderer& DrawCollection(ShapeContainer& container, const UniformContainer& uniformContainer)
+	{
+		if (container.size() != uniformContainer.size())
+			throw std::invalid_argument("Несоответсвие количества объектов числу униформ");
+
+		auto containerIt = container.begin();
+		auto uniformIt = uniformContainer.begin();
+		while (containerIt != container.end() && uniformIt != uniformContainer.end())
+		{
+			Draw(&(*containerIt), *uniformIt);
+
+			++containerIt;
+			++uniformIt;
+		}
+
+		return *this;
+	}
+	template <class ShapeContainer, typename T>
+		requires requires(const ShapeContainer& sc)
+		{
+			{ *std::begin(sc) } -> std::convertible_to<T>;
+		}
+	inline Renderer& DrawCollection(ShapeContainer& container)
+	{
+		for(auto& el : container)
+			Draw(&el);
+
+		return *this;
+	}
+	template <class ShapeContainer, typename T>
+		requires requires(const ShapeContainer& sc)
+		{
+			{ *std::begin(sc) } -> std::convertible_to<T>;
+		}
+	inline Renderer& DrawCollection(ShapeContainer& container, const Uniform& uniform)
+	{
+		for(auto& el : container)
+			Draw(&el, uniform);
+
+		return *this;
+	}
+	/*---==== C++ 20 required ====----*/
 };
 

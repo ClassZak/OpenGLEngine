@@ -251,23 +251,19 @@ void Jelly::Draw()
 	const Uniform RED_COLOR_UNIFORM = Uniform("u_Color", UniformVec4{ 1.f, 0.f, 0.f, 1.f });
 	const Uniform BLACK_COLOR_UNIFORM = Uniform("u_Color", UniformVec4{ 0.f, 0.f, 0.f, 1.f });
 
-	std::for_each
-	(m_quadrangles.begin(), m_quadrangles.end(), [&RED_COLOR_UNIFORM](Quadrangle<float>& arg) -> void
-		{Renderer::GetInstance().Draw(&arg, RED_COLOR_UNIFORM);});
-	std::for_each
-	(m_circleSectors.begin(), m_circleSectors.end(), [&RED_COLOR_UNIFORM](CircleSector<float>& arg) -> void
-		{Renderer::GetInstance().Draw(&arg, RED_COLOR_UNIFORM);});
+	Renderer::GetInstance().DrawCollection<std::list<Quadrangle<float>>, Quadrangle<float>>
+	(m_quadrangles, RED_COLOR_UNIFORM);
+	Renderer::GetInstance().DrawCollection<std::list<CircleSector<float>>, CircleSector<float>>
+	(m_circleSectors, RED_COLOR_UNIFORM);
 
 
 	Renderer::GetInstance().Draw(m_bottomLine, Uniform("u_Color", UniformVec4{ 0.f, 0.f, 0.f, 1.f }));
 
 
-	std::for_each
-	(m_lines.begin(), m_lines.end(), [&BLACK_COLOR_UNIFORM](Line<float>& arg) -> void
-		{Renderer::GetInstance().Draw(&arg, BLACK_COLOR_UNIFORM); });
-	std::for_each
-	(m_roundedLines.begin(), m_roundedLines.end(), [&BLACK_COLOR_UNIFORM](Line<float>& arg) -> void
-		{Renderer::GetInstance().Draw(&arg, BLACK_COLOR_UNIFORM); });
+	Renderer::GetInstance().DrawCollection<std::list<Line<float>>, Line<float>>
+	(m_lines, BLACK_COLOR_UNIFORM);
+	Renderer::GetInstance().DrawCollection<std::list<Line<float>>, Line<float>>
+	(m_roundedLines, BLACK_COLOR_UNIFORM);
 }
 
 
