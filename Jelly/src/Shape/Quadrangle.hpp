@@ -57,15 +57,9 @@ public:
 		Init(vertices);
 	}
 
-	Quadrangle(const Quadrangle<T>& other)
+	Quadrangle(const Quadrangle<T>& other) :
+	IHasVertexVector<T>(other)
 	{
 		Init(other.m_vertices);
-	}
-	Quadrangle& operator=(const Quadrangle<T>& other)
-	{
-		if(this != &other)
-			::IHasVertexVector<T>::Init(other.m_vertices);
-
-		return *this;
 	}
 };

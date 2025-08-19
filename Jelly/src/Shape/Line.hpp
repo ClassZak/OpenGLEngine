@@ -20,23 +20,8 @@ class Line :
 	public IHasShader
 {
 protected:
-	GLenum m_drawMode = GL_LINE_STRIP;
 	double m_lineWidth;
 	bool m_isSmooth;
-
-	void Init(const std::vector<Vertex2D<T>>& vertices)
-	{
-		VertexBufferObject* newVertexBufferObject = new VertexBufferObject(vertices);
-		this->m_vertexBufferObject.reset(newVertexBufferObject);
-		// Attribute crafting
-		VertexBufferLayout layout;
-		layout.Push<T>(2);
-		this->m_vertexArrayObject.AddBuffer(*this->m_vertexBufferObject.get(), layout);
-
-
-		this->m_vertexArrayObject.UnBind();
-		this->m_vertexBufferObject.get()->UnBind();
-	}
 public:
 	Line
 	(
@@ -67,14 +52,14 @@ public:
 		Init(vertices);
 	}
 
-
-
-
 	Line(const Line& other) :
-		m_lineWidth(other.m_lineWidth),
-		m_isSmooth(other.m_isSmooth)
+	IHasVertexVector<T>(other),
+	m_lineWidth(other.m_lineWidth),
+	m_isSmooth(other.m_isSmooth)
 	{
-		this->m_drawMode=other.m_drawMode;
+		::IHasVertexBufferObject::m_drawMode = other.GetDrawMode();
+		::IHasVertexVector<T>::Init(other.m_vertices);
+		Init(this->m_vertices);
 	}
 	Line& operator=(const Line& other)
 	{
@@ -86,6 +71,23 @@ public:
 		}
 		return *this;
 	}
+
+
+protected:
+	void Init(const std::vector<Vertex2D<T>>& vertices)
+	{
+		VertexBufferObject* newVertexBufferObject = new VertexBufferObject(vertices);
+		this->m_vertexBufferObject.reset(newVertexBufferObject);
+		// Attribute crafting
+		VertexBufferLayout layout;
+		layout.Push<T>(2);
+		this->m_vertexArrayObject.AddBuffer(*this->m_vertexBufferObject.get(), layout);
+
+
+		this->m_vertexArrayObject.UnBind();
+		this->m_vertexBufferObject.get()->UnBind();
+	}
+public:
 
 	~Line()=default;
 

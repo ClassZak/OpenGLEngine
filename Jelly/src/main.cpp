@@ -56,7 +56,7 @@
 #define FPS 60
 #define VERTEX_ATTRIBUTE_SIZE 2
 
-#define ANIMATION_SPEED 1.e-3
+#define ANIMATION_SPEED 1.e-2
 
 
 std::vector<std::function<void(GLFWwindow* window, double xpos, double ypos)>> mouseMovingProcs;
@@ -81,7 +81,7 @@ int main(int argc, char** argv)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 
-	window = glfwCreateWindow(windowWidth, windowHeight, "OldJelly", NULL, NULL);
+	window = glfwCreateWindow(windowWidth, windowHeight, "Jelly", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -123,22 +123,10 @@ int main(int argc, char** argv)
 		return -1;
 	std::cout<<glGetString(GL_VERSION)<<std::endl;
 
-
 	Renderer::GetInstance().AddShader("../res/shaders/shader.shader");
 
-
-	/*Line line({Vertex2D(-1.f,-1.f), Vertex2D(0.5f, 1.f)});
-	SimpleRect rect(Vertex2D(-0.9f,-0.9f),0.5f, 0.5f);
-	CircleSector circleSector(30, 0.2f, Vertex2D<float>(0.f,0.f), 0, M_PI_2);
-	Quadrangle quadrangle({Vertex2D(1.f,.9f), Vertex2D(-.4f,.9f), Vertex2D(0.2f, 0.6f), Vertex2D(0.2f, 0.3f)});*/
 	Jelly jelly;
 	jelly.Init();
-	/*auto& rendererShader = Renderer::GetInstance().FindShader(3);
-	rect.SetShader(rendererShader);
-	line.SetShader(rendererShader);
-	circleSector.SetShader(rendererShader);
-	quadrangle.SetShader(rendererShader);*/
-
 
 
 	while (!glfwWindowShouldClose(window))
@@ -162,54 +150,12 @@ int main(int argc, char** argv)
 
 
 		/* Animate here */
-		/*quadrangle.GetVertices()[0].x = sin(milliseconds_since_epoch.count() * ANIMATION_SPEED);
-		quadrangle.ReBind();
-		rect.SetSizes
-		(
-			abs(cos(milliseconds_since_epoch.count() * ANIMATION_SPEED)),
-			abs(sin(milliseconds_since_epoch.count() * ANIMATION_SPEED))
-		);
-
-		line.GetVertices()[0].x = cos(milliseconds_since_epoch.count() * ANIMATION_SPEED);
-		line.GetVertices()[0].y = sin(milliseconds_since_epoch.count() * ANIMATION_SPEED);
-		line.GetVertices()[1].x = -cos(milliseconds_since_epoch.count() * ANIMATION_SPEED);
-		line.GetVertices()[1].y = -sin(milliseconds_since_epoch.count() * ANIMATION_SPEED);
-		line.ReBind();*/
+		jelly.Animate(milliseconds_since_epoch.count(), ANIMATION_SPEED);
 
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
 		glClearColor(.7f,.7f,.7f,1.f);
-
 		
-		/*Renderer::GetInstance()
-		.Draw
-		(
-			&rect,
-			Uniform
-			(
-				"u_Color",
-				UniformVec4{(milliseconds_since_epoch.count() % 1000) / 1000.f, 0.f, 0.f, 1.f}
-			)
-		)
-		.Draw(&circleSector)
-		.Draw
-		(
-			&line,
-			Uniform
-			(
-				"u_Color",
-				UniformVec4{ 0.f, (milliseconds_since_epoch.count() % 1000) / 1000.f, 0.f, 1.f }
-			)
-		)
-		.Draw
-		(
-			&quadrangle,
-			Uniform
-			(
-				"u_Color",
-				UniformVec4{ 0.f, (milliseconds_since_epoch.count() % 100) / 100.f, 0.f, 1.f }
-			)
-		);*/
 		jelly.Draw();
 
 

@@ -59,4 +59,14 @@ public:
 	{
 		ReBind(0, m_vertices.size());
 	}
+
+
+
+	IHasVertexVector(const IHasVertexVector<T>& other) : 
+	IHasVertexVector(other.m_vertices) {}
+	IHasVertexVector& operator=(const IHasVertexVector<T>& other)
+	{
+		if(this!=&other)
+			Init(other.m_vertices);
+	}
 };

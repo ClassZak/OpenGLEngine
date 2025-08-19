@@ -21,6 +21,10 @@ class CircleSector :
 	public virtual IHasShader,
 	public virtual IHasVertexVector<T>
 {
+protected:
+	T m_radius;
+	const Vertex2D<T>& m_center;
+	double m_startDegree, m_endDegree;
 public:
 	CircleSector
 	(
@@ -29,18 +33,34 @@ public:
 		const Vertex2D<T>& center,
 		double startDegree,
 		double endDegree
-	)
+	) : m_radius(radius), m_center(center), m_startDegree(startDegree), m_endDegree(endDegree)
 	{
 		std::vector<Vertex2D<T>> vertices=
 		GenerateCircleSectorVertexes(count, radius, center, startDegree, endDegree);
 		vertices.insert(vertices.begin(), center);
-
+		
 		::IHasVertexVector<T>::Init(vertices);
+		Init(vertices, count);
+	}
 
-		VertexBufferObject* newVertexBufferObject = 
+	CircleSector(const CircleSector<T>& other) :
+	IHasVertexVector<T>(other), 
+	m_radius(other.m_radius), 
+	m_center(other.m_center), 
+	m_startDegree(other.m_startDegree), 
+	m_endDegree(other.m_endDegree)
+	{
+		Init(other.m_vertices, other.m_vertices.size() - 1);
+	}
+	
+
+protected:
+	void Init(const std::vector<Vertex2D<T>>& vertices, std::size_t count)
+	{
+		VertexBufferObject* newVertexBufferObject =
 		new VertexBufferObject(vertices);
 		this->m_vertexBufferObject.reset(newVertexBufferObject);
-		
+
 		// Attribute crafting
 		VertexBufferLayout layout;
 		layout.Push<T>(2);
@@ -53,6 +73,7 @@ public:
 		this->m_vertexBufferObject.get()->UnBind();
 		this->m_indexBufferObject.get()->UnBind();
 	}
+public:
 
 	/// <summary>
 	/// Генерация вершин для отрисовки окружности по сектору

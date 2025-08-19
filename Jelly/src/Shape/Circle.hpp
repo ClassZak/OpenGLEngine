@@ -26,17 +26,32 @@ class Circle :
 	public virtual IHasShader,
 	public virtual IHasVertexVector<T>
 {
+protected:
+	T m_radius;
+	const Vertex2D<T>& m_center;
 public:
 	Circle
 	(
 		std::size_t count,
 		T radius,
 		const Vertex2D<T>& center
-	)
+	) : m_radius(radius), m_center(center)
 	{
 		std::vector<Vertex2D<T>> vertices = GenerateCircleVertexes(count, radius, center);
 		::IHasVertexVector<T>::Init(vertices);
+		Init(vertices, count);
+	}
 
+	Circle(const Circle<T>& other) : 
+	IHasVertexVector<T>(other), m_center(other.m_center), m_radius(other.m_radius)
+	{
+		Init(other.m_vertices, other.m_vertices.size());
+	}
+
+
+protected:
+	void Init(const std::vector<Vertex2D<T>>& vertices, std::size_t count)
+	{
 		VertexBufferObject* newVertexBufferObject =
 		new VertexBufferObject(vertices);
 		this->m_vertexBufferObject.reset(newVertexBufferObject);
@@ -45,14 +60,15 @@ public:
 		VertexBufferLayout layout;
 		layout.Push<T>(2);
 		this->m_vertexArrayObject.AddBuffer(*this->m_vertexBufferObject.get(), layout);
-		
+
 		IndexBufferObject* newIndexBufferObject = new IndexBufferObject(GenerateCircleVertexIndexes(count));
 		this->m_indexBufferObject.reset(newIndexBufferObject);
-		
+
 		this->m_vertexArrayObject.UnBind();
 		this->m_vertexBufferObject.get()->UnBind();
 		this->m_indexBufferObject.get()->UnBind();
 	}
+public:
 	/// <summary>
 	/// 
 	/// </summary>
