@@ -124,9 +124,56 @@ int main(int argc, char** argv)
 	std::cout<<glGetString(GL_VERSION)<<std::endl;
 
 	Renderer::GetInstance().AddShader("../res/shaders/shader.shader");
+	Renderer::GetInstance().AddShader("../res/shaders/texture_shader.shader", "texture_shader");
+	auto texture_shader = Renderer::GetInstance().FindShader("texture_shader");
 
-	Jelly jelly;
-	jelly.Init();
+	int texture_x, texture_y;
+	stbi_set_flip_vertically_on_load(1);
+	unsigned char* texture_data = stbi_load("../assets/icon.png", &texture_x, &texture_y, NULL, 4);
+
+	GLuint texture_id;
+	glGenTextures(1,&texture_id);
+	glBindTexture(GL_TEXTURE_2D, texture_id);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_x, texture_y, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture_data);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	stbi_image_free(texture_data);
+
+
+
+
+
+	std::vector<float> vertices =
+	{
+		-.9f,	-.9f,			0.f,	0.f, // нижний левый
+		-.9f,	.9f,			0.f,	1.f, // верхний левый
+		.9f,	-.9f,			1.f,	0.f, // нижний правый
+		.9f,	.9f,			1.f,	1.f, // верхний правый
+	};
+	std::vector<unsigned int> indexes =
+	{
+		0, 1, 3, 0, 2, 3
+	};
+	VertexArrayObject vertexArrayObject;
+	VertexBufferObject vertexBufferObject(vertices);
+	IndexBufferObject indexBufferObject(indexes);
+	VertexBufferLayout layout;
+	layout.Push<float>(2); // позиция
+	layout.Push<float>(2); // текстурные координаты
+	vertexArrayObject.AddBuffer(vertexBufferObject, layout);
+
+	vertexArrayObject.UnBind();
+	vertexBufferObject.UnBind();
+	indexBufferObject.UnBind();
+
+
+
 
 
 	while (!glfwWindowShouldClose(window))
@@ -150,15 +197,25 @@ int main(int argc, char** argv)
 
 
 		/* Animate here */
-		jelly.Animate(milliseconds_since_epoch.count(), ANIMATION_SPEED);
+
 
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
 		glClearColor(.7f,.7f,.7f,1.f);
 		
-		jelly.Draw();
 
+		texture_shader->Bind();
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture_id);
 
+		vertexArrayObject.Bind();
+		vertexBufferObject.Bind();
+		indexBufferObject.Bind();
+		glDrawElements(GL_TRIANGLES, indexBufferObject.GetCount(), GL_UNSIGNED_INT, nullptr);
+		vertexArrayObject.UnBind();
+		vertexBufferObject.UnBind();
+		indexBufferObject.UnBind();
+		texture_shader->UnBind();
 
 		
 

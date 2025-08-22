@@ -18,6 +18,12 @@ void Renderer::AddShader(const std::string& filepath)
 	AddShader(std::shared_ptr<Shader>(shader));
 }
 
+void Renderer::AddShader(const std::string& filepath, const std::string& name)
+{
+	Shader* shader = new Shader(filepath, name.c_str());
+	AddShader(std::shared_ptr<Shader>(shader));
+}
+
 
 
 Renderer& Renderer::Draw(const VertexBufferObject& vertexBufferObject)

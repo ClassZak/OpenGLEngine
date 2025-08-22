@@ -27,15 +27,14 @@ private:
 	std::unordered_map<std::string, int> m_uniformLocationCache;
 	std::string m_fragmentShader;
 	std::string m_vertexShader;
+	char* m_name = nullptr;
 	
 	GLuint m_program{0};
 	bool m_hasFragment = false;
 	bool m_hasVertex = false;
-	
-	Shader()
-	{ }
+
 public:
-	Shader(const std::string& filepath) : Shader()
+	Shader(const std::string& filepath)
 	{
 		std::string source = LoadDataFromFile(filepath);
 		Shader::GetVertexAndFragmentShaders(*this, source);
@@ -51,9 +50,21 @@ public:
 
 		GL_ASSERT(m_program = Shader::CreateShader(m_vertexShader, m_fragmentShader));
 	}
+	Shader(const std::string& filepath, const char* name) :
+	Shader(filepath)
+	{
+		m_name = new char[strlen(name) + 1];
+		strcpy(m_name, name);
+	}
 	~Shader()
 	{
 		glDeleteProgram(m_program);
+		if (m_name)
+		{
+			delete [] m_name;
+			m_name = nullptr;
+		}
+
 	}
 
 	void Bind() const
@@ -71,6 +82,11 @@ public:
 	{
 		return m_program;
 	}
+	const char* GetName()
+	{
+		return m_name;
+	}
+	
 
 
 	void SetUniform(const Uniform& uniform);
