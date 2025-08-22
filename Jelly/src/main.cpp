@@ -129,7 +129,7 @@ int main(int argc, char** argv)
 
 	int texture_x, texture_y;
 	stbi_set_flip_vertically_on_load(1);
-	unsigned char* texture_data = stbi_load("../assets/icon.png", &texture_x, &texture_y, NULL, 4);
+	unsigned char* texture_data = stbi_load("../assets/Jelly.png", &texture_x, &texture_y, NULL, 4);
 
 	GLuint texture_id;
 	glGenTextures(1,&texture_id);
@@ -205,8 +205,12 @@ int main(int argc, char** argv)
 		
 
 		texture_shader->Bind();
+		texture_shader->SetUniform({"u_Color", UniformVec4(1.f, abs(sin(milliseconds_since_epoch.count())), 0.f, 1.f)});
+		GLLogCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+		GLLogCall(glEnable(GL_BLEND));
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture_id);
+		
 
 		vertexArrayObject.Bind();
 		vertexBufferObject.Bind();
