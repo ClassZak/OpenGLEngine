@@ -51,6 +51,7 @@
 #include "OpenGLClass/VertexBufferObject.hpp"
 #include "OpenGLClass/IndexBufferObject.hpp"
 #include "OpenGLClass/VertexArrayObject.hpp"
+#include "OpenGLClass/Texture.hpp"
 #include "OpenGLClass/Renderer.hpp"
 
 
@@ -130,25 +131,8 @@ int main(int argc, char** argv)
 	Renderer::GetInstance().AddShader("../res/shaders/texture_shader.shader", "texture_shader");
 	auto texture_shader = Renderer::GetInstance().FindShader("texture_shader");
 
-	int texture_x, texture_y;
-	stbi_set_flip_vertically_on_load(1);
-	unsigned char* texture_data = stbi_load("../assets/Jelly.png", &texture_x, &texture_y, NULL, 4);
 
-	GLuint texture_id;
-	glGenTextures(1,&texture_id);
-	glBindTexture(GL_TEXTURE_2D, texture_id);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_x, texture_y, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture_data);
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-	stbi_image_free(texture_data);
-
-
+	Texture texture("../assets/Jelly.png");
 
 
 	std::vector<Vertex3DText> d3d_vertices = 
@@ -219,7 +203,7 @@ int main(int argc, char** argv)
 		GLLogCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 		GLLogCall(glEnable(GL_BLEND));
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture_id);
+		texture.Bind(0);
 		
 
 		vertexArrayObject.Bind();

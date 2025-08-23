@@ -189,6 +189,8 @@ add_executable(${PROJECT_NAME}
 	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Shader.cpp
 	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Material.hpp
 	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Uniform.hpp
+	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Texture.hpp
+	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Texture.cpp
 	
 	
 	${CMAKE_SOURCE_DIR}/src/Shape/Interfaces/IDrawable.hpp

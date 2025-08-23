@@ -60,11 +60,7 @@ public:
 	{
 		glDeleteProgram(m_program);
 		if (m_name)
-		{
 			delete [] m_name;
-			m_name = nullptr;
-		}
-
 	}
 
 	void Bind() const
