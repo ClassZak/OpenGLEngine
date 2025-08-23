@@ -1,9 +1,11 @@
 ﻿#define _USE_MATH_DEFINES
 #define STB_IMAGE_IMPLEMENTATION
+#define TINYOBJLOADER_IMPLEMENTATION
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <tiny_obj_loader.h>
 
 #include <string>
 #include <fstream>
@@ -36,6 +38,7 @@
 #include "utils/GLMacro.h"
 
 #include "Vertex/Vertex2D.hpp"
+#include "Vertex/Vertex3DText.hpp"
 #include "Vertex/VertexUtils.hpp"
 
 #include "OpenGLClass/Shader.hpp"
@@ -148,7 +151,13 @@ int main(int argc, char** argv)
 
 
 
-
+	std::vector<Vertex3DText> d3d_vertices = 
+	{
+		{{-.9f,		-.9f,	0.f},	{0.f, 0.f}},
+		{{-.9f,		.9f,	0.f},	{0.f, 1.f}},
+		{{.9f,		-.9f,	0.f},	{1.f, 0.f}},
+		{{.9f,		.9f,	0.f},	{1.f, 1.f}},
+	};
 	std::vector<float> vertices =
 	{
 		-.9f,	-.9f,			0.f,	0.f, // нижний левый
@@ -161,10 +170,10 @@ int main(int argc, char** argv)
 		0, 1, 3, 0, 2, 3
 	};
 	VertexArrayObject vertexArrayObject;
-	VertexBufferObject vertexBufferObject(vertices);
+	VertexBufferObject vertexBufferObject(d3d_vertices);
 	IndexBufferObject indexBufferObject(indexes);
 	VertexBufferLayout layout;
-	layout.Push<float>(2); // позиция
+	layout.Push<float>(3); // позиция
 	layout.Push<float>(2); // текстурные координаты
 	vertexArrayObject.AddBuffer(vertexBufferObject, layout);
 
@@ -205,7 +214,8 @@ int main(int argc, char** argv)
 		
 
 		texture_shader->Bind();
-		texture_shader->SetUniform({"u_Color", UniformVec4(1.f, abs(sin(milliseconds_since_epoch.count())), 0.f, 1.f)});
+		texture_shader->SetUniform
+		({"u_Color", UniformVec4(1.f, abs(sin(milliseconds_since_epoch.count() * ANIMATION_SPEED)), 0.f, 1.f)});
 		GLLogCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 		GLLogCall(glEnable(GL_BLEND));
 		glActiveTexture(GL_TEXTURE0);

@@ -26,7 +26,7 @@ using UniformVec3 = glm::vec3;
 using UniformVec4 = glm::vec4;
 using UniformMat3 = glm::mat3;   // row-major
 using UniformMat4 = glm::mat4;   // row-major
-using UniformSampler = int;
+using UniformSampler = UniformInt;
 
 // Типы для массивов
 using UniformIntArray = std::vector<int>;
@@ -45,12 +45,24 @@ using UniformValue = std::variant
 	UniformInt, UniformFloat, UniformBool,
 	UniformVec2, UniformVec3, UniformVec4,
 	UniformMat3, UniformMat4,
-	UniformSampler,
 	UniformIntArray, UniformFloatArray, UniformBoolArray,
 	UniformVec2Array, UniformVec3Array, UniformVec4Array,
 	UniformMat3Array, UniformMat4Array,
 	UniformSamplerArray
 >;
+
+
+// Дополнительные использования типов
+using Uniform1i = UniformInt;
+
+
+
+
+
+
+
+
+
 
 struct Uniform
 {
@@ -61,3 +73,13 @@ struct Uniform
 	{
 	}
 };
+
+
+
+
+
+
+
+
+
+

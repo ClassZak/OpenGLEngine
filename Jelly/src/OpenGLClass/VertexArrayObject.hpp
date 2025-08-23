@@ -27,18 +27,43 @@ public:
 		{
 			const auto& element = elements[i];
 			GLLogCall(glEnableVertexAttribArray(i));
-			GLLogCall
-			(
-				glVertexAttribPointer
-				(
-					i,
-					element.count,
-					element.type,
-					element.is_normalized,
-					vertexBufferLayout.GetStride(),
-					(const void*)offset
-				)
-			);
+
+			switch (element.type)
+			{
+				case GL_FLOAT:
+				{
+					GLLogCall
+					(
+						glVertexAttribPointer
+						(
+							i,
+							element.count,
+							element.type,
+							element.is_normalized,
+							vertexBufferLayout.GetStride(),
+							(const void*)offset
+						)
+					);
+					break;
+				}
+				case GL_UNSIGNED_INT:
+				{
+					GLLogCall
+					(
+						glVertexAttribIPointer
+						(
+							i,
+							element.count,
+							element.type,
+							vertexBufferLayout.GetStride(),
+							(const void*)offset
+						)
+					);
+					break;
+				}
+			}
+			
+			
 			offset += element.count * VertexBufferElement::GetSizeOfType(element.type);
 		}
 	}

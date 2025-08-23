@@ -23,11 +23,12 @@ project(Jelly VERSION 1.0
 
 
 
-# OpenGL и GLFW
+# OpenGL, GLFW, tinyobjloader
 find_package(OpenGL	REQUIRED)
 if(WIN32)
 	find_package(glfw3)
 	find_package(glew)
+	find_package(tinyobjloader)
 	if(NOT glfw3_FOUND)
 		message(STATUS "GLFW not found, using fallback method")
 		set(GLFW_ROOT "G:/Programs/Libraries/glfw-3.4.bin.WIN64/glfw-3.4.bin.WIN64")
@@ -63,6 +64,16 @@ if(WIN32)
 			INTERFACE_INCLUDE_DIRECTORIES "${GLEW_INCLUDE_DIR}"
 			IMPORTED_IMPLIB "${GLEW_LIB_DIR}/glew32.lib"
 			IMPORTED_LOCATION "${GLEW_BIN_DIR}/glew32.dll"
+		)
+	endif()
+	if(NOT tinyobjloader_FOUND)
+		message(STATUS "tinyobjloader not found, using fallback method")
+		set(TINYOBJLOADER_ROOT "G:/Programs/Libraries/tinyobjloader")
+		set(TINYOBJLOADER_INCLUDE_DIR ${TINYOBJLOADER_ROOT})
+
+		add_library(tinyobjloader INTERFACE IMPORTED)
+		set_target_properties(tinyobjloader PROPERTIES 
+			INTERFACE_INCLUDE_DIRECTORIES ${TINYOBJLOADER_INCLUDE_DIR}
 		)
 	endif()
 else()
@@ -112,9 +123,29 @@ else()
 	else()
 		message(FATAL_ERROR "GLEW not found. Install with: sudo apt install libglew-dev")
 	endif()
+
+	find_package(tinyobjloader QUIET)
+	if(NOT tinyobjloader_FOUND)
+		message(STATUS "tinyobjloader not found, downloading...")
+		include(FetchContent)
+		FetchContent_Declare(
+			tinyobjloader
+			GIT_REPOSITORY https://github.com/tinyobjloader/tinyobjloader.git
+			GIT_TAG v2.0.0rc10
+		)
+		FetchContent_MakeAvailable(tinyobjloader)
+		set(TINYOBJLOADER_INCLUDE_DIR ${tinyobjloader_SOURCE_DIR})
+		message(TINYOBJLOADER_INCLUDE_DIR)
+	else()
+		set(TINYOBJLOADER_INCLUDE_DIR ${tinyobjloader_INCLUDE_DIRS})
+	endif()
+
+	# Добавьте в target_include_directories
+	target_include_directories(${PROJECT_NAME} PRIVATE
+		${TINYOBJLOADER_INCLUDE_DIR}
+	)
 endif()
 #GLM
-find_package(glm)
 find_package(glm QUIET)
 if(NOT glm_FOUND)
 	message(STATUS "GLM not found, using fallback method")
@@ -188,6 +219,7 @@ add_executable(${PROJECT_NAME}
 	
 	${CMAKE_SOURCE_DIR}/src/Vertex/AVertex.hpp
 	${CMAKE_SOURCE_DIR}/src/Vertex/Vertex2D.hpp
+	${CMAKE_SOURCE_DIR}/src/Vertex/Vertex3DText.hpp
 	${CMAKE_SOURCE_DIR}/src/Vertex/VertexUtils.hpp
 
 
@@ -221,6 +253,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	glfw
 	glew
 	glm
+	tinyobjloader
 )
 if(UNIX)
 	target_link_libraries(${PROJECT_NAME} PRIVATE
