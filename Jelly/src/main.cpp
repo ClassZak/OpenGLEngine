@@ -52,7 +52,7 @@
 #include "OpenGLClass/IndexBufferObject.hpp"
 #include "OpenGLClass/VertexArrayObject.hpp"
 #include "OpenGLClass/Texture.hpp"
-#include "OpenGLClass/Renderer.hpp"
+#include "EngineCore/Renderer.hpp"
 
 
 

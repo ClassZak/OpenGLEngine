@@ -4,27 +4,28 @@
 #include "IHasVertexArrayObject.hpp"
 #include "IHasVertexBufferObject.hpp"
 #include "../../Vertex/Vertex2D.hpp"
+#include "../../Vertex/Vertex3DNormText.hpp"
 
-template <typename T>
+template <class Vertex>
 class IHasVertexVector : 
 	virtual public IHasVertexBufferObject,
 	virtual public IHasVertexArrayObject
 {
 protected:
-	std::vector<Vertex2D<T>> m_vertices;
+	std::vector<Vertex> m_vertices;
 
 	IHasVertexVector() = default;
-	void Init(const std::initializer_list<Vertex2D<T>>& vertices)
+	void Init(const std::initializer_list<Vertex>& vertices)
 	{
-		Init(std::vector<Vertex2D<T>>(vertices));
+		Init(std::vector<Vertex>(vertices));
 	}
-	void Init(const std::vector<Vertex2D<T>>& vertices)
+	void Init(const std::vector<Vertex>& vertices)
 	{
 		m_vertices.assign(vertices.begin(), vertices.end());
 	}
 
 	/// <summary>
-	/// Перепривязка данных
+	/// Привязка данных заново
 	/// </summary>
 	/// <param name="startIndex">Индекс первого элемента</param>
 	/// <param name="count">Количество перерисовываемых элементов</param>
@@ -35,21 +36,21 @@ protected:
 		this->m_vertexBufferObject->ReBind
 		(
 			m_vertices.data() + startIndex,
-			count * sizeof(Vertex2D<T>),
-			startIndex * sizeof(Vertex2D<T>)
+			count * sizeof(Vertex),
+			startIndex * sizeof(Vertex)
 		);
 		this->m_vertexArrayObject.UnBind();
 	}
 public:
-	IHasVertexVector(const std::initializer_list<Vertex2D<T>>& vertices) :
-	IHasVertexVector(std::vector<Vertex2D<T>>(vertices))
+	IHasVertexVector(const std::initializer_list<Vertex>& vertices) :
+	IHasVertexVector(std::vector<Vertex>(vertices))
 	{}
-	IHasVertexVector(const std::vector<Vertex2D<T>>& vertices)
+	IHasVertexVector(const std::vector<Vertex>& vertices)
 	{
 		Init(vertices);
 	}
 
-	std::vector<Vertex2D<T>>& GetVertices()
+	std::vector<Vertex>& GetVertices()
 	{
 		return m_vertices;
 	}
@@ -62,9 +63,9 @@ public:
 
 
 
-	IHasVertexVector(const IHasVertexVector<T>& other) : 
+	IHasVertexVector(const IHasVertexVector<Vertex>& other) :
 	IHasVertexVector(other.m_vertices) {}
-	IHasVertexVector& operator=(const IHasVertexVector<T>& other)
+	IHasVertexVector& operator=(const IHasVertexVector<Vertex>& other)
 	{
 		if(this!=&other)
 			Init(other.m_vertices);

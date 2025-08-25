@@ -24,26 +24,26 @@ class Circle :
 	public virtual IHasVertexBufferObject,
 	public virtual IHasIndexBufferObject,
 	public virtual IHasShader,
-	public virtual IHasVertexVector<T>
+	public virtual IHasVertexVector<Vertex2D<T>>
 {
 protected:
 	T m_radius;
-	const Vertex2D<T>& m_center;
+	Vertex2D<T>& m_center;
 public:
 	Circle
 	(
 		std::size_t count,
 		T radius,
 		const Vertex2D<T>& center
-	) : m_radius(radius), m_center(center)
+	) : m_radius(radius), m_center((Vertex2D<T>&)center)
 	{
 		std::vector<Vertex2D<T>> vertices = GenerateCircleVertexes(count, radius, center);
-		::IHasVertexVector<T>::Init(vertices);
+		::IHasVertexVector<Vertex2D<T>>::Init(vertices);
 		Init(vertices, count);
 	}
 
 	Circle(const Circle<T>& other) : 
-	IHasVertexVector<T>(other), m_center(other.m_center), m_radius(other.m_radius)
+	IHasVertexVector<Vertex2D<T>>(other), m_center(other.m_center), m_radius(other.m_radius)
 	{
 		Init(other.m_vertices, other.m_vertices.size());
 	}
@@ -58,7 +58,7 @@ protected:
 
 		// Attribute crafting
 		VertexBufferLayout layout;
-		layout.Push<T>(2);
+		layout.Push<Vertex2D<T>>(2);
 		this->m_vertexArrayObject.AddBuffer(*this->m_vertexBufferObject.get(), layout);
 
 		IndexBufferObject* newIndexBufferObject = new IndexBufferObject(GenerateCircleVertexIndexes(count));

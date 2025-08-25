@@ -19,7 +19,7 @@ class CircleSector :
 	public virtual IHasVertexBufferObject,
 	public virtual IHasIndexBufferObject,
 	public virtual IHasShader,
-	public virtual IHasVertexVector<T>
+	public virtual IHasVertexVector<Vertex2D<T>>
 {
 protected:
 	T m_radius;
@@ -39,12 +39,12 @@ public:
 		GenerateCircleSectorVertexes(count, radius, center, startDegree, endDegree);
 		vertices.insert(vertices.begin(), center);
 		
-		::IHasVertexVector<T>::Init(vertices);
+		::IHasVertexVector<Vertex2D<T>>::Init(vertices);
 		Init(vertices, count);
 	}
 
 	CircleSector(const CircleSector<T>& other) :
-	IHasVertexVector<T>(other), 
+	IHasVertexVector<Vertex2D<T>>(other), 
 	m_radius(other.m_radius), 
 	m_center(other.m_center), 
 	m_startDegree(other.m_startDegree), 

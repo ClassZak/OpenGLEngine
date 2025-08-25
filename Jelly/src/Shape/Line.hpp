@@ -16,7 +16,7 @@
 
 template<typename T>
 class Line :
-	public IHasVertexVector<T>,
+	public IHasVertexVector<Vertex2D<T>>,
 	public IHasShader
 {
 protected:
@@ -48,17 +48,17 @@ public:
 	m_isSmooth(isSmooth)
 	{
 		::IHasVertexBufferObject::m_drawMode = drawMode;
-		::IHasVertexVector<T>::Init(vertices);
+		::IHasVertexVector<Vertex2D<T>>::Init(vertices);
 		Init(vertices);
 	}
 
 	Line(const Line& other) :
-	IHasVertexVector<T>(other),
+	IHasVertexVector<Vertex2D<T>>(other),
 	m_lineWidth(other.m_lineWidth),
 	m_isSmooth(other.m_isSmooth)
 	{
 		::IHasVertexBufferObject::m_drawMode = other.GetDrawMode();
-		::IHasVertexVector<T>::Init(other.m_vertices);
+		::IHasVertexVector<Vertex2D<T>>::Init(other.m_vertices);
 		Init(this->m_vertices);
 	}
 	Line& operator=(const Line& other)

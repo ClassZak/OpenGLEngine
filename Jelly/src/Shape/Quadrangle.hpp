@@ -19,7 +19,7 @@
 
 template <typename T>
 class Quadrangle : 
-	public IHasVertexVector<T>,
+	public IHasVertexVector<Vertex2D<T>>,
 	public IHasIndexBufferObject,
 	public IHasShader
 {
@@ -29,12 +29,12 @@ protected:
 		if(vertices.size()!=4u)
 			throw std::invalid_argument("Wrong size of vector");
 
-		::IHasVertexVector<T>::Init(vertices);
+		::IHasVertexVector<Vertex2D<T>>::Init(vertices);
 
 		VertexBufferObject* newVertexBufferObject = new VertexBufferObject(vertices);
 		this->m_vertexBufferObject.reset(newVertexBufferObject);
 
-		// Arribute crafting
+		// Attribute crafting
 		VertexBufferLayout layout;
 		layout.Push<T>(2);
 		this->m_vertexArrayObject.AddBuffer(*this->m_vertexBufferObject.get(), layout);
@@ -58,7 +58,7 @@ public:
 	}
 
 	Quadrangle(const Quadrangle<T>& other) :
-	IHasVertexVector<T>(other)
+	IHasVertexVector<Vertex2D<T>>(other)
 	{
 		Init(other.m_vertices);
 	}

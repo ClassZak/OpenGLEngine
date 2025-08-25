@@ -6,7 +6,7 @@
 #include "../OpenGLClass/IndexBufferObject.hpp"
 #include "../OpenGLClass/Shader.hpp"
 
-#include "../OpenGLClass/Renderer.hpp"
+#include "../EngineCore/Renderer.hpp"
 
 #include "Interfaces/IHasIndexBufferObject.hpp"
 #include "Interfaces/IHasVertexBufferObject.hpp"

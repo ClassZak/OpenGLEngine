@@ -180,17 +180,21 @@ add_executable(${PROJECT_NAME}
 	
 	${CMAKE_SOURCE_DIR}/src/OpenGLClass/AOpenGLClass.hpp
 	${CMAKE_SOURCE_DIR}/src/OpenGLClass/IndexBufferObject.hpp
-	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Renderer.hpp
-	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Renderer.cpp
 	${CMAKE_SOURCE_DIR}/src/OpenGLClass/VertexArrayObject.hpp
 	${CMAKE_SOURCE_DIR}/src/OpenGLClass/VertexBufferObject.hpp
 	${CMAKE_SOURCE_DIR}/src/OpenGLClass/VertexBufferLayout.hpp
 	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Shader.hpp
 	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Shader.cpp
-	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Material.hpp
 	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Uniform.hpp
 	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Texture.hpp
 	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Texture.cpp
+	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Mesh.hpp
+	${CMAKE_SOURCE_DIR}/src/OpenGLClass/Mesh.cpp
+
+	${CMAKE_SOURCE_DIR}/src/EngineCore/Renderer.hpp
+	${CMAKE_SOURCE_DIR}/src/EngineCore/Renderer.cpp
+	${CMAKE_SOURCE_DIR}/src/EngineCore/AssetsManager.hpp
+	${CMAKE_SOURCE_DIR}/src/EngineCore/AssetsManager.cpp
 	
 	
 	${CMAKE_SOURCE_DIR}/src/Shape/Interfaces/IDrawable.hpp
@@ -198,6 +202,7 @@ add_executable(${PROJECT_NAME}
 	${CMAKE_SOURCE_DIR}/src/Shape/Interfaces/IHasVertexBufferObject.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Interfaces/IHasVertexArrayObject.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Interfaces/IHasVertexVector.hpp
+	${CMAKE_SOURCE_DIR}/src/Shape/Interfaces/IHasTexture.hpp
 	
 	${CMAKE_SOURCE_DIR}/src/Shape/AShape.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Circle.hpp
@@ -222,6 +227,7 @@ add_executable(${PROJECT_NAME}
 	${CMAKE_SOURCE_DIR}/src/Vertex/AVertex.hpp
 	${CMAKE_SOURCE_DIR}/src/Vertex/Vertex2D.hpp
 	${CMAKE_SOURCE_DIR}/src/Vertex/Vertex3DText.hpp
+	${CMAKE_SOURCE_DIR}/src/Vertex/Vertex3DNormText.hpp
 	${CMAKE_SOURCE_DIR}/src/Vertex/VertexUtils.hpp
 
 

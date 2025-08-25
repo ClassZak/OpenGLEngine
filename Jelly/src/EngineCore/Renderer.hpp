@@ -14,14 +14,15 @@
 #include <vector>
 #include <set>
 
-#include "VertexArrayObject.hpp"
-#include "VertexBufferObject.hpp"
-#include "VertexBufferLayout.hpp"
-#include "IndexBufferObject.hpp"
+#include "../OpenGLClass/VertexArrayObject.hpp"
+#include "../OpenGLClass/VertexBufferObject.hpp"
+#include "../OpenGLClass/VertexBufferLayout.hpp"
+#include "../OpenGLClass/IndexBufferObject.hpp"
 #include "../OpenGLClass/Shader.hpp"
 #include "../Shape/Interfaces/IHasIndexBufferObject.hpp"
 #include "../Shape/Interfaces/IHasVertexBufferObject.hpp"
 #include "../Shape/Interfaces/IHasVertexArrayObject.hpp"
+#include "../Shape/Interfaces/IHasTexture.hpp"
 #include "../Shape/Interfaces/IHasShader.hpp"
 #include "../Shape/Interfaces/IDrawable.hpp"
 
@@ -88,17 +89,16 @@ public:
 		const IndexBufferObject& indexBufferObject,
 		Shader& shader,
 		const Uniform& uniform
-	)
-	{
-		vertexArrayObject.Bind();
-		vertexBufferObject.Bind();
-		indexBufferObject.Bind();
-		shader.Bind();
-		shader.SetUniform(uniform);
-		GLLogCall(glDrawElements(GL_TRIANGLES, indexBufferObject.GetCount(), GL_UNSIGNED_INT, nullptr));
-
-		return *this;
-	}
+	);
+	Renderer& Draw
+	(
+		const VertexArrayObject& vertexArrayObject,
+		const VertexBufferObject& vertexBufferObject,
+		const IndexBufferObject& indexBufferObject,
+		std::shared_ptr<Texture> texture,
+		Shader& shader,
+		const Uniform& uniform
+	);
 	Renderer& Draw(IDrawableOpenGL* object);
 
 
@@ -148,7 +148,7 @@ public:
 	inline Renderer& Draw(const ShapeContainer& container, const UniformContainer& uniformContainer)
 	{
 		if(container.size() != uniformContainer.size())
-			throw std::invalid_argument("Несоответсвие количества объектов числу униформ");
+			throw std::invalid_argument("Несоответствие количества объектов числу униформ");
 
 		auto containerIt = container.begin();
 		auto uniformIt = uniformContainer.begin();
@@ -193,7 +193,7 @@ public:
 	inline Renderer& DrawCollection(ShapeContainer& container, const UniformContainer& uniformContainer)
 	{
 		if (container.size() != uniformContainer.size())
-			throw std::invalid_argument("Несоответсвие количества объектов числу униформ");
+			throw std::invalid_argument("Несоответствие количества объектов числу униформ");
 
 		auto containerIt = container.begin();
 		auto uniformIt = uniformContainer.begin();

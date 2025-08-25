@@ -56,11 +56,57 @@ Renderer& Renderer::Draw
 
 	return *this;
 }
+Renderer& Renderer::Draw
+(
+	const VertexArrayObject& vertexArrayObject,
+	const VertexBufferObject& vertexBufferObject,
+	const IndexBufferObject& indexBufferObject,
+	Shader& shader,
+	const Uniform& uniform
+)
+{
+	vertexArrayObject.Bind();
+	vertexBufferObject.Bind();
+	indexBufferObject.Bind();
+	shader.Bind();
+	shader.SetUniform(uniform);
+	GLLogCall(glDrawElements(GL_TRIANGLES, indexBufferObject.GetCount(), GL_UNSIGNED_INT, nullptr));
+
+	return *this;
+}
+Renderer& Renderer::Draw
+(
+	const VertexArrayObject& vertexArrayObject,
+	const VertexBufferObject& vertexBufferObject,
+	const IndexBufferObject& indexBufferObject,
+	std::shared_ptr<Texture> texture,
+	Shader& shader,
+	const Uniform& uniform
+)
+{
+	shader.Bind();
+	shader.SetUniform(uniform);
+
+	Texture* texturePtr = texture.get();
+	GLLogCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+	GLLogCall(glEnable(GL_BLEND));
+	texturePtr->Bind(0);
+	
+	vertexArrayObject.Bind();
+	vertexBufferObject.Bind();
+	indexBufferObject.Bind();
+	GLLogCall(glDrawElements(GL_TRIANGLES, indexBufferObject.GetCount(), GL_UNSIGNED_INT, nullptr));
+
+	texturePtr->UnBind();
+
+	return *this;
+}
 Renderer& Renderer::Draw(IDrawableOpenGL* object)
 {
 	auto* iHasVertexArrayObject = dynamic_cast<IHasVertexArrayObject*>(object);
 	auto* iHasVertexBufferObject = dynamic_cast<IHasVertexBufferObject*>(object);
 	auto* iHasIndexBufferObject = dynamic_cast<IHasIndexBufferObject*>(object);
+	
 	
 	if (not (iHasIndexBufferObject || iHasVertexBufferObject))
 		throw std::invalid_argument("Wrong type");
@@ -104,9 +150,12 @@ Renderer& Renderer::Draw(IDrawableOpenGL* object, const std::vector<Uniform>& un
 	auto* iHasVertexBufferObject = dynamic_cast<IHasVertexBufferObject*>(object);
 	auto* iHasVertexArrayObject = dynamic_cast<IHasVertexArrayObject*>(object);
 	auto* iHasShader = dynamic_cast<IHasShader*>(object);
+	auto* iHasTexture = dynamic_cast<IHasTexture*>(object);
 
 	if (!iHasVertexBufferObject)
-		throw std::invalid_argument("Unable to render object without vertecies");
+		throw std::invalid_argument("Unable to render object without vertices");
+	if (iHasTexture && !iHasShader)
+		throw std::invalid_argument("Unable to render texture without shader");
 
 	if (iHasIndexBufferObject)
 		size = iHasIndexBufferObject->GetIndexBufferObject()->GetCount();

@@ -11,6 +11,9 @@ public:
 	IHasShader() = default;
 	virtual ~IHasShader() = default;
 
+	IHasShader(std::shared_ptr<Shader> shader) :
+	m_shader(shader) {}
+
 
 	std::weak_ptr<Shader> GetShader()
 	{
