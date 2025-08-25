@@ -195,6 +195,8 @@ add_executable(${PROJECT_NAME}
 	${CMAKE_SOURCE_DIR}/src/EngineCore/Renderer.cpp
 	${CMAKE_SOURCE_DIR}/src/EngineCore/AssetsManager.hpp
 	${CMAKE_SOURCE_DIR}/src/EngineCore/AssetsManager.cpp
+	${CMAKE_SOURCE_DIR}/src/EngineCore/ObjLoader.hpp
+	${CMAKE_SOURCE_DIR}/src/EngineCore/ObjLoader.cpp
 	
 	
 	${CMAKE_SOURCE_DIR}/src/Shape/Interfaces/IDrawable.hpp

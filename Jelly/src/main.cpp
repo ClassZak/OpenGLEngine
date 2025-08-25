@@ -1,6 +1,8 @@
 ﻿#define _USE_MATH_DEFINES
 #define STB_IMAGE_IMPLEMENTATION
+#ifndef TINYOBJLOADER_IMPLEMENTATION
 #define TINYOBJLOADER_IMPLEMENTATION
+#endif
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -215,7 +217,7 @@ int main(int argc, char** argv)
 		indexBufferObject.UnBind();
 		texture_shader->UnBind();
 
-		
+
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);

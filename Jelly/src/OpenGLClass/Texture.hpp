@@ -18,9 +18,6 @@ public:
 	Texture(const std::string& filename);
 	~Texture();
 
-	void Load();
-	void Init();
-
 	void Bind(unsigned char slot);
 	void UnBind() const override;
 

@@ -5,11 +5,14 @@
 
 class Vertex3DNormText : public AVertex<float>
 {
+public:
 	glm::vec3 m_pos = {0.f, 0.f, 0.f};
 	glm::vec3 m_normal = { 0.f, 0.f, 0.f };
 	glm::vec2 m_texturePos = {0.f,0.f};
 
-public:
+
+	Vertex3DNormText() = default;
+
 	Vertex3DNormText(const glm::vec3& pos) :
 	m_pos(pos) {}
 	Vertex3DNormText(const glm::vec3& pos, const glm::vec2& texturePos) :
@@ -33,14 +36,14 @@ public:
 	Vertex3DNormText(const Vertex3DNormText&) = default;
 	Vertex3DNormText& operator=(const Vertex3DNormText&) = default;
 
-	bool operator==(const Vertex3DNormText& other)
+	bool operator==(const Vertex3DNormText& other) const noexcept
 	{
 		if(this == &other)
 			return true;
 
 		return m_pos == other.m_pos && m_texturePos == other.m_texturePos && m_normal == other.m_normal;
 	}
-	bool operator!=(const Vertex3DNormText& other)
+	bool operator!=(const Vertex3DNormText& other) const noexcept
 	{
 		if (this == &other)
 			return false;

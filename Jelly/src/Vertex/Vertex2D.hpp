@@ -27,11 +27,11 @@ struct Vertex2D : AVertex<T>
 	Vertex2D(const Vertex2D&) = default;
 	Vertex2D& operator=(const Vertex2D&) = default;
 
-	bool operator==(const Vertex2D& other)
+	bool operator==(const Vertex2D& other) const
 	{
 		return this->x == other.x && this->y == other.y;
 	}
-	bool operator!=(const Vertex2D& other)
+	bool operator!=(const Vertex2D& other) const
 	{
 		return this->x != other.x || this->y != other.y;
 	}
