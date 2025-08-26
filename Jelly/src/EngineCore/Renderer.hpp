@@ -32,47 +32,11 @@
 class Renderer
 {
 	Renderer() = default;
-	
-
-	std::set<std::shared_ptr<Shader>> m_shaders;
 public:
 	Renderer(const Renderer&) = delete;
 	Renderer& operator=(const Renderer&) = delete;
 	
 	static Renderer& GetInstance();
-	
-	void AddShader(std::shared_ptr<Shader> shader);
-	void AddShader(const std::string& filepath);
-	void AddShader(const std::string& filepath, const std::string& name);
-	std::set<std::shared_ptr<Shader>>& GetShaders()
-	{
-		return m_shaders;
-	}
-	inline const std::shared_ptr<Shader> FindShader(GLuint program)
-	{
-		auto it = std::ranges::find_if(m_shaders, [program](const std::shared_ptr<Shader>& shader)->bool
-		{
-			return shader.get()->GetProgram()==program;
-		});
-		if(it == m_shaders.end())
-			return std::shared_ptr<Shader>(nullptr);
-		else
-			return *it;
-	}
-	inline const std::shared_ptr<Shader> FindShader(const std::string& name)
-	{
-		auto it = std::ranges::find_if(m_shaders, [&name](const std::shared_ptr<Shader>& shader)->bool
-		{
-			const char* shader_name = shader.get()->GetName();
-			if(!shader_name)
-				return false;
-			return name == shader_name;
-		});
-		if(it == m_shaders.end())
-			return std::shared_ptr<Shader>(nullptr);
-		else
-			return *it;
-	}
 	
 	Renderer& Draw(const VertexBufferObject& vertexBufferObject);
 	Renderer& Draw(const VertexBufferObject& vertexBufferObject, const IndexBufferObject& indexBufferObject);

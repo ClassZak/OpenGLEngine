@@ -7,6 +7,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp> 
 #include <tiny_obj_loader.h>
 
 #include <string>
@@ -53,9 +55,13 @@
 #include "OpenGLClass/VertexBufferObject.hpp"
 #include "OpenGLClass/IndexBufferObject.hpp"
 #include "OpenGLClass/VertexArrayObject.hpp"
-#include "OpenGLClass/Texture.hpp"
-#include "EngineCore/Renderer.hpp"
 
+#include "OpenGLClass/Shader.hpp"
+#include "OpenGLClass/Texture.hpp"
+#include "OpenGLClass/Mesh.hpp"
+
+#include "EngineCore/Renderer.hpp"
+#include "EngineCore/AssetsManager.hpp"
 
 
 
@@ -129,12 +135,26 @@ int main(int argc, char** argv)
 		return -1;
 	std::cout<<glGetString(GL_VERSION)<<std::endl;
 
-	Renderer::GetInstance().AddShader("../res/shaders/shader.shader");
-	Renderer::GetInstance().AddShader("../res/shaders/texture_shader.shader", "texture_shader");
-	auto texture_shader = Renderer::GetInstance().FindShader("texture_shader");
+	AssetsManager::GetInstance().LoadShader("default_shader", "../res/shaders/shader.shader");
+	Shader* texture_shader = 
+	AssetsManager::GetInstance().LoadShader("texture_shader", "../res/shaders/texture_shader.shader").get();
+	Shader* model_shader = 
+	AssetsManager::GetInstance().LoadShader("model_shader", "../res/shaders/model_shader.shader").get();
 
+	Texture* jelly_texture =
+	AssetsManager::GetInstance().LoadTexture("jelly_texture", "../assets/Jelly.png").get();
+	Texture* cube_texture =
+	AssetsManager::GetInstance().LoadTexture("cube_texture", "../assets/models/cube/default.png").get();
 
-	Texture texture("../assets/Jelly.png");
+	Mesh* cube_model = 
+	AssetsManager::GetInstance().LoadMesh
+	("cube_model", "../assets/models/cube/cube.obj", AssetsManager::GetInstance().GetTexture("cube_texture")).get();
+	if (!cube_model)
+	{
+		std::cerr << "Failed to load 3D model!" << std::endl;
+		return -1;
+	}
+	cube_model->SetShader(AssetsManager::GetInstance().GetShader("model_shader"));
 
 
 	std::vector<Vertex3DText> d3d_vertices = 
@@ -171,6 +191,23 @@ int main(int argc, char** argv)
 
 
 
+	glm::mat4 model = glm::mat4(1.f);
+	glm::mat4 view = glm::lookAt
+	(
+		glm::vec3(2.0f, 2.0f, 2.0f), // позиция камеры
+		glm::vec3(0.0f, 0.0f, 0.0f), // цель камеры
+		glm::vec3(0.0f, 1.0f, 0.0f)  // вектор "вверх"
+	);
+	glm::mat4 projection = glm::perspective
+	(
+		glm::radians(45.0f),						// угол обзора
+		(float)windowWidth / (float)windowHeight,	// соотношение сторон
+		0.1f,										// ближняя плоскость отсечения
+		100.0f										// дальняя плоскость отсечения
+	);
+
+	glEnable(GL_DEPTH_TEST);
+
 	while (!glfwWindowShouldClose(window))
 	{
 		std::chrono::system_clock::duration duration_since_epoch = now.time_since_epoch();
@@ -195,29 +232,24 @@ int main(int argc, char** argv)
 
 
 		/* Render here */
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(.7f,.7f,.7f,1.f);
 		
+		cube_model->GetShaderSharedPointer()->Bind();
+		model = glm::rotate(model, glm::radians(0.5f), glm::vec3(0.5f, 1.f, 0.f));
 
-		texture_shader->Bind();
-		texture_shader->SetUniform
-		({"u_Color", UniformVec4(1.f, abs(sin(milliseconds_since_epoch.count() * ANIMATION_SPEED)), 0.f, 1.f)});
-		GLLogCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-		GLLogCall(glEnable(GL_BLEND));
-		glActiveTexture(GL_TEXTURE0);
-		texture.Bind(0);
-		
-
-		vertexArrayObject.Bind();
-		vertexBufferObject.Bind();
-		indexBufferObject.Bind();
-		glDrawElements(GL_TRIANGLES, indexBufferObject.GetCount(), GL_UNSIGNED_INT, nullptr);
-		vertexArrayObject.UnBind();
-		vertexBufferObject.UnBind();
-		indexBufferObject.UnBind();
-		texture_shader->UnBind();
-
-
+		/*model_shader->SetUniform(Uniform("model", model));
+		model_shader->SetUniform(Uniform("view", view));
+		model_shader->SetUniform(Uniform("projection", projection));*/
+		Renderer::GetInstance().Draw
+		(
+			cube_model, 
+			{
+				Uniform("model", model),
+				Uniform("view", view),
+				Uniform("projection", projection),
+			}
+		);
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);

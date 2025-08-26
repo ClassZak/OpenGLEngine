@@ -1,29 +1,29 @@
 #shader vertex
 #version 330 core
 
-layout(location=0) in vec2 position;
-layout(location=1) in vec2 texCoord;
+layout(location = 0) in vec2 aPosition;
+layout(location = 1) in vec2 aTexCoords;
 
-out vec2 v_TexCoord;
+out vec2 v_TexCoords;
 
 void main()
 {
-	gl_Position = vec4(position, 0.0, 1.0);
-	v_TexCoord = texCoord;
+	v_TexCoords = aTexCoords;
+	gl_Position = vec4(aPosition, 0.0, 1.0);
 }
 
 #shader fragment
 #version 330 core
 
-in vec2 v_TexCoord;
-out vec4 color;
+out vec4 FragColor;
 
-uniform sampler2D u_Texture;
+in vec2 v_TexCoords;
+
 uniform vec4 u_Color;
-//uniform float u_Distortion;
+uniform sampler2D u_Texture;
 
 void main()
 {
-	vec4 texColor = texture(u_Texture, v_TexCoord);
-	color = texColor * u_Color;
+	vec4 texColor = texture(u_Texture, v_TexCoords);
+	FragColor = texColor * u_Color;
 }

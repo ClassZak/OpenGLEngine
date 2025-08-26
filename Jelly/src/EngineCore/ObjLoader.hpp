@@ -36,10 +36,17 @@ namespace std
 	{
 		size_t operator()(const Vertex3DNormText& vertex) const noexcept
 		{
-			size_t h1 = hash<glm::vec3>()(vertex.m_pos);
-			size_t h2 = hash<glm::vec3>()(vertex.m_normal);
-			size_t h3 = hash<glm::vec2>()(vertex.m_texturePos);
-			return ((h1 ^ (h2 << 1)) >> 1) ^ (h3 << 1);
+			size_t h1 = hash<float>()(vertex.m_pos.x);
+			size_t h2 = hash<float>()(vertex.m_pos.y);
+			size_t h3 = hash<float>()(vertex.m_pos.z);
+			size_t h4 = hash<float>()(vertex.m_normal.x);
+			size_t h5 = hash<float>()(vertex.m_normal.y);
+			size_t h6 = hash<float>()(vertex.m_normal.z);
+			size_t h7 = hash<float>()(vertex.m_texturePos.x);
+			size_t h8 = hash<float>()(vertex.m_texturePos.y);
+
+			return ((((((h1 ^ (h2 << 1)) ^ (h3 << 2)) ^ (h4 << 3)) ^
+				(h5 << 4)) ^ (h6 << 5)) ^ (h7 << 6)) ^ (h8 << 7);
 		}
 	};
 }
@@ -52,6 +59,7 @@ public:
 	(
 		const std::string& path,
 		std::vector<Vertex3DNormText>& vertices,
-		std::vector<unsigned int>& indices
+		std::vector<unsigned int>& indices, 
+		bool saveUnique = false
 	);
 };

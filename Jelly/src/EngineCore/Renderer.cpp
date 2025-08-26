@@ -8,22 +8,6 @@ Renderer& Renderer::GetInstance()
 }
 
 
-void Renderer::AddShader(std::shared_ptr<Shader> shader)
-{
-	m_shaders.insert(shader);
-}
-void Renderer::AddShader(const std::string& filepath)
-{
-	Shader* shader = new Shader(filepath);
-	AddShader(std::shared_ptr<Shader>(shader));
-}
-
-void Renderer::AddShader(const std::string& filepath, const std::string& name)
-{
-	Shader* shader = new Shader(filepath, name.c_str());
-	AddShader(std::shared_ptr<Shader>(shader));
-}
-
 
 
 Renderer& Renderer::Draw(const VertexBufferObject& vertexBufferObject)
@@ -171,6 +155,7 @@ Renderer& Renderer::Draw(IDrawableOpenGL* object, const std::vector<Uniform>& un
 	if (iHasIndexBufferObject)
 		iHasIndexBufferObject->GetIndexBufferObject()->Bind();
 
+
 	if (iHasShader)
 	{
 		if (Shader* shader = iHasShader->GetShaderSharedPointer())
@@ -178,6 +163,14 @@ Renderer& Renderer::Draw(IDrawableOpenGL* object, const std::vector<Uniform>& un
 			shader->Bind();
 			for (auto it = uniforms.begin(); it != uniforms.end(); ++it)
 				shader->SetUniform(*it);
+
+
+			if (iHasTexture)
+			{
+				Texture* texture = iHasTexture->GetTextureSharedPointer();
+				texture->Bind(0);
+				shader->SetUniform(Uniform("u_Texture", 0));
+			}
 		}
 	}
 
@@ -222,6 +215,8 @@ Renderer& Renderer::Draw(IDrawableOpenGL* object, const std::vector<Uniform>& un
 		iHasIndexBufferObject->GetIndexBufferObject()->UnBind();
 	if (iHasShader)
 		iHasShader->GetShaderSharedPointer()->UnBind();
+	if (iHasTexture)
+		iHasTexture->GetTextureSharedPointer()->UnBind();
 
 	return *this;
 }

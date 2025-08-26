@@ -1,8 +1,13 @@
 #pragma once
 #include <string>
 
+
 #include "AOpenGLClass.hpp"
 
+namespace std {
+	_EXPORT_STD template <class _Ty>
+		class shared_ptr;
+}
 
 
 class Texture : AOpenGLClass
@@ -15,6 +20,7 @@ protected:
 
 	void Bind() const override;
 public:
+	Texture() = default;
 	Texture(const std::string& filename);
 	~Texture();
 
@@ -28,4 +34,6 @@ public:
 	{
 		return m_index == other.m_index;
 	}
+
+	static std::shared_ptr<Texture> CreateTestTexture();
 };

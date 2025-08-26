@@ -1,4 +1,5 @@
 #include "Jelly.hpp"
+#include "../EngineCore/AssetsManager.hpp"
 
 inline void Jelly::AnimateLines(long long millisecondsSinceEpoch, double animationSpeed)
 {
@@ -234,16 +235,16 @@ void Jelly::Init()
 		m_quadrangles.push_back(m_createdQuadrangles.back());
 	}
 
-	auto& rendererShader = Renderer::GetInstance().FindShader(3);
-	m_bottomLine->SetShader(rendererShader);
+	auto renderer_shader = AssetsManager::GetInstance().GetShader("default_shader");
+	m_bottomLine->SetShader(renderer_shader);
 	for(auto& el : m_lines)
-		el.SetShader(rendererShader);
+		el.SetShader(renderer_shader);
 	for(auto& el : m_roundedLines)
-		el.SetShader(rendererShader);
+		el.SetShader(renderer_shader);
 	for(auto& el : m_quadrangles)
-		el.SetShader(rendererShader);
+		el.SetShader(renderer_shader);
 	for(auto& el : m_circleSectors)
-		el.SetShader(rendererShader);
+		el.SetShader(renderer_shader);
 }
 
 void Jelly::Draw()

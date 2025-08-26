@@ -11,7 +11,8 @@ bool ObjLoader::LoadMesh
 (
 	const std::string& path,
 	std::vector<Vertex3DNormText>& vertices,
-	std::vector<unsigned int>& indices
+	std::vector<unsigned int>& indices,
+	bool saveUnique
 )
 {
 	if(!std::filesystem::exists(path) || !std::filesystem::is_regular_file(path))
@@ -28,7 +29,8 @@ bool ObjLoader::LoadMesh
 					<< std::endl << "Error:\t\t\"" << err	<< '\"' << std::endl;
 	}
 
-	std::unordered_map<Vertex3DNormText, unsigned int> unique_vertices;
+	static std::unordered_map<Vertex3DNormText, unsigned int> unique_vertices;
+	unique_vertices.clear();
 
 	for(auto& shape : shapes)
 		for (auto& index : shape.mesh.indices)
@@ -44,12 +46,12 @@ bool ObjLoader::LoadMesh
 			};
 
 			// Normals
-			if(index.normal_index >= 0)
+			if (index.normal_index >= 0)
 				vertex.m_normal =
 				{
-					attrib.normals[3 * index.vertex_index + 0],
-					attrib.normals[3 * index.vertex_index + 1],
-					attrib.normals[3 * index.vertex_index + 2],
+					attrib.normals[3 * index.normal_index + 0],
+					attrib.normals[3 * index.normal_index + 1],
+					attrib.normals[3 * index.normal_index + 2],
 				};
 
 			// Texture coordinates
@@ -60,12 +62,19 @@ bool ObjLoader::LoadMesh
 					attrib.texcoords[2 * index.texcoord_index + 1],
 				};
 
+
+			if (!saveUnique)
+			{
+				vertices.push_back(vertex);
+				indices.push_back(static_cast<unsigned int>(vertices.size()) - 1);
+			}
+			else
 			if (unique_vertices.find(vertex) == unique_vertices.end())
 			{
 				unsigned int index = static_cast<unsigned int>(vertices.size());
-				unique_vertices[vertex] = index;
 				vertices.push_back(vertex);
 				indices.push_back(index);
+				unique_vertices[vertex] = index;
 			}
 		}
 

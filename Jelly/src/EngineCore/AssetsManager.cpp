@@ -46,10 +46,10 @@ std::shared_ptr<Mesh> AssetsManager::LoadMesh
 	std::vector<Vertex3DNormText> vertices;
 	std::vector<unsigned int> indices;
 
-	if (!ObjLoader::LoadMesh(path, vertices, indices))
+	if (ObjLoader::LoadMesh(path, vertices, indices))
 		return nullptr;
 
-	auto mesh = std::make_shared<Mesh>(vertices, indices, texture);
+	auto mesh = std::make_shared<Mesh>(vertices, indices, texture, nullptr);
 	m_meshes[name] = mesh;
 
 	return mesh;
@@ -90,3 +90,14 @@ void AssetsManager::Clear()
 	m_meshes.clear();
 	m_shaders.clear();
 }
+
+
+
+
+AssetsManager& AssetsManager::GetInstance()
+{
+	//Singleton из C++11
+	static AssetsManager assets_manager;
+	return assets_manager;
+}
+
