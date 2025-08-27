@@ -75,6 +75,25 @@ std::vector<std::function<void(GLFWwindow* window, double xpos, double ypos)>> m
 float windowWidth	=640;
 float windowHeight	=480;
 
+
+/*Вид и проекция*/
+glm::vec3 camera_pos = glm::vec3(2.0f, 2.0f, 2.0f);
+glm::mat4 model = glm::mat4(1.f);
+glm::mat4 view = glm::lookAt
+(
+	camera_pos, // позиция камеры
+	glm::vec3(0.0f, 0.0f, 0.0f), // цель камеры
+	glm::vec3(0.0f, 1.0f, 0.0f)  // вектор "вверх"
+);
+glm::mat4 projection = glm::perspective
+(
+	glm::radians(45.0f),						// угол обзора
+	(float)windowWidth / (float)windowHeight,	// соотношение сторон
+	0.1f,										// ближняя плоскость отсечения
+	100.0f										// дальняя плоскость отсечения
+);
+
+
 int main(int argc, char** argv)
 {
 	setlocale(LC_ALL, "Russian");
@@ -102,6 +121,7 @@ int main(int argc, char** argv)
 
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
+
 	/* Предустановленные Callback функции*/
 	glfwSetFramebufferSizeCallback
 	(
@@ -120,7 +140,70 @@ int main(int argc, char** argv)
 					mouseMovingProcs[i](window, xpos, ypos);
 		}
 	);
-
+	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scan_code, int action, int mods)->void
+		{
+			if (key == GLFW_KEY_W)
+			{
+				camera_pos.x -= 0.1f;
+				view = glm::lookAt
+				(
+					camera_pos, // позиция камеры
+					glm::vec3(0.0f, 0.0f, 0.0f), // цель камеры
+					glm::vec3(0.0f, 1.0f, 0.0f)  // вектор "вверх"
+				);
+			}
+			if (key == GLFW_KEY_S)
+			{
+				camera_pos.x += 0.1f;
+				view = glm::lookAt
+				(
+					camera_pos, // позиция камеры
+					glm::vec3(0.0f, 0.0f, 0.0f), // цель камеры
+					glm::vec3(0.0f, 1.0f, 0.0f)  // вектор "вверх"
+				);
+			}
+			if (key == GLFW_KEY_A)
+			{
+				camera_pos.y -= 0.1f;
+				view = glm::lookAt
+				(
+					camera_pos, // позиция камеры
+					glm::vec3(0.0f, 0.0f, 0.0f), // цель камеры
+					glm::vec3(0.0f, 1.0f, 0.0f)  // вектор "вверх"
+				);
+			}
+			if (key == GLFW_KEY_D)
+			{
+				camera_pos.y += 0.1f;
+				view = glm::lookAt
+				(
+					camera_pos, // позиция камеры
+					glm::vec3(0.0f, 0.0f, 0.0f), // цель камеры
+					glm::vec3(0.0f, 1.0f, 0.0f)  // вектор "вверх"
+				);
+			}
+			if (key == GLFW_KEY_SPACE)
+			{
+				camera_pos.z += 0.1f;
+				view = glm::lookAt
+				(
+					camera_pos, // позиция камеры
+					glm::vec3(0.0f, 0.0f, 0.0f), // цель камеры
+					glm::vec3(0.0f, 1.0f, 0.0f)  // вектор "вверх"
+				);
+			}
+			if ((key == GLFW_KEY_RIGHT_SHIFT || key == GLFW_KEY_LEFT_SHIFT))
+			{
+				camera_pos.z -= 0.1f;
+				view = glm::lookAt
+				(
+					camera_pos, // позиция камеры
+					glm::vec3(0.0f, 0.0f, 0.0f), // цель камеры
+					glm::vec3(0.0f, 1.0f, 0.0f)  // вектор "вверх"
+				);
+			}
+		}
+	);
 	
 	
 	GLFWimage images[1];
@@ -189,24 +272,6 @@ int main(int argc, char** argv)
 	vertexBufferObject.UnBind();
 	indexBufferObject.UnBind();
 
-
-
-
-
-	glm::mat4 model = glm::mat4(1.f);
-	glm::mat4 view = glm::lookAt
-	(
-		glm::vec3(2.0f, 2.0f, 2.0f), // позиция камеры
-		glm::vec3(0.0f, 0.0f, 0.0f), // цель камеры
-		glm::vec3(0.0f, 1.0f, 0.0f)  // вектор "вверх"
-	);
-	glm::mat4 projection = glm::perspective
-	(
-		glm::radians(45.0f),						// угол обзора
-		(float)windowWidth / (float)windowHeight,	// соотношение сторон
-		0.1f,										// ближняя плоскость отсечения
-		100.0f										// дальняя плоскость отсечения
-	);
 
 	glEnable(GL_DEPTH_TEST);
 
