@@ -146,9 +146,11 @@ int main(int argc, char** argv)
 	Texture* cube_texture =
 	AssetsManager::GetInstance().LoadTexture("cube_texture", "../assets/models/cube/default.png").get();
 
+
+	std::shared_ptr<Texture> test_texture = Texture::CreateTestTexture();
 	Mesh* cube_model = 
 	AssetsManager::GetInstance().LoadMesh
-	("cube_model", "../assets/models/cube/cube.obj", AssetsManager::GetInstance().GetTexture("cube_texture")).get();
+	("cube_model", "../assets/models/cube/cube.obj", test_texture).get();
 	if (!cube_model)
 	{
 		std::cerr << "Failed to load 3D model!" << std::endl;
