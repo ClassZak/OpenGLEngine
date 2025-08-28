@@ -77,22 +77,33 @@ float windowHeight	=480;
 
 
 /*Вид и проекция*/
-glm::vec3 camera_pos = glm::vec3(2.0f, 2.0f, 2.0f);
+glm::vec3 camera_pos = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::mat4 model = glm::mat4(1.f);
 glm::mat4 view = glm::lookAt
 (
 	camera_pos, // позиция камеры
 	glm::vec3(0.0f, 0.0f, 0.0f), // цель камеры
-	glm::vec3(0.0f, 1.0f, 0.0f)  // вектор "вверх"
+	glm::vec3(0.0f, 0.0f, 1.0f)  // вектор "вверх"
 );
 glm::mat4 projection = glm::perspective
 (
-	glm::radians(45.0f),						// угол обзора
+	glm::radians(15.f),							// угол обзора
 	(float)windowWidth / (float)windowHeight,	// соотношение сторон
 	0.1f,										// ближняя плоскость отсечения
 	100.0f										// дальняя плоскость отсечения
 );
 
+
+enum CameraDirection
+{
+	None = -1,
+	Forward,
+	Backward,
+	Left,
+	Right,
+	Up,
+	Down
+};
 
 int main(int argc, char** argv)
 {
@@ -142,65 +153,54 @@ int main(int argc, char** argv)
 	);
 	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scan_code, int action, int mods)->void
 		{
+			static CameraDirection direction;
 			if (key == GLFW_KEY_W)
-			{
-				camera_pos.x -= 0.1f;
-				view = glm::lookAt
-				(
-					camera_pos, // позиция камеры
-					glm::vec3(0.0f, 0.0f, 0.0f), // цель камеры
-					glm::vec3(0.0f, 1.0f, 0.0f)  // вектор "вверх"
-				);
-			}
+				direction = CameraDirection::Forward;
 			if (key == GLFW_KEY_S)
-			{
-				camera_pos.x += 0.1f;
-				view = glm::lookAt
-				(
-					camera_pos, // позиция камеры
-					glm::vec3(0.0f, 0.0f, 0.0f), // цель камеры
-					glm::vec3(0.0f, 1.0f, 0.0f)  // вектор "вверх"
-				);
-			}
+				direction = CameraDirection::Backward;
 			if (key == GLFW_KEY_A)
-			{
-				camera_pos.y -= 0.1f;
-				view = glm::lookAt
-				(
-					camera_pos, // позиция камеры
-					glm::vec3(0.0f, 0.0f, 0.0f), // цель камеры
-					glm::vec3(0.0f, 1.0f, 0.0f)  // вектор "вверх"
-				);
-			}
+				direction = CameraDirection::Left;
 			if (key == GLFW_KEY_D)
-			{
-				camera_pos.y += 0.1f;
-				view = glm::lookAt
-				(
-					camera_pos, // позиция камеры
-					glm::vec3(0.0f, 0.0f, 0.0f), // цель камеры
-					glm::vec3(0.0f, 1.0f, 0.0f)  // вектор "вверх"
-				);
-			}
+				direction = CameraDirection::Right;
 			if (key == GLFW_KEY_SPACE)
-			{
-				camera_pos.z += 0.1f;
-				view = glm::lookAt
-				(
-					camera_pos, // позиция камеры
-					glm::vec3(0.0f, 0.0f, 0.0f), // цель камеры
-					glm::vec3(0.0f, 1.0f, 0.0f)  // вектор "вверх"
-				);
-			}
+				direction = CameraDirection::Up;
 			if ((key == GLFW_KEY_RIGHT_SHIFT || key == GLFW_KEY_LEFT_SHIFT))
+				direction = CameraDirection::Down;
+			
+			if (direction != CameraDirection::None)
 			{
-				camera_pos.z -= 0.1f;
+				switch (direction)
+				{
+					case CameraDirection::Forward:
+						camera_pos.x += 0.1f;
+						break;
+					case CameraDirection::Backward:
+						camera_pos.x -= 0.1f;
+						break;
+					case CameraDirection::Left:
+						camera_pos.y += 0.1f;
+						break;
+					case CameraDirection::Right:
+						camera_pos.y -= 0.1f;
+						break;
+					case CameraDirection::Up:
+						camera_pos.z += 0.1f;
+						break;
+					case CameraDirection::Down:
+						camera_pos.z -= 0.1f;
+						break;
+				}
+				glm::vec3 camera_target = glm::vec3(camera_pos.x + 10, camera_pos.y, camera_pos.z);
 				view = glm::lookAt
 				(
 					camera_pos, // позиция камеры
-					glm::vec3(0.0f, 0.0f, 0.0f), // цель камеры
-					glm::vec3(0.0f, 1.0f, 0.0f)  // вектор "вверх"
+					camera_target, // цель камеры
+					glm::vec3(0.0f, 0.0f, 1.0f)  // вектор "вверх"
 				);
+				printf("(%2.2f,\t%2.2f,\t%2.2f)\n", camera_pos.x, camera_pos.y, camera_pos.z);
+				printf("(%2.2f,\t%2.2f,\t%2.2f)\n", camera_target.x, camera_target.y, camera_target.z);
+				
+				direction = CameraDirection::None;
 			}
 		}
 	);
@@ -241,37 +241,8 @@ int main(int argc, char** argv)
 	}
 	cube_model->SetShader(AssetsManager::GetInstance().GetShader("model_shader"));
 
-
-	std::vector<Vertex3DText> d3d_vertices = 
-	{
-		{{-.9f,		-.9f,	0.f},	{0.f, 0.f}},
-		{{-.9f,		.9f,	0.f},	{0.f, 1.f}},
-		{{.9f,		-.9f,	0.f},	{1.f, 0.f}},
-		{{.9f,		.9f,	0.f},	{1.f, 1.f}},
-	};
-	std::vector<float> vertices =
-	{
-		-.9f,	-.9f,			0.f,	0.f, // нижний левый
-		-.9f,	.9f,			0.f,	1.f, // верхний левый
-		.9f,	-.9f,			1.f,	0.f, // нижний правый
-		.9f,	.9f,			1.f,	1.f, // верхний правый
-	};
-	std::vector<unsigned int> indexes =
-	{
-		0, 1, 3, 0, 2, 3
-	};
-	VertexArrayObject vertexArrayObject;
-	VertexBufferObject vertexBufferObject(d3d_vertices);
-	IndexBufferObject indexBufferObject(indexes);
-	VertexBufferLayout layout;
-	layout.Push<float>(3); // позиция
-	layout.Push<float>(2); // текстурные координаты
-	vertexArrayObject.AddBuffer(vertexBufferObject, layout);
-
-	vertexArrayObject.UnBind();
-	vertexBufferObject.UnBind();
-	indexBufferObject.UnBind();
-
+	Jelly jelly;
+	jelly.Init();
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -296,18 +267,14 @@ int main(int argc, char** argv)
 
 
 		/* Animate here */
-
+		jelly.Animate(milliseconds_since_epoch.count(), ANIMATION_SPEED);
 
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(.7f,.7f,.7f,1.f);
 		
 		cube_model->GetShaderSharedPointer()->Bind();
-		model = glm::rotate(model, glm::radians(0.5f), glm::vec3(0.5f, 1.f, 0.f));
-
-		/*model_shader->SetUniform(Uniform("model", model));
-		model_shader->SetUniform(Uniform("view", view));
-		model_shader->SetUniform(Uniform("projection", projection));*/
+		/*model = glm::rotate(model, glm::radians(0.5f), glm::vec3(0.5f, 1.f, 0.f));*/
 		Renderer::GetInstance().Draw
 		(
 			cube_model, 
@@ -317,6 +284,8 @@ int main(int argc, char** argv)
 				Uniform("projection", projection),
 			}
 		);
+
+		//jelly.Draw();
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
