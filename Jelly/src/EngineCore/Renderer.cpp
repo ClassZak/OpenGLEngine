@@ -170,6 +170,8 @@ Renderer& Renderer::Draw(IDrawableOpenGL* object, const std::vector<Uniform>& un
 				Texture* texture = iHasTexture->GetTextureSharedPointer();
 				texture->Bind(0);
 				shader->SetUniform(Uniform("u_Texture", 0));
+				GLLogCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+				GLLogCall(glEnable(GL_BLEND));
 			}
 		}
 	}

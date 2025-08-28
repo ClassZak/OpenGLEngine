@@ -190,7 +190,7 @@ int main(int argc, char** argv)
 						camera_pos.z -= 0.1f;
 						break;
 				}
-				glm::vec3 camera_target = glm::vec3(camera_pos.x + 10, camera_pos.y, camera_pos.z);
+				glm::vec3 camera_target = glm::vec3(camera_pos.x + 1, camera_pos.y, camera_pos.z);
 				view = glm::lookAt
 				(
 					camera_pos, // позиция камеры
@@ -233,7 +233,7 @@ int main(int argc, char** argv)
 	std::shared_ptr<Texture> test_texture = Texture::CreateTestTexture();
 	Mesh* cube_model = 
 	AssetsManager::GetInstance().LoadMesh
-	("cube_model", "../assets/models/cube/cube.obj", test_texture).get();
+	("cube_model", "../assets/models/cube/cube.obj", AssetsManager::GetInstance().GetTexture("cube_texture")).get();
 	if (!cube_model)
 	{
 		std::cerr << "Failed to load 3D model!" << std::endl;
