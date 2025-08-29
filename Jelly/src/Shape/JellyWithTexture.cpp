@@ -73,21 +73,19 @@ void JellyWithTexture::Init()
 	}
 
 
-	std::unordered_set<Vertex2DText> rendering_vertices;
 	for(auto& el : rects_vertices)
-		rendering_vertices.insert(el);
+		if(std::find(all_vertices.begin(), all_vertices.end(), el) == all_vertices.end())
+			all_vertices.push_back(el);
 	for(auto& vector : circle_vertices)
 		for(auto& el : vector)
-			rendering_vertices.insert(el);
-
-	for(auto& el : rendering_vertices)
-		all_vertices.push_back(el);
+			if (std::find(all_vertices.begin(), all_vertices.end(), el) == all_vertices.end())
+				all_vertices.push_back(el);
 
 
 
 
-	std::vector<unsigned int> indexes = {0,1};
-	const unsigned int FIRST_INDEX_OF_RECT_VERTEX = 2;
+	std::vector<unsigned int> indexes;
+	const unsigned int FIRST_INDEX_OF_RECT_VERTEX = 0;
 	unsigned int index_of_rect_vertex = FIRST_INDEX_OF_RECT_VERTEX;
 	for (int i = 0; i < PARTS_COUNT; ++i)
 	{
@@ -101,6 +99,15 @@ void JellyWithTexture::Init()
 
 		index_of_rect_vertex +=2;
 	}
+	for (auto& el : rects_vertices)
+		std::cout << el << '\n';
+	std::cout << std::endl;
+	for(auto& el : all_vertices)
+		std::cout<<el<<'\n';
+	std::cout<<std::endl;
+	for (auto& el : indexes)
+		std::cout << el << '\n';
+
 	// TODO: Доделать вершины для закруглённых частей
 
 
@@ -126,8 +133,11 @@ void JellyWithTexture::Init()
 }
 
 
-JellyWithTexture::JellyWithTexture(std::shared_ptr<Texture> texture) :
-IHasTexture(texture) {}
+JellyWithTexture::JellyWithTexture(std::shared_ptr<Texture> texture, std::shared_ptr<Shader> shader) :
+IHasTexture(texture), IHasShader(shader)
+{
+	Init();
+}
 
 void JellyWithTexture::Animate(long long millisecondsSinceEpoch, double animationSpeed)
 {

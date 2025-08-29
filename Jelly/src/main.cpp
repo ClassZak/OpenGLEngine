@@ -168,37 +168,17 @@ int main(int argc, char** argv)
 	std::cout<<glGetString(GL_VERSION)<<std::endl;
 
 	AssetsManager::GetInstance().LoadShader("default_shader", "../res/shaders/shader.shader");
-	Shader* texture_shader = 
-	AssetsManager::GetInstance().LoadShader("texture_shader", "../res/shaders/texture_shader.shader").get();
-	Shader* model_shader = 
-	AssetsManager::GetInstance().LoadShader("model_shader", "../res/shaders/model_shader.shader").get();
+	auto texture_shader = 
+	AssetsManager::GetInstance().LoadShader("texture_shader", "../res/shaders/texture_shader.shader");
+	auto model_shader = 
+	AssetsManager::GetInstance().LoadShader("model_shader", "../res/shaders/model_shader.shader");
 
-	Texture* jelly_texture =
-	AssetsManager::GetInstance().LoadTexture("jelly_texture", "../assets/Jelly.png").get();
-	Texture* cube_texture =
-	AssetsManager::GetInstance().LoadTexture("cube_texture", "../assets/models/cube/default.png").get();
+	auto jelly_texture =
+	AssetsManager::GetInstance().LoadTexture("jelly_texture", "../assets/jelly_texture.png");
+	auto cube_texture =
+	AssetsManager::GetInstance().LoadTexture("cube_texture", "../assets/models/cube/default.png");
 
-
-	VertexArrayObject vertexArrayObject;
-	std::vector<Vertex2DText> vertices=
-	{
-		{{-0.9f,	-0.9f},		{0, 0}},
-		{{0.9f,		-0.9f},		{1, 0}},
-		{{-0.9f,	0.9f},		{0, 1}},
-		{{0.9f,		0.9f},		{1, 1}},
-	};
-	VertexBufferObject vertexBufferObject(vertices);
-	VertexBufferLayout layout;
-	layout.Push<float>(2);
-	layout.Push<float>(2);
-	IndexBufferObject indexBufferObject({0, 1, 3, 0, 2, 3});
-	vertexArrayObject.AddBuffer(vertexBufferObject, layout);
-
-	vertexArrayObject.UnBind();
-	vertexBufferObject.UnBind();
-	indexBufferObject.UnBind();
-	texture_shader->UnBind();
-	jelly_texture->UnBind();
+	JellyWithTexture jelly(jelly_texture, texture_shader);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -221,40 +201,19 @@ int main(int argc, char** argv)
 
 
 		/* Animate here */
-		vertices[0].m_texturePos.x = (cos(milliseconds_since_epoch.count() * ANIMATION_SPEED) + 1) / 4;
-		//vertices[1].m_texturePos.x = (cos(milliseconds_since_epoch.count() * ANIMATION_SPEED) + 1) / 4;
-		//vertices[2].m_texturePos.x = 1 - (cos(milliseconds_since_epoch.count() * ANIMATION_SPEED) + 1) / 4;
-		//vertices[3].m_texturePos.x = 1 - (cos(milliseconds_since_epoch.count() * ANIMATION_SPEED) + 1) / 4;
-
-		vertices[0].m_texturePos.y = (sin(milliseconds_since_epoch.count() * ANIMATION_SPEED) + 1) / 4;
-		//vertices[1].m_texturePos.y = (sin(milliseconds_since_epoch.count() * ANIMATION_SPEED) + 1) / 4;
-		//vertices[2].m_texturePos.y = 1 - (sin(milliseconds_since_epoch.count() * ANIMATION_SPEED) + 1) / 4;
-		//vertices[3].m_texturePos.y = 1 - (sin(milliseconds_since_epoch.count() * ANIMATION_SPEED) + 1) / 4;
-
-		
-		vertexBufferObject.ReBind(vertices);
 
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(.7f,.7f,.7f,1.f);
 
 
-		texture_shader->Bind();
+		/*texture_shader->Bind();
 		texture_shader->SetUniform
-		({ "u_Color", UniformVec4(1.f, 1.f, 1.f, 1.f) });
+		({ "u_Color", UniformVec4(1.f, 1.f, 1.f, 1.f) });*/
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_BLEND);
-
-		glActiveTexture(GL_TEXTURE0);
-		jelly_texture->Bind(0);
-		vertexArrayObject.Bind();
-		vertexBufferObject.Bind();
-		indexBufferObject.Bind();
-		glDrawElements(GL_TRIANGLES, indexBufferObject.GetCount(), GL_UNSIGNED_INT, nullptr);
-		vertexArrayObject.UnBind();
-		vertexBufferObject.UnBind();
-		indexBufferObject.UnBind();
-		texture_shader->UnBind();
+		
+		Renderer::GetInstance().Draw(&jelly, { "u_Color", UniformVec4(1.f, 1.f, 1.f, 1.f) });
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);

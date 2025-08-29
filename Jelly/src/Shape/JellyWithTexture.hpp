@@ -8,7 +8,7 @@
 #include "Interfaces/IHasVertexArrayObject.hpp"
 #include "Interfaces/IHasVertexBufferObject.hpp"
 #include "Interfaces/IHasIndexBufferObject.hpp"
-//#include "Interfaces/IHasShader.hpp"
+#include "Interfaces/IHasShader.hpp"
 #include "Interfaces/IHasTexture.hpp"
 
 
@@ -27,6 +27,7 @@ class Texture;
 class JellyWithTexture :
 	virtual public IHasVertexVector<Vertex2DText>,
 	virtual public IHasTexture,
+	virtual public IHasShader,
 	virtual public IHasVertexArrayObject,
 	virtual public IHasVertexBufferObject,
 	virtual public IHasIndexBufferObject
@@ -52,7 +53,7 @@ class JellyWithTexture :
 
 	const float ROUNDED_LINES_VERTEX_COUNT = 20;
 public:
-	JellyWithTexture(std::shared_ptr<Texture> texture);
+	JellyWithTexture(std::shared_ptr<Texture> texture, std::shared_ptr<Shader> shader);
 	/// <summary>
 	/// Метод для дёрганья желе по времени
 	/// </summary>
