@@ -1,6 +1,6 @@
 #pragma once
 #include "AVertex.hpp"
-#include <glm/glm.hpp>
+#include "../utils/GLMHash.hpp"
 
 
 class Vertex3DNormText : public AVertex<float>
@@ -85,3 +85,25 @@ public:
 	}
 };
 
+
+// Хэш-функция для Vertex3DNormText для использования в unordered_map
+namespace std
+{
+	template<> struct hash<Vertex3DNormText>
+	{
+		size_t operator()(const Vertex3DNormText& vertex) const noexcept
+		{
+			size_t h1 = hash<float>()(vertex.m_pos.x);
+			size_t h2 = hash<float>()(vertex.m_pos.y);
+			size_t h3 = hash<float>()(vertex.m_pos.z);
+			size_t h4 = hash<float>()(vertex.m_normal.x);
+			size_t h5 = hash<float>()(vertex.m_normal.y);
+			size_t h6 = hash<float>()(vertex.m_normal.z);
+			size_t h7 = hash<float>()(vertex.m_texturePos.x);
+			size_t h8 = hash<float>()(vertex.m_texturePos.y);
+
+			return ((((((h1 ^ (h2 << 1)) ^ (h3 << 2)) ^ (h4 << 3)) ^
+				(h5 << 4)) ^ (h6 << 5)) ^ (h7 << 6)) ^ (h8 << 7);
+		}
+	};
+}

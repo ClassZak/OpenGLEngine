@@ -20,7 +20,8 @@ protected:
 	int m_width = 0, m_height = 0, m_BPP = 0;
 
 	void Bind() const override;
-	Texture(unsigned int id, const char* filename, unsigned char* data, int width = 0, int height = 0, int BBP = 0);
+	Texture
+	(unsigned int id, const char* filename, unsigned char* data, int width = 0, int height = 0, int BBP = 0);
 public:
 	Texture(const std::string& filename);
 	~Texture();
@@ -39,4 +40,8 @@ public:
 	static std::shared_ptr<Texture> CreateTestTexture();
 	static std::vector<unsigned char> GenerateTextureData_CheckerboardPattern(size_t size);
 	static std::vector<unsigned char> GenerateTextureData_GradientPattern(size_t size);
+	static inline float OpenGLCoordToTextCoord(float openGLCoord)
+	{
+		return (openGLCoord + 1) / 2;
+	}
 };

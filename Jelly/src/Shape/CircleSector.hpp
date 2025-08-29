@@ -86,14 +86,14 @@ public:
 	/// <returns>Вершины для отрисовки</returns>
 	static std::vector<Vertex2D<T>> GenerateCircleSectorVertexes
 	(
-		std::size_t OldCirclePointCount,
+		std::size_t circlePointCount,
 		T radius,
 		const Vertex2D<T>& center,
 		double startDegree,
 		double endDegree
 	)
 	{
-		if (OldCirclePointCount <= 1u)
+		if (circlePointCount <= 1u)
 			throw std::invalid_argument("Division by zero");
 
 		if (radius < 0)
@@ -108,10 +108,10 @@ public:
 
 
 		std::vector<Vertex2D<T>> vertexes;
-		vertexes.reserve(OldCirclePointCount);
-		T sector = (endDegree - startDegree) / (OldCirclePointCount - 1);
+		vertexes.reserve(circlePointCount);
+		T sector = (endDegree - startDegree) / (circlePointCount - 1);
 
-		for (std::size_t i = 1; i <= OldCirclePointCount; ++i)
+		for (std::size_t i = 1; i <= circlePointCount; ++i)
 		{
 			T	x = static_cast<T>(cos((startDegree + sector) * (i - 1)) * radius),
 				y = static_cast<T>(sin((startDegree + sector) * (i - 1)) * radius);

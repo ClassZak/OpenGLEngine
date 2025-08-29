@@ -21,9 +21,6 @@
 
 #include <vector>
 #include <list>
-#include <stdlib.h>
-
-#include <gl/GL.h>
 
 
 class Jelly
@@ -57,7 +54,6 @@ protected:
 
 	const float ROUNDED_LINES_VERTEX_COUNT = 20;
 
-	GLuint m_shaderProgram=0;
 	Line<float>* m_bottomLine= new Line<float>({Vertex2D<float>(START_X, START_Y), Vertex2D<float>(END_X, START_Y)});
 
 
@@ -68,10 +64,6 @@ protected:
 	inline void AnimateRoundedParts(long long millisecondsSinceEpoch, double animationSpeed = 1e-3);
 public:
 	Jelly()=default;
-	Jelly(GLuint shaderProgram) : Jelly()
-	{
-		m_shaderProgram=shaderProgram;
-	}
 
 	void Init();
 	void Draw();

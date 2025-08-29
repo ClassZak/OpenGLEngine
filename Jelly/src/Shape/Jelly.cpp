@@ -1,4 +1,5 @@
 #include "Jelly.hpp"
+#include <stdlib.h>
 #include "../EngineCore/AssetsManager.hpp"
 
 inline void Jelly::AnimateLines(long long millisecondsSinceEpoch, double animationSpeed)
@@ -167,7 +168,7 @@ void Jelly::Init()
 		float upper_vertex_x_delta = abs(next_upper_vertex_x - upper_vertex_x);
 
 		auto vertexes = 
-		Circle<float>::GenerateRoundVertexes
+		CircleSector<float>::GenerateCircleSectorVertexes
 		(
 			ROUNDED_LINES_VERTEX_COUNT,
 			upper_vertex_x_delta/2,
@@ -195,22 +196,16 @@ void Jelly::Init()
 	}
 
 	for (auto& el : m_createdRoundedLines)
-	{
 		m_roundedLines.push_back(el);
-	}
 
 	for (auto& el : m_createdCircleSectors)
-	{
 		m_circleSectors.push_back(el);
-	}
 
 
 
 
 	for (auto& el : m_createdLines)
-	{
 		m_lines.push_back(el);
-	}
 
 
 

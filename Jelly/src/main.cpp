@@ -43,11 +43,13 @@
 
 #include "Vertex/Vertex2D.hpp"
 #include "Vertex/Vertex3DText.hpp"
+#include "Vertex/Vertex2DText.hpp"
 #include "Vertex/VertexUtils.hpp"
 
 #include "OpenGLClass/Shader.hpp"
 #include "Shape/Circle.hpp"
 #include "Shape/Jelly.hpp"
+#include "Shape/JellyWithTexture.hpp"
 #include "Shape/Quadrangle.hpp"
 #include "Shape/CircleSector.hpp"
 #include "Shape/SimpleRect.hpp"
@@ -151,59 +153,6 @@ int main(int argc, char** argv)
 					mouseMovingProcs[i](window, xpos, ypos);
 		}
 	);
-	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scan_code, int action, int mods)->void
-		{
-			static CameraDirection direction;
-			if (key == GLFW_KEY_W)
-				direction = CameraDirection::Forward;
-			if (key == GLFW_KEY_S)
-				direction = CameraDirection::Backward;
-			if (key == GLFW_KEY_A)
-				direction = CameraDirection::Left;
-			if (key == GLFW_KEY_D)
-				direction = CameraDirection::Right;
-			if (key == GLFW_KEY_SPACE)
-				direction = CameraDirection::Up;
-			if ((key == GLFW_KEY_RIGHT_SHIFT || key == GLFW_KEY_LEFT_SHIFT))
-				direction = CameraDirection::Down;
-			
-			if (direction != CameraDirection::None)
-			{
-				switch (direction)
-				{
-					case CameraDirection::Forward:
-						camera_pos.x += 0.1f;
-						break;
-					case CameraDirection::Backward:
-						camera_pos.x -= 0.1f;
-						break;
-					case CameraDirection::Left:
-						camera_pos.y += 0.1f;
-						break;
-					case CameraDirection::Right:
-						camera_pos.y -= 0.1f;
-						break;
-					case CameraDirection::Up:
-						camera_pos.z += 0.1f;
-						break;
-					case CameraDirection::Down:
-						camera_pos.z -= 0.1f;
-						break;
-				}
-				glm::vec3 camera_target = glm::vec3(camera_pos.x + 1, camera_pos.y, camera_pos.z);
-				view = glm::lookAt
-				(
-					camera_pos, // позиция камеры
-					camera_target, // цель камеры
-					glm::vec3(0.0f, 0.0f, 1.0f)  // вектор "вверх"
-				);
-				printf("(%2.2f,\t%2.2f,\t%2.2f)\n", camera_pos.x, camera_pos.y, camera_pos.z);
-				printf("(%2.2f,\t%2.2f,\t%2.2f)\n", camera_target.x, camera_target.y, camera_target.z);
-				
-				direction = CameraDirection::None;
-			}
-		}
-	);
 	
 	
 	GLFWimage images[1];
@@ -230,21 +179,26 @@ int main(int argc, char** argv)
 	AssetsManager::GetInstance().LoadTexture("cube_texture", "../assets/models/cube/default.png").get();
 
 
-	std::shared_ptr<Texture> test_texture = Texture::CreateTestTexture();
-	Mesh* cube_model = 
-	AssetsManager::GetInstance().LoadMesh
-	("cube_model", "../assets/models/cube/cube.obj", AssetsManager::GetInstance().GetTexture("cube_texture")).get();
-	if (!cube_model)
+	VertexArrayObject vertexArrayObject;
+	std::vector<Vertex2DText> vertices=
 	{
-		std::cerr << "Failed to load 3D model!" << std::endl;
-		return -1;
-	}
-	cube_model->SetShader(AssetsManager::GetInstance().GetShader("model_shader"));
+		{{-0.9f,	-0.9f},		{0, 0}},
+		{{0.9f,		-0.9f},		{1, 0}},
+		{{-0.9f,	0.9f},		{0, 1}},
+		{{0.9f,		0.9f},		{1, 1}},
+	};
+	VertexBufferObject vertexBufferObject(vertices);
+	VertexBufferLayout layout;
+	layout.Push<float>(2);
+	layout.Push<float>(2);
+	IndexBufferObject indexBufferObject({0, 1, 3, 0, 2, 3});
+	vertexArrayObject.AddBuffer(vertexBufferObject, layout);
 
-	Jelly jelly;
-	jelly.Init();
-
-	glEnable(GL_DEPTH_TEST);
+	vertexArrayObject.UnBind();
+	vertexBufferObject.UnBind();
+	indexBufferObject.UnBind();
+	texture_shader->UnBind();
+	jelly_texture->UnBind();
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -267,25 +221,40 @@ int main(int argc, char** argv)
 
 
 		/* Animate here */
-		jelly.Animate(milliseconds_since_epoch.count(), ANIMATION_SPEED);
+		vertices[0].m_texturePos.x = (cos(milliseconds_since_epoch.count() * ANIMATION_SPEED) + 1) / 4;
+		//vertices[1].m_texturePos.x = (cos(milliseconds_since_epoch.count() * ANIMATION_SPEED) + 1) / 4;
+		//vertices[2].m_texturePos.x = 1 - (cos(milliseconds_since_epoch.count() * ANIMATION_SPEED) + 1) / 4;
+		//vertices[3].m_texturePos.x = 1 - (cos(milliseconds_since_epoch.count() * ANIMATION_SPEED) + 1) / 4;
+
+		vertices[0].m_texturePos.y = (sin(milliseconds_since_epoch.count() * ANIMATION_SPEED) + 1) / 4;
+		//vertices[1].m_texturePos.y = (sin(milliseconds_since_epoch.count() * ANIMATION_SPEED) + 1) / 4;
+		//vertices[2].m_texturePos.y = 1 - (sin(milliseconds_since_epoch.count() * ANIMATION_SPEED) + 1) / 4;
+		//vertices[3].m_texturePos.y = 1 - (sin(milliseconds_since_epoch.count() * ANIMATION_SPEED) + 1) / 4;
+
+		
+		vertexBufferObject.ReBind(vertices);
 
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(.7f,.7f,.7f,1.f);
-		
-		cube_model->GetShaderSharedPointer()->Bind();
-		/*model = glm::rotate(model, glm::radians(0.5f), glm::vec3(0.5f, 1.f, 0.f));*/
-		Renderer::GetInstance().Draw
-		(
-			cube_model, 
-			{
-				Uniform("model", model),
-				Uniform("view", view),
-				Uniform("projection", projection),
-			}
-		);
 
-		//jelly.Draw();
+
+		texture_shader->Bind();
+		texture_shader->SetUniform
+		({ "u_Color", UniformVec4(1.f, 1.f, 1.f, 1.f) });
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
+
+		glActiveTexture(GL_TEXTURE0);
+		jelly_texture->Bind(0);
+		vertexArrayObject.Bind();
+		vertexBufferObject.Bind();
+		indexBufferObject.Bind();
+		glDrawElements(GL_TRIANGLES, indexBufferObject.GetCount(), GL_UNSIGNED_INT, nullptr);
+		vertexArrayObject.UnBind();
+		vertexBufferObject.UnBind();
+		indexBufferObject.UnBind();
+		texture_shader->UnBind();
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);

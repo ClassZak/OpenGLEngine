@@ -215,6 +215,8 @@ add_executable(${PROJECT_NAME}
 	${CMAKE_SOURCE_DIR}/src/Shape/OldJelly.cpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Jelly.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Jelly.cpp
+	${CMAKE_SOURCE_DIR}/src/Shape/JellyWithTexture.hpp
+	${CMAKE_SOURCE_DIR}/src/Shape/JellyWithTexture.cpp
 	${CMAKE_SOURCE_DIR}/src/Shape/OldLine.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Line.hpp
 	${CMAKE_SOURCE_DIR}/src/Shape/Quadrangle.hpp
@@ -225,10 +227,12 @@ add_executable(${PROJECT_NAME}
 	${CMAKE_SOURCE_DIR}/src/utils/functions.hpp
 	${CMAKE_SOURCE_DIR}/src/utils/functions.cpp
 	${CMAKE_SOURCE_DIR}/src/utils/GLMacro.h
+	${CMAKE_SOURCE_DIR}/src/utils/GLMHash.hpp
 	
 	${CMAKE_SOURCE_DIR}/src/Vertex/AVertex.hpp
 	${CMAKE_SOURCE_DIR}/src/Vertex/Vertex2D.hpp
 	${CMAKE_SOURCE_DIR}/src/Vertex/Vertex3DText.hpp
+	${CMAKE_SOURCE_DIR}/src/Vertex/Vertex2DText.hpp
 	${CMAKE_SOURCE_DIR}/src/Vertex/Vertex3DNormText.hpp
 	${CMAKE_SOURCE_DIR}/src/Vertex/VertexUtils.hpp
 
