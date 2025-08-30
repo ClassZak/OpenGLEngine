@@ -140,7 +140,7 @@ else()
 		set(TINYOBJLOADER_INCLUDE_DIR ${tinyobjloader_INCLUDE_DIRS})
 	endif()
 
-	# Добавьте в target_include_directories
+	
 	target_include_directories(${PROJECT_NAME} PRIVATE
 		${TINYOBJLOADER_INCLUDE_DIR}
 	)
