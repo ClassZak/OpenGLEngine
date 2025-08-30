@@ -17,13 +17,15 @@
 #include <unordered_set>
 #include <algorithm>
 #include <ranges>
+#include <chrono>
+#include <stdlib.h>
 
 
 
 void JellyWithTexture::Init()
 {
+	std::chrono::system_clock::time_point start_time = std::chrono::system_clock::now();
 	VertexArrayObject vertex_array_object;
-	std::vector<Vertex2DText> all_vertices;
 
 	std::vector<Vertex2DText> rects_vertices;
 	for (int i = 0; i <= PARTS_COUNT; ++i)
@@ -54,6 +56,8 @@ void JellyWithTexture::Init()
 				upper_vertex_x_delta / 2,
 				Vertex2D<float>(upper_vertex_x + upper_vertex_x_delta / 2.f, END_Y), 0, M_PI
 			);
+		vertexes.insert
+		(vertexes.begin(), Vertex2D<float>(upper_vertex_x + upper_vertex_x_delta / 2.f, END_Y));
 
 		generated_circle_vertices.emplace_back(vertexes);
 	}
@@ -63,6 +67,7 @@ void JellyWithTexture::Init()
 		{
 			return CreateVertexText(vertex.x, vertex.y);
 		};
+
 	for (const auto& vector : generated_circle_vertices)
 	{
 		std::vector<Vertex2DText> new_vector;
@@ -74,48 +79,55 @@ void JellyWithTexture::Init()
 
 
 	for(auto& el : rects_vertices)
-		if(std::find(all_vertices.begin(), all_vertices.end(), el) == all_vertices.end())
-			all_vertices.push_back(el);
+		if(std::find(this->m_vertices.begin(), this->m_vertices.end(), el) == this->m_vertices.end())
+			this->m_vertices.push_back(el);
 	for(auto& vector : circle_vertices)
 		for(auto& el : vector)
-			if (std::find(all_vertices.begin(), all_vertices.end(), el) == all_vertices.end())
-				all_vertices.push_back(el);
+			//if (std::find(this->m_vertices.begin(), this->m_vertices.end(), el) == this->m_vertices.end())
+				this->m_vertices.push_back(el);
 
 
 
 
 	std::vector<unsigned int> indexes;
 	const unsigned int FIRST_INDEX_OF_RECT_VERTEX = 0;
-	unsigned int index_of_rect_vertex = FIRST_INDEX_OF_RECT_VERTEX;
+	unsigned int current_index = FIRST_INDEX_OF_RECT_VERTEX;
 	for (int i = 0; i < PARTS_COUNT; ++i)
 	{
-		indexes.emplace_back(index_of_rect_vertex + 0);
-		indexes.emplace_back(index_of_rect_vertex + 1);
-		indexes.emplace_back(index_of_rect_vertex + 3);
+		indexes.emplace_back(current_index + 0);
+		indexes.emplace_back(current_index + 1);
+		indexes.emplace_back(current_index + 3);
 
-		indexes.emplace_back(index_of_rect_vertex + 0);
-		indexes.emplace_back(index_of_rect_vertex + 2);
-		indexes.emplace_back(index_of_rect_vertex + 3);
+		indexes.emplace_back(current_index + 0);
+		indexes.emplace_back(current_index + 2);
+		indexes.emplace_back(current_index + 3);
 
-		index_of_rect_vertex +=2;
+		current_index +=2;
 	}
-	for (auto& el : rects_vertices)
-		std::cout << el << '\n';
-	std::cout << std::endl;
-	for(auto& el : all_vertices)
-		std::cout<<el<<'\n';
-	std::cout<<std::endl;
-	for (auto& el : indexes)
-		std::cout << el << '\n';
+	current_index+=2;
+	for (auto& vector : circle_vertices)
+	{
+		std::vector<unsigned int> circle_vertices_indexes = 
+		CircleSector<float>::GenerateCircleSectorVertexIndexes(ROUNDED_LINES_VERTEX_COUNT);
+		for (auto& el : circle_vertices_indexes)
+		{
+			el += current_index;
+		}
+		std::copy
+		(circle_vertices_indexes.begin(), circle_vertices_indexes.end(), std::back_inserter(indexes));
+		current_index+=vector.size();
+	}
 
-	// TODO: Доделать вершины для закруглённых частей
 
-
-
-
+	std::copy(this->m_vertices.begin(), this->m_vertices.end(), std::back_inserter(m_generated_vertices));
+	std::chrono::system_clock::time_point end_time = std::chrono::system_clock::now();
+	std::cout<<"Generated for\t"
+			<<std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count() 
+			<<"ms" << std::endl;
 
 	VertexBufferObject* newVertexBufferObject =
-	new VertexBufferObject(all_vertices.data(), all_vertices.size() * sizeof(Vertex2DText), all_vertices.size());
+	new VertexBufferObject
+	(this->m_vertices.data(), this->m_vertices.size() * sizeof(Vertex2DText), this->m_vertices.size());
 	this->m_vertexBufferObject.reset(newVertexBufferObject);
 
 	// Attribute crafting
@@ -141,13 +153,17 @@ IHasTexture(texture), IHasShader(shader)
 
 void JellyWithTexture::Animate(long long millisecondsSinceEpoch, double animationSpeed)
 {
-	
+	double animation_coefficient= millisecondsSinceEpoch * animationSpeed;
+	for (size_t i = 0; i < this->m_vertices.size(); ++i)
+	{
+		this->m_vertices[i].m_pos.x = 
+		m_generated_vertices[i].m_pos.x + cos(animation_coefficient) / (rand() % 200);
+		this->m_vertices[i].m_pos.y =
+		m_generated_vertices[i].m_pos.y + sin(animation_coefficient) / (rand() % 200);
+	}
+	this->ReBind();
 }
 
-void JellyWithTexture::Draw()
-{
-	
-}
 
 
 

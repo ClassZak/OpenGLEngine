@@ -1,6 +1,6 @@
 #pragma once
 
-#include <list>
+#include <vector>
 #include <memory>
 
 #include "Interfaces/IHasVertexVector.hpp"
@@ -51,7 +51,11 @@ class JellyWithTexture :
 	const float PART_SIZE = LENGTH / PARTS_COUNT;
 
 
-	const float ROUNDED_LINES_VERTEX_COUNT = 20;
+	const float ROUNDED_LINES_VERTEX_COUNT = 30;
+
+
+
+	std::vector<Vertex2DText> m_generated_vertices;
 public:
 	JellyWithTexture(std::shared_ptr<Texture> texture, std::shared_ptr<Shader> shader);
 	/// <summary>
@@ -59,7 +63,6 @@ public:
 	/// </summary>
 	/// <param name="millisecondsSinceEpoch">время</param>
 	void Animate(long long millisecondsSinceEpoch, double animationSpeed = 1e-3);
-	void Draw();
 
 	static inline Vertex2DText CreateVertexText(float x, float y);
 };

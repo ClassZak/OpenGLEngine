@@ -70,7 +70,7 @@
 #define FPS 60
 #define VERTEX_ATTRIBUTE_SIZE 2
 
-#define ANIMATION_SPEED 1.e-2
+#define ANIMATION_SPEED 1.e-3
 
 
 std::vector<std::function<void(GLFWwindow* window, double xpos, double ypos)>> mouseMovingProcs;
@@ -201,6 +201,7 @@ int main(int argc, char** argv)
 
 
 		/* Animate here */
+		jelly.Animate(milliseconds_since_epoch.count(), ANIMATION_SPEED);
 
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
