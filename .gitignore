@@ -4,3 +4,5 @@ build/
 
 # Paint.NET
 *.pdnSave
+/Jelly/assets/models/lost-empire
+/Jelly/assets/models/pine
