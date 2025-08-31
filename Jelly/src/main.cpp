@@ -28,6 +28,7 @@
 #include <stdlib.h>
 
 #include <thread>
+#include <mutex>
 #include <functional>
 #include <utility>
 
@@ -79,7 +80,10 @@ float windowHeight	=480;
 
 
 /*Вид и проекция*/
-glm::vec3 camera_pos = glm::vec3(0.0f, 0.0f, 0.0f);
+const float DEFAULT_CAMERA_SPEED = 2.f;
+float camera_speed = DEFAULT_CAMERA_SPEED;
+std::mutex camera_mutex;
+glm::vec3 camera_pos = glm::vec3(-100.0f, 0.0f, 0.0f);
 glm::mat4 model = glm::mat4(1.f);
 glm::mat4 view = glm::lookAt
 (
@@ -92,9 +96,10 @@ glm::mat4 projection = glm::perspective
 	glm::radians(15.f),							// угол обзора
 	(float)windowWidth / (float)windowHeight,	// соотношение сторон
 	0.1f,										// ближняя плоскость отсечения
-	100.0f										// дальняя плоскость отсечения
+	10000.0f									// дальняя плоскость отсечения
 );
 
+bool keys[1024] = { false };
 
 enum CameraDirection
 {
@@ -106,6 +111,48 @@ enum CameraDirection
 	Up,
 	Down
 };
+
+
+
+static void keyboard_input();
+static inline void move_camera(glm::vec3& camera_pos, glm::mat4& view, const CameraDirection direction, float speed);
+static inline void speed_up();
+
+std::unordered_map<int, std::function<void(void)>>
+keyboard_events=
+{
+	{GLFW_KEY_W, std::function([]()->void
+	{
+		move_camera(camera_pos, view, CameraDirection::Forward,		camera_speed);
+	})},
+	{GLFW_KEY_A, std::function([]()->void
+	{
+		move_camera(camera_pos, view, CameraDirection::Left,		camera_speed);
+	})},
+	{GLFW_KEY_S, std::function([]()->void
+	{
+		move_camera(camera_pos, view, CameraDirection::Backward,	camera_speed);
+	})},
+	{GLFW_KEY_D, std::function([]()->void
+	{
+		move_camera(camera_pos, view, CameraDirection::Right,		camera_speed);
+	})},
+	{GLFW_KEY_SPACE, std::function([]()->void
+	{
+		move_camera(camera_pos, view, CameraDirection::Up,			camera_speed);
+	})},
+
+	{GLFW_KEY_LEFT_SHIFT, std::function([]()->void
+	{
+		move_camera(camera_pos, view, CameraDirection::Down,		camera_speed);
+	})},
+	{GLFW_KEY_RIGHT_SHIFT, std::function([]()->void
+	{
+		move_camera(camera_pos, view, CameraDirection::Down,		camera_speed);
+	})},
+};
+
+
 
 int main(int argc, char** argv)
 {
@@ -153,6 +200,15 @@ int main(int argc, char** argv)
 					mouseMovingProcs[i](window, xpos, ypos);
 		}
 	);
+	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scan_code, int action, int mods) {
+		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+			glfwSetWindowShouldClose(window, true);
+		
+		if (action == GLFW_PRESS)
+			keys[key] = true;
+		else if (action == GLFW_RELEASE)
+			keys[key] = false;
+	});
 	
 	
 	GLFWimage images[1];
@@ -172,13 +228,26 @@ int main(int argc, char** argv)
 	AssetsManager::GetInstance().LoadShader("texture_shader", "../res/shaders/texture_shader.shader");
 	auto model_shader = 
 	AssetsManager::GetInstance().LoadShader("model_shader", "../res/shaders/model_shader.shader");
+	auto model_with_texture_shader =
+	AssetsManager::GetInstance().LoadShader("model_with_texture_shader", "../res/shaders/model_with_texture_shader.shader");
 
 	auto jelly_texture =
 	AssetsManager::GetInstance().LoadTexture("jelly_texture", "../assets/jelly_texture.png");
 	auto cube_texture =
 	AssetsManager::GetInstance().LoadTexture("cube_texture", "../assets/models/cube/default.png");
+	auto teapot_texture =
+	AssetsManager::GetInstance().LoadTexture("teapot_texture", "../assets/models/teapot/default.png");
+
+	auto cube_model =
+	AssetsManager::GetInstance().LoadMesh("cube_model", "../assets/models/cube/cube.obj", cube_texture);
+	auto teapot_model =
+	AssetsManager::GetInstance().LoadMesh("teapot_model", "../assets/models/teapot/teapot.obj", teapot_texture);
+	teapot_model.get()->SetShader(model_with_texture_shader);
+
 
 	JellyWithTexture jelly(jelly_texture, texture_shader);
+
+	glEnable(GL_DEPTH_TEST);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -199,7 +268,7 @@ int main(int argc, char** argv)
 #endif  // FPS <= 1000
 
 
-
+		keyboard_input();
 		/* Animate here */
 		jelly.Animate(milliseconds_since_epoch.count(), ANIMATION_SPEED);
 
@@ -207,14 +276,12 @@ int main(int argc, char** argv)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(.7f,.7f,.7f,1.f);
 
-
-		/*texture_shader->Bind();
-		texture_shader->SetUniform
-		({ "u_Color", UniformVec4(1.f, 1.f, 1.f, 1.f) });*/
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_BLEND);
 		
-		Renderer::GetInstance().Draw(&jelly, { "u_Color", UniformVec4(1.f, 1.f, 1.f, 1.f) });
+		Renderer::GetInstance().Draw(teapot_model.get(), 
+		{Uniform("model", model),Uniform("view", view), Uniform("projection", projection) });
+		//Renderer::GetInstance().Draw(&jelly, { "u_Color", UniformVec4(1.f, 1.f, 1.f, 1.f) });
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
@@ -229,4 +296,63 @@ int main(int argc, char** argv)
 	glfwTerminate();
 
 	return 0;
+}
+
+void keyboard_input()
+{
+	for(auto& event : keyboard_events)
+		if(keys[event.first])
+			event.second();
+}
+
+void move_camera(glm::vec3& camera_pos, glm::mat4& view, const CameraDirection direction, float speed = 0.1f)
+{
+	using namespace std::chrono;
+
+	while(!camera_mutex.try_lock())
+	std::this_thread::sleep_for(milliseconds(2));
+
+	switch (direction)
+	{
+		case CameraDirection::Forward:
+			camera_pos.x += speed;
+			break;
+		case CameraDirection::Backward:
+			camera_pos.x -= speed;
+			break;
+		case CameraDirection::Left:
+			camera_pos.y += speed;
+			break;
+		case CameraDirection::Right:
+			camera_pos.y -= speed;
+			break;
+		case CameraDirection::Up:
+			camera_pos.z += speed;
+			break;
+		case CameraDirection::Down:
+			camera_pos.z -= speed;
+			break;
+		default:
+			camera_mutex.unlock();
+			return;
+	}
+
+
+	glm::vec3 camera_target = glm::vec3(camera_pos.x + 1, camera_pos.y, camera_pos.z);
+	static glm::vec3 up_vector = glm::vec3(0.f, 0.f, 1.f);
+	view = glm::lookAt
+	(
+		camera_pos,
+		camera_target,
+		up_vector
+	);
+	printf("(%2.2f,\t%2.2f,\t%2.2f)\n", camera_pos.x, camera_pos.y, camera_pos.z);
+	printf("(%2.2f,\t%2.2f,\t%2.2f)\n", camera_target.x, camera_target.y, camera_target.z);
+
+	camera_mutex.unlock();
+}
+
+inline void speed_up()
+{
+	camera_speed = DEFAULT_CAMERA_SPEED * 2.5f;
 }
