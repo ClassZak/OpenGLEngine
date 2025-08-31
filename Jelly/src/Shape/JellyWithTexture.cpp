@@ -24,7 +24,9 @@
 
 void JellyWithTexture::Init()
 {
+#ifdef _DEBUG
 	std::chrono::system_clock::time_point start_time = std::chrono::system_clock::now();
+#endif
 	VertexArrayObject vertex_array_object;
 
 	std::vector<Vertex2DText> rects_vertices;
@@ -83,7 +85,6 @@ void JellyWithTexture::Init()
 			this->m_vertices.push_back(el);
 	for(auto& vector : circle_vertices)
 		for(auto& el : vector)
-			//if (std::find(this->m_vertices.begin(), this->m_vertices.end(), el) == this->m_vertices.end())
 				this->m_vertices.push_back(el);
 
 
@@ -120,11 +121,12 @@ void JellyWithTexture::Init()
 
 
 	std::copy(this->m_vertices.begin(), this->m_vertices.end(), std::back_inserter(m_generated_vertices));
+#ifdef _DEBUG
 	std::chrono::system_clock::time_point end_time = std::chrono::system_clock::now();
 	std::cout<<"Generated for\t"
 			<<std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count() 
 			<<"ms" << std::endl;
-
+#endif
 	VertexBufferObject* newVertexBufferObject =
 	new VertexBufferObject
 	(this->m_vertices.data(), this->m_vertices.size() * sizeof(Vertex2DText), this->m_vertices.size());

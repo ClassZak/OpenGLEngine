@@ -367,8 +367,10 @@ void move_camera(glm::vec3& camera_pos, glm::mat4& view, const CameraDirection d
 		camera_target,
 		up_vector
 	);
+#ifdef _DEBUG
 	printf("(%2.2f,\t%2.2f,\t%2.2f)\n", camera_pos.x, camera_pos.y, camera_pos.z);
 	printf("(%2.2f,\t%2.2f,\t%2.2f)\n", camera_target.x, camera_target.y, camera_target.z);
+#endif
 
 	camera_mutex.unlock();
 }
