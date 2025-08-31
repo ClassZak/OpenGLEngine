@@ -1,3 +1,5 @@
+#pragma once
+
 #include "AVertex.hpp"
 #include "../utils/GLMHash.hpp"
 

@@ -68,3 +68,5 @@ struct Vertex2D : AVertex<T>
 	}
 };
 
+using Vertex2D_float = Vertex2D<float>;
+

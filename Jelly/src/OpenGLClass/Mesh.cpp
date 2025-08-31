@@ -28,3 +28,13 @@ IHasVertexVector<Vertex3DNormText>(vertices), IHasTexture(texture), IHasShader(s
 {
 	Init(vertices, indexes);
 }
+
+
+void Mesh::Move(float x, float y, float z)
+{
+	glm::vec3 move_vector(x,y,z);
+	for(auto& el : this->m_vertices)
+		el.m_pos += move_vector;
+
+	this->ReBind();
+}

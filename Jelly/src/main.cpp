@@ -80,7 +80,7 @@ float windowHeight	=480;
 
 
 /*Вид и проекция*/
-const float DEFAULT_CAMERA_SPEED = 2.f;
+const float DEFAULT_CAMERA_SPEED = .4f;
 float camera_speed = DEFAULT_CAMERA_SPEED;
 std::mutex camera_mutex;
 glm::vec3 camera_pos = glm::vec3(-100.0f, 0.0f, 0.0f);
@@ -115,7 +115,8 @@ enum CameraDirection
 
 
 static void keyboard_input();
-static inline void move_camera(glm::vec3& camera_pos, glm::mat4& view, const CameraDirection direction, float speed);
+static inline void move_camera
+(glm::vec3& camera_pos, glm::mat4& view, const CameraDirection direction, float speed);
 static inline void speed_up();
 
 std::unordered_map<int, std::function<void(void)>>
@@ -229,7 +230,8 @@ int main(int argc, char** argv)
 	auto model_shader = 
 	AssetsManager::GetInstance().LoadShader("model_shader", "../res/shaders/model_shader.shader");
 	auto model_with_texture_shader =
-	AssetsManager::GetInstance().LoadShader("model_with_texture_shader", "../res/shaders/model_with_texture_shader.shader");
+	AssetsManager::GetInstance().
+	LoadShader("model_with_texture_shader", "../res/shaders/model_with_texture_shader.shader");
 
 	auto jelly_texture =
 	AssetsManager::GetInstance().LoadTexture("jelly_texture", "../assets/jelly_texture.png");
@@ -237,15 +239,30 @@ int main(int argc, char** argv)
 	AssetsManager::GetInstance().LoadTexture("cube_texture", "../assets/models/cube/default.png");
 	auto teapot_texture =
 	AssetsManager::GetInstance().LoadTexture("teapot_texture", "../assets/models/teapot/default.png");
+	auto rifle_texture =
+	AssetsManager::GetInstance().LoadTexture("rifle_texture", "../assets/rifle.png");
+
 
 	auto cube_model =
 	AssetsManager::GetInstance().LoadMesh("cube_model", "../assets/models/cube/cube.obj", cube_texture);
 	auto teapot_model =
 	AssetsManager::GetInstance().LoadMesh("teapot_model", "../assets/models/teapot/teapot.obj", teapot_texture);
 	teapot_model.get()->SetShader(model_with_texture_shader);
-
+	cube_model.get()->SetShader(model_with_texture_shader);
+	cube_model.get()->Move(0, -50, 0);
 
 	JellyWithTexture jelly(jelly_texture, texture_shader);
+
+
+	QuadrangleTexture<Vertex2DText> quadrangle_template(
+	{ 
+		Vertex2DText({0.5,	-1},	{0,0}), 
+		Vertex2DText({0.5,	-0.5},	{0,1}),
+		Vertex2DText({1.0,	-0.5},	{1,1}),
+		Vertex2DText({1.0,	-1},	{1,0}),
+	});
+	quadrangle_template.SetShader(texture_shader);
+	quadrangle_template.SetTexture(rifle_texture);
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -281,6 +298,10 @@ int main(int argc, char** argv)
 		
 		Renderer::GetInstance().Draw(teapot_model.get(), 
 		{Uniform("model", model),Uniform("view", view), Uniform("projection", projection) });
+		Renderer::GetInstance().Draw(cube_model.get(), 
+		{Uniform("model", model),Uniform("view", view), Uniform("projection", projection) });
+		Renderer::GetInstance().Draw(&quadrangle_template, Uniform("u_Color", UniformVec4(1.f, 1.f, 1.f, 1.f)));
+		
 		//Renderer::GetInstance().Draw(&jelly, { "u_Color", UniformVec4(1.f, 1.f, 1.f, 1.f) });
 
 		/* Swap front and back buffers */

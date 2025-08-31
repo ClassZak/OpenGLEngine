@@ -37,4 +37,6 @@ public:
 		const std::shared_ptr<Shader> shader
 	) :
 	Mesh(std::vector<Vertex3DNormText>(vertices), std::vector<unsigned int>(indexes), texture, shader){}
+
+	void Move(float x, float y, float z);
 };
