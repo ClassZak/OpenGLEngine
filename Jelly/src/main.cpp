@@ -31,6 +31,7 @@
 #include <mutex>
 #include <functional>
 #include <utility>
+#include <atomic>
 
 #include <math.h>
 
@@ -82,6 +83,8 @@ float windowHeight	=480;
 /*Вид и проекция*/
 const float DEFAULT_CAMERA_SPEED = .4f;
 float camera_speed = DEFAULT_CAMERA_SPEED;
+std::atomic<bool> is_speed_increased = false;
+
 std::mutex camera_mutex;
 glm::vec3 camera_pos = glm::vec3(-100.0f, 0.0f, 0.0f);
 glm::mat4 model = glm::mat4(1.f);
@@ -118,9 +121,10 @@ static void keyboard_input();
 static inline void move_camera
 (glm::vec3& camera_pos, glm::mat4& view, const CameraDirection direction, float speed);
 static inline void speed_up();
+static inline void speed_down();
 
 std::unordered_map<int, std::function<void(void)>>
-keyboard_events=
+keyboard_events_press=
 {
 	{GLFW_KEY_W, std::function([]()->void
 	{
@@ -150,6 +154,63 @@ keyboard_events=
 	{GLFW_KEY_RIGHT_SHIFT, std::function([]()->void
 	{
 		move_camera(camera_pos, view, CameraDirection::Down,		camera_speed);
+	})},
+};
+struct KeyboardEvent
+{
+	int m_key;
+	int m_action;
+	std::function<void(void)> m_func;
+
+	static void KeyInput(GLFWwindow* window, std::list<KeyboardEvent>& events)
+	{
+		for(auto& el : events)
+			if(glfwGetKey(window, el.m_key) == el.m_action)
+				el.m_func();
+	}
+};
+std::list<KeyboardEvent> keyboard_events=
+{
+	{GLFW_KEY_W, GLFW_PRESS, std::function([]()->void
+	{
+		move_camera(camera_pos, view, CameraDirection::Forward,		camera_speed);
+	})},
+	{GLFW_KEY_A, GLFW_PRESS, std::function([]()->void
+	{
+		move_camera(camera_pos, view, CameraDirection::Left,		camera_speed);
+	})},
+	{GLFW_KEY_S, GLFW_PRESS, std::function([]()->void
+	{
+		move_camera(camera_pos, view, CameraDirection::Backward,	camera_speed);
+	})},
+	{GLFW_KEY_D, GLFW_PRESS, std::function([]()->void
+	{
+		move_camera(camera_pos, view, CameraDirection::Right,		camera_speed);
+	})},
+	{GLFW_KEY_SPACE, GLFW_PRESS, std::function([]()->void
+	{
+		move_camera(camera_pos, view, CameraDirection::Up,			camera_speed);
+	})},
+
+	{GLFW_KEY_LEFT_SHIFT, GLFW_PRESS, std::function([]()->void
+	{
+		move_camera(camera_pos, view, CameraDirection::Down,		camera_speed);
+	})},
+	{GLFW_KEY_RIGHT_SHIFT, GLFW_PRESS, std::function([]()->void
+	{
+		move_camera(camera_pos, view, CameraDirection::Down,		camera_speed);
+	})},
+
+
+
+
+	{GLFW_KEY_LEFT_CONTROL, GLFW_PRESS, std::function([]()->void
+	{
+		speed_up();
+	})},
+	{GLFW_KEY_LEFT_CONTROL, GLFW_RELEASE, std::function([]()->void
+	{
+		speed_down();
 	})},
 };
 
@@ -274,6 +335,8 @@ int main(int argc, char** argv)
 		std::chrono::seconds		seconds_since_epoch =
 		std::chrono::duration_cast<std::chrono::seconds>(duration_since_epoch);
 
+		//keyboard_input();
+		KeyboardEvent::KeyInput(window, keyboard_events);
 		long diff = 2L;
 #if FPS <= 1000
 		while (int(1000. / diff) >= FPS)
@@ -285,7 +348,6 @@ int main(int argc, char** argv)
 #endif  // FPS <= 1000
 
 
-		keyboard_input();
 		/* Animate here */
 		jelly.Animate(milliseconds_since_epoch.count(), ANIMATION_SPEED);
 
@@ -321,7 +383,7 @@ int main(int argc, char** argv)
 
 void keyboard_input()
 {
-	for(auto& event : keyboard_events)
+	for(auto& event : keyboard_events_press)
 		if(keys[event.first])
 			event.second();
 }
@@ -377,5 +439,16 @@ void move_camera(glm::vec3& camera_pos, glm::mat4& view, const CameraDirection d
 
 inline void speed_up()
 {
-	camera_speed = DEFAULT_CAMERA_SPEED * 2.5f;
+	if(is_speed_increased.load())
+		return;
+	camera_speed = DEFAULT_CAMERA_SPEED * 10.f;
+	is_speed_increased.store(true);
+}
+
+inline void speed_down()
+{
+	if (!is_speed_increased.load())
+		return;
+	camera_speed = DEFAULT_CAMERA_SPEED;
+	is_speed_increased.store(false);
 }
