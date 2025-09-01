@@ -117,7 +117,6 @@ enum CameraDirection
 
 
 
-static void keyboard_input();
 static inline void move_camera
 (glm::vec3& camera_pos, glm::mat4& view, const CameraDirection direction, float speed);
 static inline void speed_up();
@@ -301,7 +300,7 @@ int main(int argc, char** argv)
 	auto teapot_texture =
 	AssetsManager::GetInstance().LoadTexture("teapot_texture", "../assets/models/teapot/default.png");
 	auto rifle_texture =
-	AssetsManager::GetInstance().LoadTexture("rifle_texture", "../assets/rifle.png");
+	AssetsManager::GetInstance().LoadTexture("rifle_texture", "../assets/rifle2.png");
 
 
 	auto cube_model =
@@ -335,7 +334,6 @@ int main(int argc, char** argv)
 		std::chrono::seconds		seconds_since_epoch =
 		std::chrono::duration_cast<std::chrono::seconds>(duration_since_epoch);
 
-		//keyboard_input();
 		KeyboardEvent::KeyInput(window, keyboard_events);
 		long diff = 2L;
 #if FPS <= 1000
@@ -379,13 +377,6 @@ int main(int argc, char** argv)
 	glfwTerminate();
 
 	return 0;
-}
-
-void keyboard_input()
-{
-	for(auto& event : keyboard_events_press)
-		if(keys[event.first])
-			event.second();
 }
 
 void move_camera(glm::vec3& camera_pos, glm::mat4& view, const CameraDirection direction, float speed = 0.1f)
