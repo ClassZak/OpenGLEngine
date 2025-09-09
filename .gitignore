@@ -6,3 +6,4 @@ build/
 *.pdnSave
 /Jelly/assets/models/lost-empire
 /Jelly/assets/models/pine
+/Jelly/include/stb_image.h
