@@ -168,10 +168,13 @@ Renderer& Renderer::Draw(IDrawableOpenGL* object, const std::vector<Uniform>& un
 			if (iHasTexture)
 			{
 				Texture* texture = iHasTexture->GetTextureSharedPointer();
-				texture->Bind(0);
-				shader->SetUniform(Uniform("u_Texture", 0));
-				GLLogCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-				GLLogCall(glEnable(GL_BLEND));
+				if (texture)
+				{
+					texture->Bind(0);
+					shader->SetUniform(Uniform("u_Texture", 0));
+					GLLogCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+					GLLogCall(glEnable(GL_BLEND));
+				}
 			}
 		}
 	}
@@ -218,7 +221,8 @@ Renderer& Renderer::Draw(IDrawableOpenGL* object, const std::vector<Uniform>& un
 	if (iHasShader)
 		iHasShader->GetShaderSharedPointer()->UnBind();
 	if (iHasTexture)
-		iHasTexture->GetTextureSharedPointer()->UnBind();
+		if(iHasTexture->GetTextureSharedPointer())
+			iHasTexture->GetTextureSharedPointer()->UnBind();
 
 	return *this;
 }

@@ -92,7 +92,7 @@ glm::mat4 view = glm::lookAt
 (
 	camera_pos, // позиция камеры
 	glm::vec3(0.0f, 0.0f, 0.0f), // цель камеры
-	glm::vec3(0.0f, 0.0f, 1.0f)  // вектор "вверх"
+	glm::vec3(0.0f, 1.0f, 0.0f)  // вектор "вверх"
 );
 glm::mat4 projection = glm::perspective
 (
@@ -306,10 +306,14 @@ int main(int argc, char** argv)
 	auto cube_model =
 	AssetsManager::GetInstance().LoadMesh("cube_model", "../assets/models/cube/cube.obj", cube_texture);
 	auto teapot_model =
-	AssetsManager::GetInstance().LoadMesh("teapot_model", "../assets/models/teapot/teapot.obj", teapot_texture);
+	AssetsManager::GetInstance().LoadMesh("teapot_model", "../assets/models/teapot/teapot2.obj", teapot_texture);
+	auto obsidian_model = 
+	AssetsManager::GetInstance().LoadMesh("obsidian_model", "../assets/models/obsidian/obsidian.obj");
 	teapot_model.get()->SetShader(model_with_texture_shader);
 	cube_model.get()->SetShader(model_with_texture_shader);
-	cube_model.get()->Move(0, -50, 0);
+	cube_model.get()->Move(0, 0, -50);
+	obsidian_model.get()->SetShader(model_shader);
+	obsidian_model.get()->Move(5, 0, -50);
 
 	JellyWithTexture jelly(jelly_texture, texture_shader);
 
@@ -356,11 +360,20 @@ int main(int argc, char** argv)
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_BLEND);
 		
-		Renderer::GetInstance().Draw(teapot_model.get(), 
-		{Uniform("model", model),Uniform("view", view), Uniform("projection", projection) });
-		Renderer::GetInstance().Draw(cube_model.get(), 
-		{Uniform("model", model),Uniform("view", view), Uniform("projection", projection) });
-		Renderer::GetInstance().Draw(&quadrangle_template, Uniform("u_Color", UniformVec4(1.f, 1.f, 1.f, 1.f)));
+		Renderer::GetInstance()
+		.Draw(teapot_model.get(), 
+		{Uniform("model", model),Uniform("view", view), Uniform("projection", projection) })
+		.Draw(cube_model.get(), 
+		{Uniform("model", model),Uniform("view", view), Uniform("projection", projection) })
+		.Draw
+		(
+			obsidian_model.get(), 
+			{
+				Uniform("u_Color", UniformVec4(0.1f, 0.f, 0.2f, 1.f)),
+				Uniform("model", model),Uniform("view", view), Uniform("projection", projection) 
+			}
+		)
+		.Draw(&quadrangle_template, Uniform("u_Color", UniformVec4(1.f, 1.f, 1.f, 1.f)));
 		
 		//Renderer::GetInstance().Draw(&jelly, { "u_Color", UniformVec4(1.f, 1.f, 1.f, 1.f) });
 
@@ -395,16 +408,16 @@ void move_camera(glm::vec3& camera_pos, glm::mat4& view, const CameraDirection d
 			camera_pos.x -= speed;
 			break;
 		case CameraDirection::Left:
-			camera_pos.y += speed;
+			camera_pos.z -= speed;
 			break;
 		case CameraDirection::Right:
-			camera_pos.y -= speed;
-			break;
-		case CameraDirection::Up:
 			camera_pos.z += speed;
 			break;
+		case CameraDirection::Up:
+			camera_pos.y += speed;
+			break;
 		case CameraDirection::Down:
-			camera_pos.z -= speed;
+			camera_pos.y -= speed;
 			break;
 		default:
 			camera_mutex.unlock();
@@ -413,7 +426,7 @@ void move_camera(glm::vec3& camera_pos, glm::mat4& view, const CameraDirection d
 
 
 	glm::vec3 camera_target = glm::vec3(camera_pos.x + 1, camera_pos.y, camera_pos.z);
-	static glm::vec3 up_vector = glm::vec3(0.f, 0.f, 1.f);
+	static glm::vec3 up_vector = glm::vec3(0.f, 1.f, 0.f);
 	view = glm::lookAt
 	(
 		camera_pos,
