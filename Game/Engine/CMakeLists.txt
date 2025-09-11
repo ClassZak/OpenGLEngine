@@ -13,7 +13,8 @@ target_include_directories(Engine
 	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
 	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/deps
 )
-
+# Современный alias (удобно линковать как Engine::Engine)
+add_library(Engine::Engine ALIAS Engine)
 
 
 # Автоматическая настройка для Windows 7

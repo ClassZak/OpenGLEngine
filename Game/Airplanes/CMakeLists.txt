@@ -171,6 +171,7 @@ endif()
 
 
 
+include_directories(PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/deps/)
 set(SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
 )
@@ -207,6 +208,8 @@ target_link_libraries(Airplanes PRIVATE
 	glew
 	glm
 	tinyobjloader
+	PRIVATE
+	Engine::Engine
 )
 if(UNIX)
 	target_link_libraries(Airplanes PRIVATE
@@ -281,17 +284,3 @@ endif()
 target_compile_definitions(Airplanes PRIVATE
 	$<$<CONFIG:Debug>:DEBUG_MODE>
 )
-
-
-
-
-
-
-
-
-
-#add_executable(Airplanes)
-#file(GLOB_RECURSE app_srcs CONFIGURE_DEPENDS "src/*.cpp")
-#target_sources(Airplanes PRIVATE ${app_srcs})
-#
-#target_link_libraries(Airplanes PUBLIC Engine)

@@ -47,8 +47,8 @@ public:
 	m_lineWidth(lineWidth), 
 	m_isSmooth(isSmooth)
 	{
-		::  IHasVertexBufferObject::m_drawMode = drawMode;
-		::  IHasVertexVector<Vertex2D<T>>::Init(vertices);
+		::IHasVertexBufferObject::m_drawMode = drawMode;
+		::IHasVertexVector<Vertex2D<T>>::Init(vertices);
 		Init(vertices);
 	}
 
@@ -57,8 +57,8 @@ public:
 	m_lineWidth(other.m_lineWidth),
 	m_isSmooth(other.m_isSmooth)
 	{
-		::  IHasVertexBufferObject::m_drawMode = other.GetDrawMode();
-		::  IHasVertexVector<Vertex2D<T>>::Init(other.m_vertices);
+		::IHasVertexBufferObject::m_drawMode = other.GetDrawMode();
+		::IHasVertexVector<Vertex2D<T>>::Init(other.m_vertices);
 		Init(this->m_vertices);
 	}
 	Line& operator=(const Line& other)
