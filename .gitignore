@@ -7,3 +7,5 @@ build/
 /Jelly/assets/models/lost-empire
 /Jelly/assets/models/pine
 /Jelly/include/stb_image.h
+
+/Game/include/stb_image.h
