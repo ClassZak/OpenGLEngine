@@ -1,10 +1,10 @@
 #include <tiny_obj_loader.h>
 
-#include "../../include/EngineCore/ObjLoader.hpp"
+#include "../../include/ZakEngine/EngineCore/ObjLoader.hpp"
 
 
 #include <filesystem>
-#include "../../include/OpenGLClass/Mesh.hpp"
+#include "../../include/ZakEngine/OpenGLClass/Mesh.hpp"
 
 bool ObjLoader::LoadMesh
 (

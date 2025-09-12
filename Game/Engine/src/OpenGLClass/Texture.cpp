@@ -1,4 +1,4 @@
-#include "../../include/OpenGLClass/Texture.hpp"
+#include "../../include/ZakEngine/OpenGLClass/Texture.hpp"
 #include <filesystem>
 #include <memory>
 
@@ -11,7 +11,7 @@
 #include <stb_image.h>
 
 
-#include "../../include/utils/GLMacro.h"
+#include "../../include/ZakEngine/utils/GLMacro.h"
 
 Texture::Texture(const std::string& filename)
 {

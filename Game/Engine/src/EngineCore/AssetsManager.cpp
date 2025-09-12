@@ -1,9 +1,9 @@
-#include "../../include/EngineCore/AssetsManager.hpp"
-#include "../../include/EngineCore/ObjLoader.hpp"
+#include "../../include/ZakEngine/EngineCore/AssetsManager.hpp"
+#include "../../include/ZakEngine/EngineCore/ObjLoader.hpp"
 
-#include "../../include/OpenGLClass/Texture.hpp"
-#include "../../include/OpenGLClass/Mesh.hpp"
-#include "../../include/OpenGLClass/Shader.hpp"
+#include "../../include/ZakEngine/OpenGLClass/Texture.hpp"
+#include "../../include/ZakEngine/OpenGLClass/Mesh.hpp"
+#include "../../include/ZakEngine/OpenGLClass/Shader.hpp"
 
 #include <filesystem>
 

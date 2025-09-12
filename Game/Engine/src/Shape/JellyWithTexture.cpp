@@ -1,18 +1,18 @@
 #define _USE_MATH_DEFINES
-#include "../../include/Shape/JellyWithTexture.hpp"
+#include "../../include/ZakEngine/Shape/JellyWithTexture.hpp"
 
 
-#include "../../include/Shape/CircleSector.hpp"
+#include "../../include/ZakEngine/Shape/CircleSector.hpp"
 
-#include "../../include/OpenGLClass/VertexArrayObject.hpp"
-#include "../../include/OpenGLClass/VertexBufferObject.hpp"
-#include "../../include/OpenGLClass/VertexBufferLayout.hpp"
-#include "../../include/OpenGLClass/IndexBufferObject.hpp"
-#include "../../include/OpenGLClass/Shader.hpp"
-#include "../../include/OpenGLClass/Texture.hpp"
+#include "../../include/ZakEngine/OpenGLClass/VertexArrayObject.hpp"
+#include "../../include/ZakEngine/OpenGLClass/VertexBufferObject.hpp"
+#include "../../include/ZakEngine/OpenGLClass/VertexBufferLayout.hpp"
+#include "../../include/ZakEngine/OpenGLClass/IndexBufferObject.hpp"
+#include "../../include/ZakEngine/OpenGLClass/Shader.hpp"
+#include "../../include/ZakEngine/OpenGLClass/Texture.hpp"
 
-#include "../../include/Vertex/Vertex2DText.hpp"
-#include "../../include/Vertex/Vertex2D.hpp"
+#include "../../include/ZakEngine/Vertex/Vertex2DText.hpp"
+#include "../../include/ZakEngine/Vertex/Vertex2D.hpp"
 
 #include <unordered_set>
 #include <algorithm>

@@ -18,10 +18,10 @@
 
 
 
-#include <EngineCore/Renderer.hpp>
-#include <EngineCore/AssetsManager.hpp>
-#include <Shape/Line.hpp>
-#include <Shape/Quadrangle.hpp>
+#include <ZakEngine/EngineCore/Renderer.hpp>
+#include <ZakEngine/EngineCore/AssetsManager.hpp>
+#include <ZakEngine/Shape/Line.hpp>
+#include <ZakEngine/Shape/Quadrangle.hpp>
 
 
 
@@ -103,7 +103,7 @@ int main(int argc, char** argv)
 	std::shared_ptr<Shader> texture_shader;
 	try
 	{
-		background = AssetsManager::GetInstance().LoadTexture("background", "../../Airplanes/assets/backgrounds/background.jpg");
+		background = AssetsManager::GetInstance().LoadTexture("background", "../../Airplanes/assets/backgrounds/background.png");
 		plane_texture = AssetsManager::GetInstance().LoadTexture("plane_texture", "../../Airplanes/assets/sprites/plane.png");
 
 		texture_shader = AssetsManager::GetInstance().LoadShader("texture_shader", "../../Airplanes/res/shaders/texture_shader.shader");

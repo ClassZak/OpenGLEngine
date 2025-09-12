@@ -1,6 +1,6 @@
-#include "../../include/Shape/Jelly.hpp"
+#include "../../include/ZakEngine/Shape/Jelly.hpp"
 #include <stdlib.h>
-#include "../../include/EngineCore/AssetsManager.hpp"
+#include "../../include/ZakEngine/EngineCore/AssetsManager.hpp"
 
 inline void Jelly::AnimateLines(long long millisecondsSinceEpoch, double animationSpeed)
 {
