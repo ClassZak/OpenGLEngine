@@ -84,7 +84,7 @@ int main(int argc, char** argv)
 				std::cout<<"GLFW_MOUSE_BUTTON_LEFT"<<'\n';
 				if (planeQuadrangle_ptr)
 				{
-					planeMutex.try_lock();
+					while(!planeMutex.try_lock());
 					auto& vertices = planeQuadrangle_ptr->GetVertices();
 					vertices[0].m_pos.y += 0.01;
 					vertices[1].m_pos.y += 0.01;
@@ -138,7 +138,7 @@ int main(int argc, char** argv)
 	while (!glfwWindowShouldClose(window))
 	{
 		/* Animation here */
-		planeMutex.try_lock();
+		while(!planeMutex.try_lock());
 		auto& vertices = planeQuadrangle.GetVertices();
 		vertices[0].m_pos.y -= 0.001;
 		vertices[1].m_pos.y -= 0.001;
@@ -165,7 +165,7 @@ int main(int argc, char** argv)
 
 	glfwTerminate();
 
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 inline void exit_failure(int code)
