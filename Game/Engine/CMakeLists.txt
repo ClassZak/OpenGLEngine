@@ -174,23 +174,6 @@ if(NOT glm_FOUND)
 	)
 endif()
 
-
-# Для Windows добавляем ресурсный файл
-#if(WIN32)
-#	# Создаем ресурсный файл
-#	set(RESOURCE_FILE ${CMAKE_CURRENT_SOURCE_DIR}/resources.rc)
-#	
-#	# Добавляем ресурсы к исполняемому файлу
-#	target_sources(Engine PRIVATE ${RESOURCE_FILE})
-#	
-#	# Устанавливаем свойства для Windows
-#	set_target_properties(Engine PROPERTIES
-#		WIN32_EXECUTABLE TRUE
-#		LINK_FLAGS "/ENTRY:mainCRTStartup"
-#	)
-#	target_compile_definitions(Engine PRIVATE -DUNICODE -D_UNICODE)
-#endif()
-
 target_include_directories(
 	Engine		PRIVATE
 	${CMAKE_SOURCE_DIR}/include/ZakEngine
@@ -208,18 +191,6 @@ if(UNIX)
 		X11 pthread dl GL
 	)
 endif()
-
-
-# Для GLEW
-if(WIN32)
-	add_custom_command(TARGET Engine POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy_if_different
-			"${GLEW_BIN_DIR}/glew32.dll"
-			$<TARGET_FILE_DIR:Engine>
-		COMMENT "Copying glew32.dll to output directory"
-	)
-endif()
-
 
 # Платформенно-специфичные настройки
 if(WIN32)
