@@ -12,6 +12,7 @@
 
 #include "../Vertex/Vertex2D.hpp"
 
+namespace Zak {
 template <typename T>
 class CircleSector :
 	public virtual IHasVertexArrayObject,
@@ -38,7 +39,7 @@ public:
 		GenerateCircleSectorVertexes(count, radius, center, startDegree, endDegree);
 		vertices.insert(vertices.begin(), center);
 		
-		::IHasVertexVector<Vertex2D<T>>::Init(vertices);
+		::Zak::IHasVertexVector<Vertex2D<T>>::Init(vertices);
 		Init(vertices, count);
 	}
 
@@ -145,3 +146,4 @@ public:
 		return vertexesIndices;
 	}
 };
+}

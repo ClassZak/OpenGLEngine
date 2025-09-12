@@ -8,6 +8,7 @@
 
 #define VERTEX_ATTRIBUTE_SIZE 2
 
+namespace Zak {
 /// <summary>
 /// Класс для элементарных фигур
 /// </summary>
@@ -97,3 +98,4 @@ public:
 	{
 	}
 };
+}

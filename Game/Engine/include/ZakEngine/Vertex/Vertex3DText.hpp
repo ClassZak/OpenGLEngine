@@ -1,6 +1,9 @@
-#include "AVertex.hpp"
-#include <glm/glm.hpp>
+#pragma once
 
+#include "AVertex.hpp"
+#include "../utils/GLMHash.hpp"
+
+namespace Zak {
 class Vertex3DText : AVertex<float>
 {
 	glm::vec3 m_pos = {0.f, 0.f, 0.f};
@@ -75,3 +78,4 @@ public:
 		return is;
 	}
 };
+}

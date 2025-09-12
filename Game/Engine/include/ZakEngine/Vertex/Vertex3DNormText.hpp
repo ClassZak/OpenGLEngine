@@ -2,6 +2,7 @@
 #include "AVertex.hpp"
 #include "../utils/GLMHash.hpp"
 
+namespace Zak {
 class Vertex3DNormText : public AVertex<float>
 {
 public:
@@ -83,13 +84,14 @@ public:
 		return is;
 	}
 };
+}
 
 // Хэш-функция для Vertex3DNormText для использования в unordered_map
 namespace std
 {
-	template<> struct hash<Vertex3DNormText>
+	template<> struct hash<Zak::Vertex3DNormText>
 	{
-		size_t operator()(const Vertex3DNormText& vertex) const noexcept
+		size_t operator()(const Zak::Vertex3DNormText& vertex) const noexcept
 		{
 			size_t h1 = hash<float>()(vertex.m_pos.x);
 			size_t h2 = hash<float>()(vertex.m_pos.y);

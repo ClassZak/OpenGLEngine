@@ -6,6 +6,7 @@
 #include "../../Vertex/Vertex2D.hpp"
 #include "../../Vertex/Vertex3DNormText.hpp"
 
+namespace Zak {
 template <class Vertex>
 class IHasVertexVector : 
 	virtual public IHasVertexBufferObject,
@@ -71,3 +72,4 @@ public:
 			Init(other.m_vertices);
 	}
 };
+}

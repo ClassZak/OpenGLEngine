@@ -3,6 +3,7 @@
 #include <vector>
 #include <array>
 
+namespace Zak {
 // Типы данных униформ
 enum class UniformType {
 	Int, Float, Bool,
@@ -38,30 +39,23 @@ using UniformVec4Array = std::vector<glm::vec4>;
 using UniformMat3Array = std::vector<glm::mat3>;
 using UniformMat4Array = std::vector<glm::mat4>;
 using UniformSamplerArray = std::vector<int>;
-
+}
 // Вариант для хранения данных
 using UniformValue = std::variant
 <
-	UniformInt, UniformFloat, UniformBool,
-	UniformVec2, UniformVec3, UniformVec4,
-	UniformMat3, UniformMat4,
-	UniformIntArray, UniformFloatArray, UniformBoolArray,
-	UniformVec2Array, UniformVec3Array, UniformVec4Array,
-	UniformMat3Array, UniformMat4Array,
-	UniformSamplerArray
+	Zak::UniformInt, Zak::UniformFloat, Zak::UniformBool,
+	Zak::UniformVec2, Zak::UniformVec3, Zak::UniformVec4,
+	Zak::UniformMat3, Zak::UniformMat4,
+	Zak::UniformIntArray, Zak::UniformFloatArray, Zak::UniformBoolArray,
+	Zak::UniformVec2Array, Zak::UniformVec3Array, Zak::UniformVec4Array,
+	Zak::UniformMat3Array, Zak::UniformMat4Array,
+	Zak::UniformSamplerArray
 >;
 
 
+namespace Zak {
 // Дополнительные использования типов
 using Uniform1i = UniformInt;
-
-
-
-
-
-
-
-
 
 
 struct Uniform
@@ -73,3 +67,4 @@ struct Uniform
 	{
 	}
 };
+}

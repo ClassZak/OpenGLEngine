@@ -4,6 +4,7 @@
 #include "../../OpenGLClass/IndexBufferObject.hpp"
 #include "IDrawable.hpp"
 
+namespace Zak {
 class IHasIndexBufferObject : virtual public IDrawableOpenGL
 {
 protected:
@@ -28,3 +29,4 @@ public:
 		m_indexBufferObject.reset(indexBufferObject);
 	}
 };
+}

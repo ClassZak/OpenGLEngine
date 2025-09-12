@@ -3,6 +3,7 @@
 #include "AVertex.hpp"
 #include "../utils/GLMHash.hpp"
 
+namespace Zak {
 class Vertex2DText : AVertex<float>
 {
 public:
@@ -63,14 +64,15 @@ public:
 		return is;
 	}
 };
+}
 
 
 // Хэш-функция для Vertex2DText
 namespace std
 {
-	template<> struct hash<Vertex2DText>
+	template<> struct hash<Zak::Vertex2DText>
 	{
-		size_t operator()(const Vertex2DText& vertex) const noexcept
+		size_t operator()(const Zak::Vertex2DText& vertex) const noexcept
 		{
 			size_t h1 = hash<glm::vec2>()(vertex.m_pos);
 			size_t h2 = hash<glm::vec2>()(vertex.m_texturePos);

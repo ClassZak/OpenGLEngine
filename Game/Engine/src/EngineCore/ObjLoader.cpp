@@ -6,6 +6,7 @@
 #include <filesystem>
 #include "../../include/ZakEngine/OpenGLClass/Mesh.hpp"
 
+using namespace Zak;
 bool ObjLoader::LoadMesh
 (
 	const std::string& path,

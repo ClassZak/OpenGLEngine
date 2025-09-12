@@ -1,6 +1,7 @@
 #pragma once
 #include <GL/glew.h>
 
+namespace Zak {
 class IDrawable
 {
 	virtual void Draw() = 0;
@@ -20,3 +21,4 @@ public:
 		return m_drawMode;
 	}
 };
+}

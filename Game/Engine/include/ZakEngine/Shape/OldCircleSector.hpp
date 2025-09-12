@@ -5,6 +5,7 @@
 #include "Interfaces/IDrawable.hpp"
 #include "../Vertex/Vertex2D.hpp"
 
+namespace Zak {
 template<typename T>
 class OldCircleSector : public AShape<Vertex2D<T>>
 {
@@ -189,4 +190,5 @@ inline void OldCircleSector<T>::Draw()
 	));
 
 	GLLogCall(glDrawElements(GL_TRIANGLES, this->m_indexes.size(), GL_UNSIGNED_INT, nullptr));
+}
 }

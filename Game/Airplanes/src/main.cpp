@@ -24,6 +24,7 @@
 #include <ZakEngine/Shape/Quadrangle.hpp>
 
 
+using namespace Zak;
 
 std::mutex planeMutex;
 QuadrangleTexture<Vertex2DText>* planeQuadrangle_ptr=nullptr;
@@ -54,7 +55,7 @@ int main(int argc, char** argv)
 	glfwMakeContextCurrent(window);
 
 	GLFWimage images[1];
-	images[0].pixels = stbi_load("../assets/icon.png", &images[0].width, &images[0].height, 0, 4);
+	images[0].pixels = stbi_load("../../Airplanes/assets/icon.png", &images[0].width, &images[0].height, 0, 4);
 	glfwSetWindowIcon(window, 1, images);
 	stbi_image_free(images[0].pixels);
 
@@ -103,10 +104,10 @@ int main(int argc, char** argv)
 	std::shared_ptr<Shader> texture_shader;
 	try
 	{
-		background = AssetsManager::GetInstance().LoadTexture("background", "../../Airplanes/assets/backgrounds/background.png");
-		plane_texture = AssetsManager::GetInstance().LoadTexture("plane_texture", "../../Airplanes/assets/sprites/plane.png");
+		background = Zak::AssetsManager::GetInstance().LoadTexture("background", "../../Airplanes/assets/backgrounds/background.png");
+		plane_texture = Zak::AssetsManager::GetInstance().LoadTexture("plane_texture", "../../Airplanes/assets/sprites/plane.png");
 
-		texture_shader = AssetsManager::GetInstance().LoadShader("texture_shader", "../../Airplanes/res/shaders/texture_shader.shader");
+		texture_shader = Zak::AssetsManager::GetInstance().LoadShader("texture_shader", "../../Airplanes/res/shaders/texture_shader.shader");
 	}
 	catch (std::exception& e)
 	{

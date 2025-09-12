@@ -1,6 +1,5 @@
-﻿# MyLargeProject/CMakeLists.txt
-cmake_minimum_required(VERSION 3.28)
-project(MyLargeProject LANGUAGES CXX)
+﻿cmake_minimum_required(VERSION 3.28)
+project(ZakOpenGLEngine LANGUAGES CXX)
 
 # 1. Устанавливаем глобальные настройки для всего проекта.
 set(CMAKE_CXX_STANDARD 20)

@@ -12,7 +12,7 @@
 #include "../Shape/Interfaces/IHasTexture.hpp"
 #include "../Shape/Interfaces/IHasShader.hpp"
 
-
+namespace Zak {
 class Mesh :
 	virtual public IHasVertexArrayObject,
 	virtual public IHasVertexVector<Vertex3DNormText>,
@@ -41,3 +41,4 @@ public:
 
 	void Move(float x, float y, float z);
 };
+}

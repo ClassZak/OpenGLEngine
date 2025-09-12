@@ -22,6 +22,7 @@
 #include <vector>
 #include <list>
 
+namespace Zak {
 class Jelly
 {
 protected:
@@ -73,3 +74,4 @@ public:
 	/// <param name="millisecondsSinceEpoch">время</param>
 	void Animate(long long millisecondsSinceEpoch, double animationSpeed = 1e-3);
 };
+}

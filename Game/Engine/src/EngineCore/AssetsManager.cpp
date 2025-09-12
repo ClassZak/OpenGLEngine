@@ -7,6 +7,7 @@
 
 #include <filesystem>
 
+using namespace Zak;
 std::shared_ptr<Texture> AssetsManager::LoadTexture(const std::string& name, const std::string& path)
 {
 	if(!std::filesystem::exists(path))

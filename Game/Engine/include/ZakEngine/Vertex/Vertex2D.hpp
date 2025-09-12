@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "AVertex.hpp"
 
+namespace Zak {
 /// <summary>
 /// 
 /// </summary>
@@ -67,5 +68,9 @@ struct Vertex2D : AVertex<T>
 		return is;
 	}
 };
+}
 
+namespace Zak {
 using Vertex2D_float = Vertex2D<float>;
+}
+

@@ -3,6 +3,7 @@
 #include "../../OpenGLClass/Shader.hpp"
 #include "IDrawable.hpp"
 
+namespace Zak {
 class IHasShader : virtual public IDrawableOpenGL
 {
 protected:
@@ -30,3 +31,4 @@ public:
 		m_shader = shader;
 	}
 };
+}

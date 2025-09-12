@@ -9,7 +9,7 @@ namespace std
 	_EXPORT_STD template <class _Ty>
 		class shared_ptr;
 }
-
+namespace Zak {
 class Texture : AOpenGLClass
 {
 protected:
@@ -44,3 +44,4 @@ public:
 		return (openGLCoord + 1) / 2;
 	}
 };
+}

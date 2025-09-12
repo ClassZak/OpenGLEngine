@@ -2,6 +2,7 @@
 #include "../../OpenGLClass/VertexArrayObject.hpp"
 #include "IDrawable.hpp"
 
+namespace Zak {
 class IHasVertexArrayObject : virtual public IDrawableOpenGL
 {
 protected:
@@ -16,3 +17,4 @@ public:
 		return m_vertexArrayObject;
 	}
 };
+}

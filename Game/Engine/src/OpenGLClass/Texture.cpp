@@ -13,6 +13,8 @@
 
 #include "../../include/ZakEngine/utils/GLMacro.h"
 
+using namespace Zak;
+
 Texture::Texture(const std::string& filename)
 {
 	m_filename = new char[filename.size() + 1];

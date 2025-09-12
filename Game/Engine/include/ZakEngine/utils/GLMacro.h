@@ -8,7 +8,7 @@
 #include <csignal>
 #endif
 
-
+namespace Zak {
 static inline void GLClearError()
 {
 	while(glGetError() != GL_NO_ERROR);
@@ -22,6 +22,7 @@ static inline bool GLLogCallFunction()
 		return false;
 	}
 	return true;
+}
 }
 
 

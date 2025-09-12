@@ -19,7 +19,7 @@
 #include "../utils/GLMacro.h"
 #include "Uniform.hpp"
 
-
+namespace Zak {
 class Shader
 {
 private:
@@ -138,3 +138,4 @@ private:
 	/// <returns>Id программы. 0 - ошибка</returns>
 	static GLuint CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
 };
+}

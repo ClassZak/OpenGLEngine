@@ -29,6 +29,7 @@
 #include "../Shape/Line.hpp"
 #include "../Shape/ShapeWithUniform.hpp"
 
+namespace Zak {
 class Renderer
 {
 	Renderer() = default;
@@ -197,3 +198,4 @@ public:
 	}
 	/*---==== C++ 20 required ====----*/
 };
+}

@@ -7,7 +7,7 @@
 
 #include "../Vertex/Vertex3DNormText.hpp"
 
-
+namespace Zak {
 class ObjLoader
 {
 public:
@@ -19,3 +19,4 @@ public:
 		bool saveUnique = false
 	);
 };
+}

@@ -1,5 +1,6 @@
 #include "../../include/ZakEngine/EngineCore/Renderer.hpp"
 
+using namespace Zak;
 Renderer& Renderer::GetInstance()
 {
 	//Singleton из C++11

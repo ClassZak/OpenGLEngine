@@ -17,6 +17,7 @@
 #include <cmath>
 #include <GL/glew.h>
 
+namespace Zak {
 template<typename T>
 class Circle :
 	public virtual IHasVertexArrayObject,
@@ -37,7 +38,7 @@ public:
 	) : m_radius(radius), m_center((Vertex2D<T>&)center)
 	{
 		std::vector<Vertex2D<T>> vertices = GenerateCircleVertexes(count, radius, center);
-		::  IHasVertexVector<Vertex2D<T>>::Init(vertices);
+		::Zak::IHasVertexVector<Vertex2D<T>>::Init(vertices);
 		Init(vertices, count);
 	}
 
@@ -125,3 +126,4 @@ public:
 		return vertexesIndices;
 	}
 };
+}

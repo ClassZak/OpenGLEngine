@@ -10,6 +10,7 @@
 #include "VertexBufferLayout.hpp"
 #include "AOpenGLClass.hpp"
 
+namespace Zak{
 class VertexArrayObject : public AOpenGLClass
 {
 public:
@@ -86,3 +87,4 @@ public:
 		GLLogCall(glBindVertexArray(0));
 	}
 };
+}

@@ -3,6 +3,8 @@
 #include <string>
 #include <memory>
 
+
+namespace Zak {
 class Texture;
 class Mesh;
 class Shader;
@@ -33,3 +35,4 @@ public:
 
 	static AssetsManager& GetInstance();
 };
+}

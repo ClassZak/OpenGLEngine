@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <cmath>
 
+namespace Zak {
 template<class T>
 class OldQuadrangle : public AShape<Vertex2D<T>>
 {
@@ -127,4 +128,5 @@ inline void OldQuadrangle<T>::Draw()
 	));
 
 	GLLogCall(glDrawElements(GL_TRIANGLES, this->m_indexes.size(), GL_UNSIGNED_INT, nullptr));
+}
 }

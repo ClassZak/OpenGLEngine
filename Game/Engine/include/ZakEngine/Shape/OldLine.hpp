@@ -6,6 +6,7 @@
 #include <cmath>
 #include <GL/glew.h>
 
+namespace Zak {
 template<typename T>
 class OldLine : public AShape<Vertex2D<T>>
 {
@@ -152,4 +153,5 @@ void OldLine<T>::Draw()
 		glDisable(GL_LINE_SMOOTH);
 
 	GLLogCall(glDrawArrays(m_drawMode, 0, this->m_vertexes.size()));
+}
 }

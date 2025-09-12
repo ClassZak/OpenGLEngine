@@ -12,6 +12,7 @@
 #include "Interfaces/IHasTexture.hpp"
 
 
+namespace Zak {
 class Vertex2DText;
 
 class VertexArrayObject;
@@ -20,8 +21,6 @@ class VertexBufferLayout;
 class IndexBufferObject;
 class Shader;
 class Texture;
-
-
 
 class JellyWithTexture :
 	virtual public IHasVertexVector<Vertex2DText>,
@@ -65,3 +64,4 @@ public:
 
 	static inline Vertex2DText CreateVertexText(float x, float y);
 };
+}

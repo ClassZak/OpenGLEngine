@@ -8,6 +8,7 @@
 #include "../utils/GLMacro.h"
 #include "AOpenGLClass.hpp"
 
+namespace Zak {
 class IndexBufferObject : public AOpenGLClass
 {
 private:
@@ -65,3 +66,4 @@ public:
 		return m_count;
 	}
 };
+}

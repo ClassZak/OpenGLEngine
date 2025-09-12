@@ -1,4 +1,5 @@
 #include "../../include/ZakEngine/OpenGLClass/Mesh.hpp"
+using namespace Zak;
 
 void Mesh::Init(const std::vector<Vertex3DNormText>& vertices, const std::vector<unsigned int>& indexes)
 {

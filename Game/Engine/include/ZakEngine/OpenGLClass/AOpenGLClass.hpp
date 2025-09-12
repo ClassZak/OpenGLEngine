@@ -2,6 +2,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+namespace Zak {
 class AOpenGLClass
 {
 protected:
@@ -14,3 +15,4 @@ public:
 	virtual void Bind() const = 0;
 	virtual void UnBind() const = 0;
 };
+}

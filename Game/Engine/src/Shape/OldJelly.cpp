@@ -1,5 +1,7 @@
 #include "../../include/ZakEngine/Shape/OldJelly.hpp"
 
+using namespace Zak;
+
 inline void OldJelly::AnimateLines(long long millisecondsSinceEpoch, double animationSpeed)
 {
 	const auto ANIMATION_COEFFICIENT = millisecondsSinceEpoch * animationSpeed;

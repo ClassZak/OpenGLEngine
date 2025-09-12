@@ -4,6 +4,7 @@
 #include "AVertex.hpp"
 
 
+namespace Zak {
 template<class T>
 static std::vector<T> GetUniqueVertexes(const std::vector<T>& vertexes)
 {
@@ -18,4 +19,5 @@ template<class T>
 static void SaveUniqueVertexes(std::vector<T>& vertexes)
 {
 	vertexes = GetUniqueVertexes(vertexes);
+}
 }

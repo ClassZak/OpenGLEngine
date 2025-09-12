@@ -9,6 +9,7 @@
 #include "../Shape/Interfaces/IHasVertexVector.hpp"
 #include "../Vertex/Vertex2D.hpp"
 
+namespace Zak {
 template<typename T>
 class SimpleRect : 
 	public virtual IHasVertexArrayObject, 
@@ -124,3 +125,4 @@ public:
 	SimpleRect(const SimpleRect<T>& other) : 
 	SimpleRect(other.m_pos, other.m_width, other.m_height){}
 };
+}

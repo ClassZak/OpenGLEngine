@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "../../include/ZakEngine/EngineCore/AssetsManager.hpp"
 
+using namespace Zak;
+
 inline void Jelly::AnimateLines(long long millisecondsSinceEpoch, double animationSpeed)
 {
 	const auto ANIMATION_COEFFICIENT = millisecondsSinceEpoch * animationSpeed;
@@ -230,7 +232,7 @@ void Jelly::Init()
 		m_quadrangles.push_back(m_createdQuadrangles.back());
 	}
 
-	auto renderer_shader = AssetsManager::GetInstance().GetShader("default_shader");
+	auto renderer_shader = Zak::AssetsManager::GetInstance().GetShader("default_shader");
 	m_bottomLine->SetShader(renderer_shader);
 	for(auto& el : m_lines)
 		el.SetShader(renderer_shader);

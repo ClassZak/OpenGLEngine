@@ -9,7 +9,9 @@
 #include <vector>
 #include <list>
 #include <stdlib.h>
+#include <gl/GL.h>
 
+namespace Zak{
 class OldJelly : public IDrawable
 {
 protected:
@@ -66,3 +68,4 @@ public:
 	/// <param name="millisecondsSinceEpoch">время</param>
 	void Animate(long long millisecondsSinceEpoch, double animationSpeed = 1e-3);
 };
+}

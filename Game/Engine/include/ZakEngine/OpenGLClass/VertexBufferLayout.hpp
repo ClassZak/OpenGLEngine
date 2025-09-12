@@ -6,7 +6,7 @@
 #include <functional>
 
 #include "../utils/GLMacro.h"
-
+namespace Zak {
 struct VertexBufferElement
 {
 	unsigned int	count;
@@ -77,3 +77,4 @@ public:
 		return m_elements;
 	}
 };
+}

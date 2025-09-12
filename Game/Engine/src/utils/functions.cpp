@@ -1,6 +1,7 @@
 #include "../../include/ZakEngine/utils/functions.hpp"
 
-std::string LoadDataFromFile(const std::string& filename)
+using namespace Zak;
+std::string Zak::LoadDataFromFile(const std::string& filename)
 {
 	std::ifstream file(filename, std::ios::binary);
 	file.seekg(0, file.end);

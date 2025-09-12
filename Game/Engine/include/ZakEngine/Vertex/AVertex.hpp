@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iostream>
 
+namespace Zak {
 /// <summary>
 /// 
 /// </summary>
@@ -11,3 +12,4 @@ template<typename T>
 class AVertex
 {
 };
+}

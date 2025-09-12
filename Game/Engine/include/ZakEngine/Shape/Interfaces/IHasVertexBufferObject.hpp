@@ -5,6 +5,7 @@
 #include "../../OpenGLClass/VertexBufferObject.hpp"
 #include "IDrawable.hpp"
 
+namespace Zak {
 class IHasVertexBufferObject : virtual public IDrawableOpenGL
 {
 protected:
@@ -29,3 +30,4 @@ public:
 		m_vertexBufferObject.reset(vertexBufferObject);
 	}
 };
+}

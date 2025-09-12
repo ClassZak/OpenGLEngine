@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <cmath>
 
+namespace Zak {
 template<typename T>
 class OldCircle : public AShape<Vertex2D<T>>
 {
@@ -219,4 +220,5 @@ inline void OldCircle<T>::Draw()
 	));
 
 	GLLogCall(glDrawElements(GL_TRIANGLES, this->m_indexes.size(), GL_UNSIGNED_INT, nullptr));
+}
 }

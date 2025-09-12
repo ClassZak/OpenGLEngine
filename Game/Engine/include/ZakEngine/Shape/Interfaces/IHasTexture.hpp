@@ -3,6 +3,7 @@
 #include "../../OpenGLClass/Texture.hpp"
 #include "IDrawable.hpp"
 
+namespace Zak {
 class IHasTexture : virtual public IDrawableOpenGL
 {
 protected:
@@ -30,3 +31,4 @@ public:
 		m_texture = texture;
 	}
 };
+}

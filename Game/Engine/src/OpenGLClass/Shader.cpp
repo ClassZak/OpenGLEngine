@@ -1,4 +1,5 @@
 ﻿#include "../../include/ZakEngine/OpenGLClass/Shader.hpp"
+using namespace Zak;
 
 GLint Shader::GetUniformLocation(const std::string& uniform)
 {

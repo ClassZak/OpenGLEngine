@@ -17,6 +17,7 @@
 #include <array>
 #include <cmath>
 
+namespace Zak {
 template <typename T>
 class Quadrangle : 
 	public IHasVertexVector<Vertex2D<T>>,
@@ -29,7 +30,7 @@ protected:
 		if(vertices.size()!=4u)
 			throw std::invalid_argument("Wrong size of vector");
 
-		::IHasVertexVector<Vertex2D<T>>::Init(vertices);
+		::Zak::IHasVertexVector<Vertex2D<T>>::Init(vertices);
 
 		VertexBufferObject* newVertexBufferObject = new VertexBufferObject(vertices);
 		this->m_vertexBufferObject.reset(newVertexBufferObject);
@@ -79,7 +80,7 @@ protected:
 		if (vertices.size() != 4u)
 			throw std::invalid_argument("Wrong size of vector");
 
-		::IHasVertexVector<Vertex2DClass>::Init(vertices);
+		::Zak::IHasVertexVector<Vertex2DClass>::Init(vertices);
 
 		VertexBufferObject* newVertexBufferObject = new VertexBufferObject(vertices);
 		this->m_vertexBufferObject.reset(newVertexBufferObject);
@@ -135,7 +136,7 @@ public:
 		layout.Push<float>(2);
 	}
 };
-
+}
 
 
 
@@ -148,6 +149,7 @@ public:
 #include "../Shape/Interfaces/IHasTexture.hpp"
 #include "../Shape/Interfaces/IHasVertexArrayObject.hpp"
 
+namespace Zak {
 template <class Vertex2DClass>
 class QuadrangleTexture :
 	virtual public IHasVertexVector<Vertex2DClass>,
@@ -163,7 +165,7 @@ protected:
 		if (vertices.size() != 4u)
 			throw std::invalid_argument("Wrong size of vector");
 
-		::IHasVertexVector<Vertex2DClass>::Init(vertices);
+		::Zak::IHasVertexVector<Vertex2DClass>::Init(vertices);
 
 		VertexBufferObject* newVertexBufferObject = new VertexBufferObject(vertices);
 		this->m_vertexBufferObject.reset(newVertexBufferObject);
@@ -214,3 +216,4 @@ public:
 		layout.Push<float>(2);
 	}
 };
+}

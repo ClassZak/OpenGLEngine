@@ -9,4 +9,6 @@
 #include <string>
 #include <fstream>
 
+namespace Zak {
 std::string LoadDataFromFile(const std::string& filename);
+}

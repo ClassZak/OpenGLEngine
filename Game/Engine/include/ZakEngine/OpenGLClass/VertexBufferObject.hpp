@@ -9,6 +9,7 @@
 #include "../utils/GLMacro.h"
 #include "AOpenGLClass.hpp"
 
+namespace Zak {
 class VertexBufferObject : public AOpenGLClass
 {
 	GLsizei m_size;
@@ -95,3 +96,4 @@ public:
 		return m_count;
 	}
 };
+}
