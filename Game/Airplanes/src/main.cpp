@@ -15,6 +15,7 @@
 #include <locale>
 #include <stdlib.h>
 #include <mutex>
+#include <atomic>
 
 
 
@@ -27,6 +28,8 @@
 using namespace Zak;
 
 std::mutex planeMutex;
+std::mutex objectAnimationMutex;
+std::atomic<bool> appClosed(false);
 QuadrangleTexture<Vertex2DText>* planeQuadrangle_ptr=nullptr;
 float windowWidth = 640;
 float windowHeight = 480;
@@ -85,14 +88,16 @@ int main(int argc, char** argv)
 				std::cout<<"GLFW_MOUSE_BUTTON_LEFT"<<'\n';
 				if (planeQuadrangle_ptr)
 				{
+					while (!objectAnimationMutex.try_lock());
 					while(!planeMutex.try_lock());
 					auto& vertices = planeQuadrangle_ptr->GetVertices();
-					vertices[0].m_pos.y += 0.01;
-					vertices[1].m_pos.y += 0.01;
-					vertices[2].m_pos.y += 0.01;
-					vertices[3].m_pos.y += 0.01;
+					vertices[0].m_pos.y += 0.1;
+					vertices[1].m_pos.y += 0.1;
+					vertices[2].m_pos.y += 0.1;
+					vertices[3].m_pos.y += 0.1;
 					planeQuadrangle_ptr->ReBind();
 					planeMutex.unlock();
+					objectAnimationMutex.unlock();
 				}
 			}
 		}
@@ -136,17 +141,34 @@ int main(int argc, char** argv)
 	planeQuadrangle.SetTexture(plane_texture);
 	planeQuadrangle.SetShader(texture_shader);
 
+	std::thread objectAnimationThread([&planeQuadrangle](){
+#ifdef _DEBUG
+		std::cout<<std::this_thread::get_id()<<std::endl;
+#endif // _DEBUG
+
+		while (!appClosed.load())
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds(2));
+			while(!objectAnimationMutex.try_lock());
+
+			while (!planeMutex.try_lock());
+			auto& vertices = planeQuadrangle.GetVertices();
+			vertices[0].m_pos.y -= 0.001;
+			vertices[1].m_pos.y -= 0.001;
+			vertices[2].m_pos.y -= 0.001;
+			vertices[3].m_pos.y -= 0.001;
+			planeMutex.unlock();
+
+			objectAnimationMutex.unlock();
+		}
+	});
+
 	while (!glfwWindowShouldClose(window))
 	{
 		/* Animation here */
-		while(!planeMutex.try_lock());
-		auto& vertices = planeQuadrangle.GetVertices();
-		vertices[0].m_pos.y -= 0.001;
-		vertices[1].m_pos.y -= 0.001;
-		vertices[2].m_pos.y -= 0.001;
-		vertices[3].m_pos.y -= 0.001;
+		while (!objectAnimationMutex.try_lock());
 		planeQuadrangle.ReBind();
-		planeMutex.unlock();
+		objectAnimationMutex.unlock();
 
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -155,7 +177,10 @@ int main(int argc, char** argv)
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_BLEND);
 		Renderer::GetInstance().Draw(&quadrangleTexture, Uniform("u_Color", UniformVec4(1.f, 1.f, 1.f, 1.f)));
+
+		while(!objectAnimationMutex.try_lock());
 		Renderer::GetInstance().Draw(planeQuadrangle_ptr, Uniform("u_Color", UniformVec4(1.f, 1.f, 1.f, 1.f)));
+		objectAnimationMutex.unlock();
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
@@ -163,6 +188,9 @@ int main(int argc, char** argv)
 		/* Poll for and process events */
 		glfwPollEvents();
 	}
+
+	appClosed.store(true);
+	objectAnimationThread.join();
 
 	glfwTerminate();
 
