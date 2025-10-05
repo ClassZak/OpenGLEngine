@@ -2,6 +2,9 @@ build/
 .vs/
 .trash/
 
+# VS Code
+.vscode
+
 # Paint.NET
 *.pdnSave
 /Jelly/assets/models/lost-empire
