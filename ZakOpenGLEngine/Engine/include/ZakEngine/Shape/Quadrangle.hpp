@@ -115,14 +115,12 @@ public:
 	}
 
 
-
 	// Attribute crafting
-	template<typename Vertex2DClass>
+#ifdef _WIN32
+	template<typename Vertex2DClassAttr>
 	static void CraftAttributes(VertexBufferLayout& layout)
 	{
-#ifdef _WIN32
 		static_assert(false);
-#endif
 	}
 	template<>
 	static void CraftAttributes<Vertex2D_float>(VertexBufferLayout& layout)
@@ -135,6 +133,28 @@ public:
 		layout.Push<float>(2);
 		layout.Push<float>(2);
 	}
+#else
+	static void CraftAttributes(VertexBufferLayout& layout)
+	{
+		if constexpr (std::is_same_v<Vertex2DClass, Vertex2DText>)
+		{
+			layout.Push<float>(2);
+		}
+		else if constexpr (std::is_same_v<Vertex2DClass, Vertex2DText>)
+		{
+			layout.Push<float>(2);
+			layout.Push<float>(2);
+		}
+		else
+		{
+#ifdef _WIN32
+			static_assert(false, "Unsupported vertex type for textured quadrangle");
+#else
+			throw "Unsupported vertex type for textured quadrangle";
+#endif
+		}
+	}
+#endif
 };
 }
 
@@ -172,7 +192,7 @@ protected:
 
 		// Attribute crafting
 		VertexBufferLayout layout;
-		CraftAttributes<Vertex2DClass>(layout);
+		QuadrangleTexture<Vertex2DClass>::CraftAttributes(layout);
 		this->m_vertexArrayObject.AddBuffer(*this->m_vertexBufferObject.get(), layout);
 
 		IndexBufferObject* newIndexBufferObject = new IndexBufferObject({ 0, 1, 2, 0, 2, 3 });
@@ -202,12 +222,11 @@ public:
 
 
 	// Attribute crafting
+#ifdef _WIN32
 	template<typename Vertex2DClass>
 	static void CraftAttributes(VertexBufferLayout& layout)
 	{
-#ifdef _WIN32
 		static_assert(false);
-#endif
 	}
 	template<>
 	static void CraftAttributes<Vertex2DText>(VertexBufferLayout& layout)
@@ -215,5 +234,20 @@ public:
 		layout.Push<float>(2);
 		layout.Push<float>(2);
 	}
+#else
+	static void CraftAttributes(VertexBufferLayout& layout)
+	{
+		if constexpr (std::is_same_v<Vertex2DClass, Vertex2DText>)
+		{
+			layout.Push<float>(2);
+			layout.Push<float>(2);
+		}
+		else
+		{
+			//static_assert(false, "Unsupported vertex type for textured quadrangle");
+			throw "Unsupported vertex type for textured quadrangle";
+		}
+	}
+#endif
 };
 }

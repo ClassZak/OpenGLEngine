@@ -1,16 +1,16 @@
 cmake_minimum_required(VERSION 3.28)
 
 
-# Автоматическая настройка для Windows 7
+# РђРІС‚РѕРјР°С‚РёС‡РµСЃРєР°СЏ РЅР°СЃС‚СЂРѕР№РєР° РґР»СЏ Windows 7
 if(WIN32 AND CMAKE_SYSTEM_VERSION VERSION_EQUAL 6.1)
-	# Принудительная настройка для Windows 7
+	# РџСЂРёРЅСѓРґРёС‚РµР»СЊРЅР°СЏ РЅР°СЃС‚СЂРѕР№РєР° РґР»СЏ Windows 7
 	set(CMAKE_GENERATOR "Ninja" CACHE INTERNAL "" FORCE)
 	set(CMAKE_MAKE_PROGRAM "C:/gcc-10.4890.0-no-debug/bin/ninja.exe" CACHE FILEPATH "Path to Ninja" FORCE)
 	set(CMAKE_CXX_COMPILER "C:/gcc-10.4890.0-no-debug/bin/g++.exe" CACHE FILEPATH "CXX compiler" FORCE)
 	set(CMAKE_CXX_COMPILER_WORKS 1 CACHE BOOL "" FORCE)
 	set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY CACHE STRING "" FORCE)
 	
-	# Установка стандарта C20 для GCC
+	# РЈСЃС‚Р°РЅРѕРІРєР° СЃС‚Р°РЅРґР°СЂС‚Р° C20 РґР»СЏ GCC
 	set(CMAKE_CXX_STANDARD_REQUIRED ON)
 endif()
 
@@ -23,6 +23,18 @@ project(Airplanes VERSION 1.0
 )
 
 
+include_directories(PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/deps/)
+set(SOURCES
+	${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/main1.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/main2.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/main3.cpp
+)
+
+# Р”РѕР±Р°РІР»СЏРµРј РёСЃРїРѕР»РЅСЏРµРјС‹Р№ С„Р°Р№Р»
+add_executable(Airplanes
+	${SOURCES}
+)
 
 # OpenGL, GLFW, tinyobjloader
 find_package(OpenGL	REQUIRED)
@@ -79,7 +91,7 @@ if(WIN32)
 	endif()
 else()
 	# Linux-specific setup
-	# Ищем GLFW
+	# РС‰РµРј GLFW
 	find_path(GLFW_INCLUDE_DIR GLFW/glfw3.h
 		PATHS /usr/include /usr/local/include
 		DOC "Path to GLFW include directory"
@@ -102,7 +114,7 @@ else()
 		message(FATAL_ERROR "GLFW not found. Install with: sudo apt install libglfw3-dev")
 	endif()
 
-	# Ищем GLEW
+	# РС‰РµРј GLEW
 	find_path(GLEW_INCLUDE_DIR GL/glew.h
 		PATHS /usr/include /usr/local/include
 		DOC "Path to GLEW include directory"
@@ -153,7 +165,7 @@ if(NOT glm_FOUND)
 	set(GLM_ROOT "G:/Programs/Libraries/glm-1.0.1/glm-1.0.1")
 	set(GLM_INCLUDE_DIR "${GLM_ROOT}")
 	
-	# Создаем интерфейсную библиотеку вместо SHARED
+	# РЎРѕР·РґР°РµРј РёРЅС‚РµСЂС„РµР№СЃРЅСѓСЋ Р±РёР±Р»РёРѕС‚РµРєСѓ РІРјРµСЃС‚Рѕ SHARED
 	add_library(glm INTERFACE IMPORTED)
 	set_target_properties(glm PROPERTIES
 		INTERFACE_INCLUDE_DIRECTORIES "${GLM_INCLUDE_DIR}"
@@ -171,25 +183,17 @@ endif()
 
 
 
-include_directories(PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/deps/)
-set(SOURCES
-	${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
-)
 
-# Добавляем исполняемый файл
-add_executable(Airplanes
-	${SOURCES}
-)
 
-# Для Windows добавляем ресурсный файл
+# Р”Р»СЏ Windows РґРѕР±Р°РІР»СЏРµРј СЂРµСЃСѓСЂСЃРЅС‹Р№ С„Р°Р№Р»
 if(WIN32)
-	# Создаем ресурсный файл
+	# РЎРѕР·РґР°РµРј СЂРµСЃСѓСЂСЃРЅС‹Р№ С„Р°Р№Р»
 	set(RESOURCE_FILE ${CMAKE_CURRENT_SOURCE_DIR}/resources.rc)
 	
-	# Добавляем ресурсы к исполняемому файлу
+	# Р”РѕР±Р°РІР»СЏРµРј СЂРµСЃСѓСЂСЃС‹ Рє РёСЃРїРѕР»РЅСЏРµРјРѕРјСѓ С„Р°Р№Р»Сѓ
 	target_sources(Airplanes PRIVATE ${RESOURCE_FILE})
 	
-	# Устанавливаем свойства для Windows
+	# РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЃРІРѕР№СЃС‚РІР° РґР»СЏ Windows
 	set_target_properties(Airplanes PROPERTIES
 		WIN32_EXECUTABLE TRUE
 		LINK_FLAGS "/ENTRY:mainCRTStartup"
@@ -218,7 +222,7 @@ if(UNIX)
 endif()
 
 
-# Для GLEW
+# Р”Р»СЏ GLEW
 if(WIN32)
 	add_custom_command(TARGET Airplanes POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different
@@ -229,21 +233,21 @@ if(WIN32)
 endif()
 
 
-# Платформенно-специфичные настройки
+# РџР»Р°С‚С„РѕСЂРјРµРЅРЅРѕ-СЃРїРµС†РёС„РёС‡РЅС‹Рµ РЅР°СЃС‚СЂРѕР№РєРё
 if(WIN32)
-	# Флаги для Windows 7
+	# Р¤Р»Р°РіРё РґР»СЏ Windows 7
 	if(CMAKE_SYSTEM_VERSION VERSION_EQUAL 6.1)
 		add_compile_definitions(_WIN32_WINNT=0x0601)
 		target_compile_options(Airplanes PRIVATE -O0)
 	endif()
 else()
-	# Настройки для Linux/MacOS
+	# РќР°СЃС‚СЂРѕР№РєРё РґР»СЏ Linux/MacOS
 	target_compile_options(Airplanes PRIVATE -O0)
 endif()
 
-# Настройки для MSVC (Windows 10/11)
+# РќР°СЃС‚СЂРѕР№РєРё РґР»СЏ MSVC (Windows 10/11)
 if(MSVC)
-	# Активация политики для Edit and Continue
+	# РђРєС‚РёРІР°С†РёСЏ РїРѕР»РёС‚РёРєРё РґР»СЏ Edit and Continue
 	cmake_policy(SET CMP0141 NEW)
 	target_compile_options(Airplanes PRIVATE "/std:c++20")
 	
@@ -254,7 +258,7 @@ if(MSVC)
 		LINK_FLAGS_DEBUG "/INCREMENTAL"
 	)
 	
-	# Флаги оптимизации
+	# Р¤Р»Р°РіРё РѕРїС‚РёРјРёР·Р°С†РёРё
 	target_compile_options(Airplanes PRIVATE
 		"$<$<CONFIG:Debug>:/Od>"
 	)
@@ -264,23 +268,23 @@ endif()
 
 
 
-# Консоль для debug версии
+# РљРѕРЅСЃРѕР»СЊ РґР»СЏ debug РІРµСЂСЃРёРё
 if(WIN32)
-	# Установка точки входа и подсистемы
+	# РЈСЃС‚Р°РЅРѕРІРєР° С‚РѕС‡РєРё РІС…РѕРґР° Рё РїРѕРґСЃРёСЃС‚РµРјС‹
 	if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-		# Debug: консольное приложение
+		# Debug: РєРѕРЅСЃРѕР»СЊРЅРѕРµ РїСЂРёР»РѕР¶РµРЅРёРµ
 		set_target_properties(Airplanes PROPERTIES
 			LINK_FLAGS "/ENTRY:mainCRTStartup /SUBSYSTEM:CONSOLE"
 		)
 	else()
-		# Release: оконное приложение
+		# Release: РѕРєРѕРЅРЅРѕРµ РїСЂРёР»РѕР¶РµРЅРёРµ
 		set_target_properties(Airplanes PROPERTIES
 			LINK_FLAGS "/ENTRY:mainCRTStartup /SUBSYSTEM:WINDOWS"
 		)
 	endif()
 endif()
 
-# Debug режим для компиляции
+# Debug СЂРµР¶РёРј РґР»СЏ РєРѕРјРїРёР»СЏС†РёРё
 target_compile_definitions(Airplanes PRIVATE
 	$<$<CONFIG:Debug>:DEBUG_MODE>
 )

@@ -96,7 +96,7 @@ void AssetsManager::Clear()
 
 AssetsManager& AssetsManager::GetInstance()
 {
-	//Singleton èç C++11
+	//Singleton Ğ¸Ğ· C++11
 	static AssetsManager assets_manager;
 	return assets_manager;
 }

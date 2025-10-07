@@ -1,7 +1,7 @@
 #include "../../include/ZakEngine/OpenGLClass/Texture.hpp"
 #include <filesystem>
 #include <memory>
-
+#include <cstring>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>

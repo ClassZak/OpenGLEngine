@@ -3,7 +3,7 @@
 using namespace Zak;
 Renderer& Renderer::GetInstance()
 {
-	//Singleton из C++11
+	//Singleton РёР· C++11
 	static Renderer instance;
 	return instance;
 }
@@ -103,7 +103,7 @@ Renderer& Renderer::Draw(IDrawableOpenGL* object)
 	if(iHasIndexBufferObject)
 		iHasIndexBufferObject->GetIndexBufferObject()->Bind();
 
-	// Фигурные скобки обязательно
+	// Р¤РёРіСѓСЂРЅС‹Рµ СЃРєРѕР±РєРё РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ
 	if (iHasIndexBufferObject)
 	{
 		GLLogCall
@@ -199,7 +199,7 @@ Renderer& Renderer::Draw(IDrawableOpenGL* object, const std::vector<Uniform>& un
 	}
 
 
-	// Фигурные скобки обязательно
+	// Р¤РёРіСѓСЂРЅС‹Рµ СЃРєРѕР±РєРё РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ
 	if (iHasIndexBufferObject)
 	{
 		GLLogCall(glDrawElements(object->GetDrawMode(), size, GL_UNSIGNED_INT, nullptr));

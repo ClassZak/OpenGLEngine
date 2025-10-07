@@ -4,11 +4,19 @@
 
 #include "AOpenGLClass.hpp"
 
+#ifdef _WIN32
 namespace std 
 {
 	_EXPORT_STD template <class _Ty>
 		class shared_ptr;
 }
+#else
+namespace std 
+{
+	template <class Tp>
+		class shared_ptr;
+}
+#endif
 namespace Zak {
 class Texture : AOpenGLClass
 {

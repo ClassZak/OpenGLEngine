@@ -23,6 +23,20 @@ project(Jelly VERSION 1.0
 )
 
 
+include_directories(PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/deps/)
+set(SOURCES
+	${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
+
+	${CMAKE_CURRENT_SOURCE_DIR}/src/CustomShapes/Jelly.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/CustomShapes/JellyWithTexture.cpp
+)
+
+# Добавляем исполняемый файл
+add_executable(Jelly
+	${SOURCES}
+)
+
+
 
 # OpenGL, GLFW, tinyobjloader
 find_package(OpenGL	REQUIRED)
@@ -171,18 +185,7 @@ endif()
 
 
 
-include_directories(PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/deps/)
-set(SOURCES
-	${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
 
-	${CMAKE_CURRENT_SOURCE_DIR}/src/CustomShapes/Jelly.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/CustomShapes/JellyWithTexture.cpp
-)
-
-# Добавляем исполняемый файл
-add_executable(Jelly
-	${SOURCES}
-)
 
 # Для Windows добавляем ресурсный файл
 if(WIN32)

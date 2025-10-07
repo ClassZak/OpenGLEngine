@@ -37,7 +37,7 @@ float windowHeight = 480;
 inline void exit_failure(int code = EXIT_FAILURE);
 int main(int argc, char** argv)
 {
-#pragma region Инициализация
+#pragma region Initialization
 	setlocale(LC_ALL, "Russian");
 	srand(time(NULL));
 
@@ -69,7 +69,7 @@ int main(int argc, char** argv)
 	if (glewInit() != GLEW_OK)
 		exit_failure();
 #pragma endregion 
-#pragma region Предустановленные Callback функции
+#pragma region Callback functions
 	glfwSetFramebufferSizeCallback
 	(
 		window,
