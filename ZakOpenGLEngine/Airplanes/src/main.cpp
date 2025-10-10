@@ -15,7 +15,6 @@
 #include <locale>
 #include <stdlib.h>
 #include <mutex>
-#include <thread>
 #include <atomic>
 
 
@@ -25,10 +24,15 @@
 #include <ZakEngine/Shape/Line.hpp>
 #include <ZakEngine/Shape/Quadrangle.hpp>
 #include <chrono>
+#include <thread>
 
 
 using namespace Zak;
 
+std::mutex planeMutex;
+std::mutex objectAnimationMutex;
+std::atomic<bool> appClosed(false);
+QuadrangleTexture<Vertex2DText>* planeQuadrangle_ptr=nullptr;
 float windowWidth = 640;
 float windowHeight = 480;
 inline void exit_failure(int code = EXIT_FAILURE);
@@ -44,11 +48,6 @@ int main(int argc, char** argv)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	// Проверка версии OpenGL
-	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
-	std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
-	std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
-	std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
 
 	window = glfwCreateWindow(windowWidth, windowHeight, "Airplane", NULL, NULL);
 	if (!window)
@@ -59,11 +58,6 @@ int main(int argc, char** argv)
 
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
-	if (glewInit() != GLEW_OK)
-	{
-		std::cerr << "Failed to initialize GLEW" << std::endl;
-		exit_failure();
-	}
 
 	GLFWimage images[1];
 	images[0].pixels = stbi_load("../../Airplanes/assets/icon.png", &images[0].width, &images[0].height, 0, 4);
@@ -72,8 +66,10 @@ int main(int argc, char** argv)
 
 	glfwSwapInterval(1);
 
+	if (glewInit() != GLEW_OK)
+		exit_failure();
 
-	/* Callback */
+	/* Предустановленные Callback функции*/
 	glfwSetFramebufferSizeCallback
 	(
 		window,
@@ -82,6 +78,30 @@ int main(int argc, char** argv)
 			glViewport(0, 0, width, height);
 			windowHeight = height;
 			windowWidth = width;
+		}
+	);
+	glfwSetMouseButtonCallback
+	(
+		window,
+		[](GLFWwindow* window, int button, int action, int mods)
+		{
+			if (button == GLFW_MOUSE_BUTTON_LEFT)
+			{
+				std::cout<<"GLFW_MOUSE_BUTTON_LEFT"<<'\n';
+				if (planeQuadrangle_ptr)
+				{
+					while (!objectAnimationMutex.try_lock());
+					while(!planeMutex.try_lock());
+					auto& vertices = planeQuadrangle_ptr->GetVertices();
+					vertices[0].m_pos.y += 0.1;
+					vertices[1].m_pos.y += 0.1;
+					vertices[2].m_pos.y += 0.1;
+					vertices[3].m_pos.y += 0.1;
+					planeQuadrangle_ptr->ReBind();
+					planeMutex.unlock();
+					objectAnimationMutex.unlock();
+				}
+			}
 		}
 	);
 
@@ -105,39 +125,47 @@ int main(int argc, char** argv)
 	}
 #pragma endregion
 
-	
-	Line<float> line({Vertex2D<float>(-1.f,-1.f),Vertex2D<float>(1.f,1.f)},GL_LINE_STRIP,5);
-	line.SetShader(default_shader);
-
-	Quadrangle quadrangle({
-		Vertex2D( -0.1f, -0.1f ),
-		Vertex2D( -0.1f,  0.1f ),
-		Vertex2D(  0.1f,  0.1f ),
-		Vertex2D(  0.1f, -0.1f ),
+	QuadrangleTexture<Vertex2DText> planeQuadrangle
+	({
+		Vertex2DText({ -0.1, -0.1 },	{ 0,0 }),
+		Vertex2DText({ -0.1,  0.1 },	{ 0,1 }),
+		Vertex2DText({  0.1,  0.1 },	{ 1,1 }),
+		Vertex2DText({  0.1, -0.1 },	{ 1,0 }),
 	});
-	quadrangle.SetShader(default_shader);
+	planeQuadrangle_ptr = &planeQuadrangle;
+	QuadrangleTexture<Vertex2DText> quadrangleTexture
+	({
+		Vertex2DText({ -1, -1 },	{ 0,0 }),
+		Vertex2DText({ -1,  1 },	{ 0,1 }),
+		Vertex2DText({  1,  1 },	{ 1,1 }),
+		Vertex2DText({  1, -1 },	{ 1,0 }),
+	});
+	quadrangleTexture.SetTexture(background);
+	quadrangleTexture.SetShader(texture_shader);
+	planeQuadrangle.SetTexture(plane_texture);
+	planeQuadrangle.SetShader(texture_shader);
 
+	std::thread objectAnimationThread([&planeQuadrangle](){
+#ifdef _DEBUG
+		std::cout<<std::this_thread::get_id()<<std::endl;
+#endif // _DEBUG
 
+		while (!appClosed.load())
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds(2));
+			while(!objectAnimationMutex.try_lock());
 
-	
-	// Вершины треугольника
-	std::vector<Vertex2D_float> vertices =
-	{
-		Vertex2D_float(-0.5f, -0.5f),
-		Vertex2D_float( 0.5f, -0.5f),
-		Vertex2D_float( 0.0f,  0.5f)
-	};
+			while (!planeMutex.try_lock());
+			auto& vertices = planeQuadrangle.GetVertices();
+			vertices[0].m_pos.y -= 0.001;
+			vertices[1].m_pos.y -= 0.001;
+			vertices[2].m_pos.y -= 0.001;
+			vertices[3].m_pos.y -= 0.001;
+			planeMutex.unlock();
 
-	VertexBufferObject vertexBufferObject(vertices);
-	VertexBufferLayout vertexBufferLayout;
-	vertexBufferLayout.Push<float>(2);
-	VertexArrayObject vertexArrayObject;
-	vertexArrayObject.AddBuffer(vertexBufferObject, vertexBufferLayout);
-	IndexBufferObject indexBufferObject({0,1,2});
-	indexBufferObject.UnBind();
-	vertexBufferObject.UnBind();
-	vertexArrayObject.UnBind();
-	
+			objectAnimationMutex.unlock();
+		}
+	});
 
 	std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
 	std::chrono::system_clock::duration duration_since_epoch = now.time_since_epoch();
@@ -151,31 +179,21 @@ int main(int argc, char** argv)
 		std::chrono::duration_cast<std::chrono::milliseconds>(duration_since_epoch);
 
 		/* Animation here */
+		while (!objectAnimationMutex.try_lock());
+		planeQuadrangle.ReBind();
+		objectAnimationMutex.unlock();
 
 		/* Render here */
-		glClearColor(1.0,0.3,0.3,1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClearColor(1.0,0.3,0.3,1.0);
 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_BLEND);
-		// Очистка экрана
+		Renderer::GetInstance().Draw(&quadrangleTexture, Uniform("u_Color", UniformVec4(1.f, 1.f, 1.f, 1.f)));
 
-		/*Renderer::GetInstance().Draw
-		(
-			vertexArrayObject, 
-			vertexBufferObject, 
-			indexBufferObject, 
-			(Shader&)(*((Shader*)default_shader.get())), 
-			Uniform("u_Color", UniformVec4(0.3f,1.f,1.f,1.f))
-		);*/
-		vertexArrayObject.Bind();
-		vertexBufferObject.Bind();
-		indexBufferObject.Bind();
-		default_shader->Bind();
-		default_shader->SetUniform(Uniform("u_Color", UniformVec4(1.f, 1.f, 0.f, 1.f)));
-		glDrawElements(GL_TRIANGLES, indexBufferObject.GetCount(), GL_UNSIGNED_INT, nullptr);
-
-		//Renderer::GetInstance().Draw(&quadrangle, Uniform("u_Color", UniformVec4(1.f,1.f,1.f,1.f)));
+		while(!objectAnimationMutex.try_lock());
+		Renderer::GetInstance().Draw(planeQuadrangle_ptr, Uniform("u_Color", UniformVec4(1.f, 1.f, 1.f, 1.f)));
+		objectAnimationMutex.unlock();
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
@@ -185,6 +203,9 @@ int main(int argc, char** argv)
 
 		now = std::chrono::system_clock::now();
 	}
+
+	appClosed.store(true);
+	objectAnimationThread.join();
 
 	glfwTerminate();
 
