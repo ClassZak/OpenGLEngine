@@ -42,32 +42,9 @@ public:
 	template<typename T>
 	void Push(unsigned int count)
 	{
-#ifdef _WIN32
 		static_assert(false);
-#endif
 	}
 
-	
-#ifdef _WIN32
-	template<>
-	void Push<float>(unsigned int count)
-	{
-		m_elements.push_back({count, GL_FLOAT, GL_FALSE});
-		m_stride += VertexBufferElement::GetSizeOfType(GL_FLOAT) * count;
-	}
-	template<>
-	void Push<unsigned int>(unsigned int count)
-	{
-		m_elements.push_back({count, GL_UNSIGNED_INT, GL_FALSE});
-		m_stride += VertexBufferElement::GetSizeOfType(GL_UNSIGNED_INT) * count;
-	}
-	template<>
-	void Push<unsigned char>(unsigned int count)
-	{
-		m_elements.push_back({count, GL_UNSIGNED_BYTE, GL_TRUE});
-		m_stride += VertexBufferElement::GetSizeOfType(GL_UNSIGNED_BYTE) * count;
-	}
-#else
 	template<float>
 	void Push(unsigned int count)
 	{
@@ -86,7 +63,6 @@ public:
 		m_elements.push_back({count, GL_UNSIGNED_BYTE, GL_TRUE});
 		m_stride += VertexBufferElement::GetSizeOfType(GL_UNSIGNED_BYTE) * count;
 	}
-#endif
 
 
 	inline unsigned int GetStride() const

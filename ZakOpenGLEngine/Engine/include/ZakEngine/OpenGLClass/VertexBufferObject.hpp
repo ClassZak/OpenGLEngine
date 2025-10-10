@@ -36,7 +36,7 @@ public:
 	{
 		Init(dataVector.data(), dataVector.size() * sizeof(T), dataVector.size());
 	}
-	void Init(const void* data, GLsizeiptr size, GLsizei count, GLenum usage = GL_DYNAMIC_DRAW)
+	void Init(const void* data, GLsizeiptr size, GLsizei count)
 	{
 		m_size = size;
 		m_count = count;

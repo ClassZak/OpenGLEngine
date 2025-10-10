@@ -26,9 +26,6 @@ project(Airplanes VERSION 1.0
 include_directories(PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/deps/)
 set(SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/main1.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/main2.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/main3.cpp
 )
 
 # Добавляем исполняемый файл
