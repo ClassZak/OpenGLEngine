@@ -113,7 +113,7 @@ public:
 	inline Renderer& Draw(const ShapeContainer& container, const UniformContainer& uniformContainer)
 	{
 		if(container.size() != uniformContainer.size())
-			throw std::invalid_argument("Несоответствие количества объектов числу униформ");
+			throw std::invalid_argument("РќРµСЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ РєРѕР»РёС‡РµСЃС‚РІР° РѕР±СЉРµРєС‚РѕРІ С‡РёСЃР»Сѓ СѓРЅРёС„РѕСЂРј");
 
 		auto containerIt = container.begin();
 		auto uniformIt = uniformContainer.begin();
@@ -158,7 +158,7 @@ public:
 	inline Renderer& DrawCollection(ShapeContainer& container, const UniformContainer& uniformContainer)
 	{
 		if (container.size() != uniformContainer.size())
-			throw std::invalid_argument("Несоответствие количества объектов числу униформ");
+			throw std::invalid_argument("РќРµСЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ РєРѕР»РёС‡РµСЃС‚РІР° РѕР±СЉРµРєС‚РѕРІ С‡РёСЃР»Сѓ СѓРЅРёС„РѕСЂРј");
 
 		auto containerIt = container.begin();
 		auto uniformIt = uniformContainer.begin();

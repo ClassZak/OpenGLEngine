@@ -110,10 +110,10 @@ int main(int argc, char** argv)
 	line.SetShader(default_shader);
 
 	Quadrangle quadrangle({
-		Vertex2D( -1.f, -1.f ),
-		Vertex2D( -1.f,  1.f ),
-		Vertex2D(  1.f,  1.f ),
-		Vertex2D(  1.f, -1.f ),
+		Vertex2D( -0.1f, -0.1f ),
+		Vertex2D( -0.1f,  0.1f ),
+		Vertex2D(  0.1f,  0.1f ),
+		Vertex2D(  0.1f, -0.1f ),
 	});
 	quadrangle.SetShader(default_shader);
 
@@ -128,15 +128,15 @@ int main(int argc, char** argv)
 		Vertex2D_float( 0.0f,  0.5f)
 	};
 
-	VertexArrayObject vertexArrayObject;
 	VertexBufferObject vertexBufferObject(vertices);
 	VertexBufferLayout vertexBufferLayout;
 	vertexBufferLayout.Push<float>(2);
+	VertexArrayObject vertexArrayObject;
 	vertexArrayObject.AddBuffer(vertexBufferObject, vertexBufferLayout);
 	IndexBufferObject indexBufferObject({0,1,2});
 	indexBufferObject.UnBind();
-	vertexArrayObject.UnBind();
 	vertexBufferObject.UnBind();
+	vertexArrayObject.UnBind();
 	
 
 	std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
@@ -160,16 +160,23 @@ int main(int argc, char** argv)
 		glEnable(GL_BLEND);
 		// Очистка экрана
 
-		indexBufferObject.Bind();
+		/*Renderer::GetInstance().Draw
+		(
+			vertexArrayObject, 
+			vertexBufferObject, 
+			indexBufferObject, 
+			(Shader&)(*((Shader*)default_shader.get())), 
+			Uniform("u_Color", UniformVec4(0.3f,1.f,1.f,1.f))
+		);*/
 		vertexArrayObject.Bind();
 		vertexBufferObject.Bind();
+		indexBufferObject.Bind();
 		default_shader->Bind();
-		default_shader->SetUniform(Uniform("u_Color", UniformVec4(1.f, 0.f, 0.f, 1.f)));
-		glDrawElements(GL_DYNAMIC_DRAW, indexBufferObject.GetCount(), GL_UNSIGNED_INT, nullptr);
-		indexBufferObject.UnBind();
-		vertexArrayObject.UnBind();
-		vertexBufferObject.UnBind();
-		default_shader->UnBind();
+		default_shader->SetUniform(Uniform("u_Color", UniformVec4(1.f, 1.f, 0.f, 1.f)));
+		glDrawElements(GL_TRIANGLES, indexBufferObject.GetCount(), GL_UNSIGNED_INT, nullptr);
+
+		//Renderer::GetInstance().Draw(&quadrangle, Uniform("u_Color", UniformVec4(1.f,1.f,1.f,1.f)));
+
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
 

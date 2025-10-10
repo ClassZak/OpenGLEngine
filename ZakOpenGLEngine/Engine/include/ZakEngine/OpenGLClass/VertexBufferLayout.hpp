@@ -40,29 +40,35 @@ private:
 	unsigned int m_stride{0};
 public:
 	template<typename T>
-	void Push(unsigned int count)
+	inline void Push(unsigned int count)
 	{
+#ifdef _WIN32
 		static_assert(false);
+#endif
 	}
 
-	template<float>
-	void Push(unsigned int count)
+
+// if MSGV
+#ifdef _WIN32
+	template<>
+	inline void Push<float>(unsigned int count)
 	{
 		m_elements.push_back({count, GL_FLOAT, GL_FALSE});
 		m_stride += VertexBufferElement::GetSizeOfType(GL_FLOAT) * count;
 	}
-	template<unsigned int>
-	void Push(unsigned int count)
+	template<>
+	inline void Push<unsigned int>(unsigned int count)
 	{
 		m_elements.push_back({count, GL_UNSIGNED_INT, GL_FALSE});
 		m_stride += VertexBufferElement::GetSizeOfType(GL_UNSIGNED_INT) * count;
 	}
-	template<unsigned char>
-	void Push(unsigned int count)
+	template<>
+	inline void Push<unsigned char>(unsigned int count)
 	{
 		m_elements.push_back({count, GL_UNSIGNED_BYTE, GL_TRUE});
 		m_stride += VertexBufferElement::GetSizeOfType(GL_UNSIGNED_BYTE) * count;
 	}
+#endif
 
 
 	inline unsigned int GetStride() const
@@ -74,4 +80,26 @@ public:
 		return m_elements;
 	}
 };
+
+#ifndef _WIN32
+template<>
+inline void VertexBufferLayout::Push<float>(unsigned int count)
+{
+	m_elements.push_back({count, GL_FLOAT, GL_FALSE});
+	m_stride += VertexBufferElement::GetSizeOfType(GL_FLOAT) * count;	
+}
+template<>
+inline void VertexBufferLayout::Push<unsigned int>(unsigned int count)
+{
+	m_elements.push_back({count, GL_UNSIGNED_INT, GL_FALSE});
+	m_stride += VertexBufferElement::GetSizeOfType(GL_UNSIGNED_INT) * count;	
+}
+template<>
+inline void VertexBufferLayout::Push<unsigned char>(unsigned int count)
+{
+	m_elements.push_back({count, GL_UNSIGNED_BYTE, GL_FALSE});
+	m_stride += VertexBufferElement::GetSizeOfType(GL_UNSIGNED_BYTE) * count;	
+}
+#endif
+
 }
