@@ -48,6 +48,11 @@ int main(int argc, char** argv)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	const char* XDG_CURRENT_DESKTOP = getenv("XDG_CURRENT_DESKTOP");
+	if (XDG_CURRENT_DESKTOP && strcmp(XDG_CURRENT_DESKTOP, "GNOME") == 0)
+		glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
+	else
+		glfwInitHint(GLFW_PLATFORM, GLFW_ANY_PLATFORM);
 
 	window = glfwCreateWindow(windowWidth, windowHeight, "Jelly", NULL, NULL);
 	if (!window)
@@ -68,6 +73,13 @@ int main(int argc, char** argv)
 
 	if (glewInit() != GLEW_OK)
 		exit_failure();
+	
+#ifdef _DEBUG
+	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+	std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+	std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
+	std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
+#endif
 #pragma endregion 
 #pragma region Callback functions
 	glfwSetFramebufferSizeCallback

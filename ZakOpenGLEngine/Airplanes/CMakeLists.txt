@@ -285,3 +285,13 @@ endif()
 target_compile_definitions(Airplanes PRIVATE
 	$<$<CONFIG:Debug>:DEBUG_MODE>
 )
+if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR NOT CMAKE_BUILD_TYPE)
+	message(STATUS "Building in DEBUG mode")
+	add_compile_definitions(DEBUG_MODE)
+	# Для совместимости с Windows кодом
+	if(UNIX)
+		add_compile_definitions(_DEBUG)
+	endif()
+else()
+	message(STATUS "Building in RELEASE mode")
+endif()
