@@ -66,7 +66,7 @@ public:
 	}
 
 
-	// Дружественная функция для вывода
+	// Р”СЂСѓР¶РµСЃС‚РІРµРЅРЅР°СЏ С„СѓРЅРєС†РёСЏ РґР»СЏ РІС‹РІРѕРґР°
 	friend std::ostream& operator<<(std::ostream& os, const Vertex3DNormText& obj)
 	{
 		os	<< '(' << obj.m_pos.x		<< ",\t" <<	obj.m_pos.y			<< ",\t" << obj.m_pos.z		<< ")\t"
@@ -75,7 +75,7 @@ public:
 		return os;
 	}
 
-	// Дружественная функция для ввода
+	// Р”СЂСѓР¶РµСЃС‚РІРµРЅРЅР°СЏ С„СѓРЅРєС†РёСЏ РґР»СЏ РІРІРѕРґР°
 	friend std::istream& operator>>(std::istream& is, Vertex3DNormText& obj)
 	{
 		is	>> obj.m_pos.x			>> obj.m_pos.y			>> obj.m_pos.z 
@@ -86,7 +86,7 @@ public:
 };
 }
 
-// Хэш-функция для Vertex3DNormText для использования в unordered_map
+// РҐСЌС€-С„СѓРЅРєС†РёСЏ РґР»СЏ Vertex3DNormText РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РІ unordered_map
 namespace std
 {
 	template<> struct hash<Zak::Vertex3DNormText>

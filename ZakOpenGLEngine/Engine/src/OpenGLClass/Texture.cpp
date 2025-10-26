@@ -85,11 +85,11 @@ void Texture::UnBind() const
 
 std::shared_ptr<Texture> Texture::CreateTestTexture()
 {
-	// Создаем текстуру 16x16
+	// РЎРѕР·РґР°РµРј С‚РµРєСЃС‚СѓСЂСѓ 16x16
 	const int size = 16;
 	std::vector<unsigned char> pixels = GenerateTextureData_GradientPattern(size);
 
-	// Создаем временную текстуру
+	// РЎРѕР·РґР°РµРј РІСЂРµРјРµРЅРЅСѓСЋ С‚РµРєСЃС‚СѓСЂСѓ
 	GLuint texture_id;
 	glGenTextures(1, &texture_id);
 	glBindTexture(GL_TEXTURE_2D, texture_id);
@@ -102,7 +102,7 @@ std::shared_ptr<Texture> Texture::CreateTestTexture()
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	// Создаем объект Texture (может потребоваться адаптация вашего класса)
+	// РЎРѕР·РґР°РµРј РѕР±СЉРµРєС‚ Texture (РјРѕР¶РµС‚ РїРѕС‚СЂРµР±РѕРІР°С‚СЊСЃСЏ Р°РґР°РїС‚Р°С†РёСЏ РІР°С€РµРіРѕ РєР»Р°СЃСЃР°)
 	Texture* texture = new Texture(texture_id, nullptr, pixels.data(), size, size, 4);
 	std::shared_ptr<Texture> texture_shared_ptr(texture);
 

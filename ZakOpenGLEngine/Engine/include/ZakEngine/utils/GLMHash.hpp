@@ -3,7 +3,7 @@
 
 namespace std
 {
-	// Специализации хэша для GLM типов
+	// РЎРїРµС†РёР°Р»РёР·Р°С†РёРё С…СЌС€Р° РґР»СЏ GLM С‚РёРїРѕРІ
 	template<> struct hash<glm::vec3>
 	{
 		size_t operator()(const glm::vec3& vec) const noexcept

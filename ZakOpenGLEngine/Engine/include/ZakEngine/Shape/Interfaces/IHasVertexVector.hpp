@@ -26,10 +26,10 @@ protected:
 	}
 
 	/// <summary>
-	/// Привязка данных заново
+	/// РџСЂРёРІСЏР·РєР° РґР°РЅРЅС‹С… Р·Р°РЅРѕРІРѕ
 	/// </summary>
-	/// <param name="startIndex">Индекс первого элемента</param>
-	/// <param name="count">Количество перерисовываемых элементов</param>
+	/// <param name="startIndex">РРЅРґРµРєСЃ РїРµСЂРІРѕРіРѕ СЌР»РµРјРµРЅС‚Р°</param>
+	/// <param name="count">РљРѕР»РёС‡РµСЃС‚РІРѕ РїРµСЂРµСЂРёСЃРѕРІС‹РІР°РµРјС‹С… СЌР»РµРјРµРЅС‚РѕРІ</param>
 	inline void ReBind(size_t startIndex, size_t count)
 	{
 		this->m_vertexArrayObject.Bind();

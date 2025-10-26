@@ -76,14 +76,14 @@ protected:
 public:
 
 	/// <summary>
-	/// Генерация вершин для отрисовки окружности по сектору
+	/// Р“РµРЅРµСЂР°С†РёСЏ РІРµСЂС€РёРЅ РґР»СЏ РѕС‚СЂРёСЃРѕРІРєРё РѕРєСЂСѓР¶РЅРѕСЃС‚Рё РїРѕ СЃРµРєС‚РѕСЂСѓ
 	/// </summary>
-	/// <param name="count">Число вершин (больше 1)</param>
-	/// <param name="radius">Радиус (больше 0)</param>
-	/// <param name="center">Центр</param>
-	/// <param name="startDegree">Радианы для начала э [-2PI;2PI]</param>
-	/// <param name="endDegree">Радианы для конца э [-2PI;2PI]</param>
-	/// <returns>Вершины для отрисовки</returns>
+	/// <param name="count">Р§РёСЃР»Рѕ РІРµСЂС€РёРЅ (Р±РѕР»СЊС€Рµ 1)</param>
+	/// <param name="radius">Р Р°РґРёСѓСЃ (Р±РѕР»СЊС€Рµ 0)</param>
+	/// <param name="center">Р¦РµРЅС‚СЂ</param>
+	/// <param name="startDegree">Р Р°РґРёР°РЅС‹ РґР»СЏ РЅР°С‡Р°Р»Р° СЌ [-2PI;2PI]</param>
+	/// <param name="endDegree">Р Р°РґРёР°РЅС‹ РґР»СЏ РєРѕРЅС†Р° СЌ [-2PI;2PI]</param>
+	/// <returns>Р’РµСЂС€РёРЅС‹ РґР»СЏ РѕС‚СЂРёСЃРѕРІРєРё</returns>
 	static std::vector<Vertex2D<T>> GenerateCircleSectorVertexes
 	(
 		std::size_t circlePointCount,
@@ -122,14 +122,14 @@ public:
 	}
 
 	/// <summary>
-	/// Генерация индексов вершин для отрисовки окружности по сектору
+	/// Р“РµРЅРµСЂР°С†РёСЏ РёРЅРґРµРєСЃРѕРІ РІРµСЂС€РёРЅ РґР»СЏ РѕС‚СЂРёСЃРѕРІРєРё РѕРєСЂСѓР¶РЅРѕСЃС‚Рё РїРѕ СЃРµРєС‚РѕСЂСѓ
 	/// </summary>
-	/// <param name="count">Число вершин (больше 1)</param>
-	/// <param name="radius">Радиус (больше 0)</param>
-	/// <param name="center">Центр</param>
-	/// <param name="startDegree">Радианы для начала э [-2PI;2PI]</param>
-	/// <param name="endDegree">Радианы для конца э [-2PI;2PI]</param>
-	/// <returns>Вершины для отрисовки</returns>
+	/// <param name="count">Р§РёСЃР»Рѕ РІРµСЂС€РёРЅ (Р±РѕР»СЊС€Рµ 1)</param>
+	/// <param name="radius">Р Р°РґРёСѓСЃ (Р±РѕР»СЊС€Рµ 0)</param>
+	/// <param name="center">Р¦РµРЅС‚СЂ</param>
+	/// <param name="startDegree">Р Р°РґРёР°РЅС‹ РґР»СЏ РЅР°С‡Р°Р»Р° СЌ [-2PI;2PI]</param>
+	/// <param name="endDegree">Р Р°РґРёР°РЅС‹ РґР»СЏ РєРѕРЅС†Р° СЌ [-2PI;2PI]</param>
+	/// <returns>Р’РµСЂС€РёРЅС‹ РґР»СЏ РѕС‚СЂРёСЃРѕРІРєРё</returns>
 	static std::vector<unsigned int> GenerateCircleSectorVertexIndexes(unsigned int OldCirclePointCount)
 	{
 		if (OldCirclePointCount == 0u)
@@ -138,9 +138,9 @@ public:
 		std::vector<unsigned int> vertexesIndices;
 		for (int i = 0; i < OldCirclePointCount - 1; i++)
 		{
-			vertexesIndices.push_back(0); // Центральная вершина
-			vertexesIndices.push_back(1 + i); // Текущая вершина окружности
-			vertexesIndices.push_back(1 + (i + 1) % OldCirclePointCount); // Следующая вершина окружности
+			vertexesIndices.push_back(0); // Р¦РµРЅС‚СЂР°Р»СЊРЅР°СЏ РІРµСЂС€РёРЅР°
+			vertexesIndices.push_back(1 + i); // РўРµРєСѓС‰Р°СЏ РІРµСЂС€РёРЅР° РѕРєСЂСѓР¶РЅРѕСЃС‚Рё
+			vertexesIndices.push_back(1 + (i + 1) % OldCirclePointCount); // РЎР»РµРґСѓСЋС‰Р°СЏ РІРµСЂС€РёРЅР° РѕРєСЂСѓР¶РЅРѕСЃС‚Рё
 		}
 
 		return vertexesIndices;

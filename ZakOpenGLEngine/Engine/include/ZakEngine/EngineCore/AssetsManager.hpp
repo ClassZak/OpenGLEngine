@@ -17,20 +17,20 @@ private:
 	std::unordered_map<std::string, std::shared_ptr<Shader>> m_shaders;
 
 public:
-	// Òåêñòóğû
+	// Ğ¢ĞµĞºÑÑ‚ÑƒÑ€Ñ‹
 	std::shared_ptr<Texture> LoadTexture(const std::string& name, const std::string& path);
 	std::shared_ptr<Texture> GetTexture(const std::string& name);
 
-	// Ìåøè
+	// ĞœĞµÑˆĞ¸
 	std::shared_ptr<Mesh> LoadMesh
 	(const std::string& name, const std::string& path, std::shared_ptr<Texture> texture = nullptr);
 	std::shared_ptr<Mesh> GetMesh(const std::string& name);
 
-	// Øåéäåğû
+	// Ğ¨ĞµĞ¹Ğ´ĞµÑ€Ñ‹
 	std::shared_ptr<Shader> LoadShader(const std::string& name, const std::string& path);
 	std::shared_ptr<Shader> GetShader(const std::string& name);
 
-	// Î÷èñòêà
+	// ĞÑ‡Ğ¸ÑÑ‚ĞºĞ°
 	void Clear();
 
 	static AssetsManager& GetInstance();

@@ -10,11 +10,11 @@ inline void Jelly::AnimateLines(long long millisecondsSinceEpoch, double animati
 	auto animatedIt = m_lines.begin();
 	auto createdIt = m_createdLines.begin();
 
-	// Ey ˝ [0;1]
+	// Ey —ç [0;1]
 	const double SHORT_COS_COEFFICIENT = (cos(ANIMATION_COEFFICIENT) + 1) / 2.;
 	const double SHORT_SIN_COEFFICIENT = (sin(ANIMATION_COEFFICIENT) + 1) / 2.;
 	const double SHORT_BORDER_SIN_COEFFICIENT = (sin(ANIMATION_COEFFICIENT / 10) + 1) / 2.;
-	// Ey ˝ [-1;1]
+	// Ey —ç [-1;1]
 	const double COS_COEFFICIENT = cos(ANIMATION_COEFFICIENT);
 	const double SIN_COEFFICIENT = sin(ANIMATION_COEFFICIENT);
 
@@ -42,11 +42,11 @@ inline void Jelly::AnimateRoundedLines(long long millisecondsSinceEpoch, double 
 	auto animatedIt = m_roundedLines.begin();
 	auto createdIt = m_createdRoundedLines.begin();
 
-	// Ey ˝ [0;1]
+	// Ey —ç [0;1]
 	const double SHORT_COS_COEFFICIENT = (cos(ANIMATION_COEFFICIENT) + 1) / 2.;
 	const double SHORT_SIN_COEFFICIENT = (sin(ANIMATION_COEFFICIENT) + 1) / 2.;
 	const double SHORT_BORDER_SIN_COEFFICIENT = (sin(ANIMATION_COEFFICIENT / 10) + 1) / 2.;
-	// Ey ˝ [-1;1]
+	// Ey —ç [-1;1]
 	const double COS_COEFFICIENT = cos(ANIMATION_COEFFICIENT);
 	const double SIN_COEFFICIENT = sin(ANIMATION_COEFFICIENT);
 
@@ -79,11 +79,11 @@ inline void Jelly::AnimateParts(long long millisecondsSinceEpoch, double animati
 	auto animatedIt = m_quadrangles.begin();
 	auto createdIt = m_createdQuadrangles.begin();
 
-	// Ey ˝ [0;1]
+	// Ey —ç [0;1]
 	const double SHORT_COS_COEFFICIENT = (cos(ANIMATION_COEFFICIENT) + 1) / 2.;
 	const double SHORT_SIN_COEFFICIENT = (sin(ANIMATION_COEFFICIENT) + 1) / 2.;
 	const double SHORT_BORDER_SIN_COEFFICIENT = (sin(ANIMATION_COEFFICIENT / 10) + 1) / 2.;
-	// Ey ˝ [-1;1]
+	// Ey —ç [-1;1]
 	const double COS_COEFFICIENT = cos(ANIMATION_COEFFICIENT);
 	const double SIN_COEFFICIENT = sin(ANIMATION_COEFFICIENT);
 
@@ -114,11 +114,11 @@ inline void Jelly::AnimateRoundedParts(long long millisecondsSinceEpoch, double 
 	auto animatedIt = m_circleSectors.begin();
 	auto createdIt = m_createdCircleSectors.begin();
 
-	// Ey ˝ [0;1]
+	// Ey —ç [0;1]
 	const double SHORT_COS_COEFFICIENT = (cos(ANIMATION_COEFFICIENT) + 1) / 2.;
 	const double SHORT_SIN_COEFFICIENT = (sin(ANIMATION_COEFFICIENT) + 1) / 2.;
 	const double SHORT_BORDER_SIN_COEFFICIENT = (sin(ANIMATION_COEFFICIENT / 10) + 1) / 2.;
-	// Ey ˝ [-1;1]
+	// Ey —ç [-1;1]
 	const double COS_COEFFICIENT = cos(ANIMATION_COEFFICIENT);
 	const double SIN_COEFFICIENT = sin(ANIMATION_COEFFICIENT);
 

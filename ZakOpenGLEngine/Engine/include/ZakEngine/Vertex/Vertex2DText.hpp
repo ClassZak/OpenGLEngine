@@ -49,7 +49,7 @@ public:
 	}
 
 
-	// Дружественная функция для вывода
+	// Р”СЂСѓР¶РµСЃС‚РІРµРЅРЅР°СЏ С„СѓРЅРєС†РёСЏ РґР»СЏ РІС‹РІРѕРґР°
 	friend std::ostream& operator<<(std::ostream& os, const Vertex2DText& obj)
 	{
 		os	<< '(' << obj.m_pos.x << ",\t" << obj.m_pos.y << ")\t" 
@@ -57,7 +57,7 @@ public:
 		return os;
 	}
 
-	// Дружественная функция для ввода
+	// Р”СЂСѓР¶РµСЃС‚РІРµРЅРЅР°СЏ С„СѓРЅРєС†РёСЏ РґР»СЏ РІРІРѕРґР°
 	friend std::istream& operator>>(std::istream& is, Vertex2DText& obj)
 	{
 		is >> obj.m_pos.x >> obj.m_pos.y >> obj.m_texturePos.x >> obj.m_texturePos.y;
@@ -67,7 +67,7 @@ public:
 }
 
 
-// Хэш-функция для Vertex2DText
+// РҐСЌС€-С„СѓРЅРєС†РёСЏ РґР»СЏ Vertex2DText
 namespace std
 {
 	template<> struct hash<Zak::Vertex2DText>

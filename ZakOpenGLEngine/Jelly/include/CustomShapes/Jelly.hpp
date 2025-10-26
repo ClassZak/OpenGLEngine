@@ -69,8 +69,8 @@ public:
 	void Draw();
 
 	/// <summary>
-	/// Метод для дёрганья желе по времени
+	/// РњРµС‚РѕРґ РґР»СЏ РґС‘СЂРіР°РЅСЊСЏ Р¶РµР»Рµ РїРѕ РІСЂРµРјРµРЅРё
 	/// </summary>
-	/// <param name="millisecondsSinceEpoch">время</param>
+	/// <param name="millisecondsSinceEpoch">РІСЂРµРјСЏ</param>
 	void Animate(long long millisecondsSinceEpoch, double animationSpeed = 1e-3);
 };
