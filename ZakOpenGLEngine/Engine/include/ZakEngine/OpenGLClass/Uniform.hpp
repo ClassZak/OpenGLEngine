@@ -4,7 +4,7 @@
 #include <array>
 
 namespace Zak {
-// Типы данных униформ
+// РўРёРїС‹ РґР°РЅРЅС‹С… СѓРЅРёС„РѕСЂРј
 enum class UniformType {
 	Int, Float, Bool,
 	Vec2, Vec3, Vec4,
@@ -12,13 +12,13 @@ enum class UniformType {
 	Sampler2D
 };
 
-// Информация о типе униформы
+// РРЅС„РѕСЂРјР°С†РёСЏ Рѕ С‚РёРїРµ СѓРЅРёС„РѕСЂРјС‹
 struct UniformInfo {
 	UniformType type;
-	int arraySize = 0; // 0 = не массив
+	int arraySize = 0; // 0 = РЅРµ РјР°СЃСЃРёРІ
 };
 
-// Базовые типы данных
+// Р‘Р°Р·РѕРІС‹Рµ С‚РёРїС‹ РґР°РЅРЅС‹С…
 using UniformInt = int;
 using UniformFloat = float;
 using UniformBool = bool;
@@ -29,7 +29,7 @@ using UniformMat3 = glm::mat3;   // row-major
 using UniformMat4 = glm::mat4;   // row-major
 using UniformSampler = UniformInt;
 
-// Типы для массивов
+// РўРёРїС‹ РґР»СЏ РјР°СЃСЃРёРІРѕРІ
 using UniformIntArray = std::vector<int>;
 using UniformFloatArray = std::vector<float>;
 using UniformBoolArray = std::vector<bool>;
@@ -40,7 +40,7 @@ using UniformMat3Array = std::vector<glm::mat3>;
 using UniformMat4Array = std::vector<glm::mat4>;
 using UniformSamplerArray = std::vector<int>;
 }
-// Вариант для хранения данных
+// Р’Р°СЂРёР°РЅС‚ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РґР°РЅРЅС‹С…
 using UniformValue = std::variant
 <
 	Zak::UniformInt, Zak::UniformFloat, Zak::UniformBool,
@@ -54,7 +54,7 @@ using UniformValue = std::variant
 
 
 namespace Zak {
-// Дополнительные использования типов
+// Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ С‚РёРїРѕРІ
 using Uniform1i = UniformInt;
 
 
