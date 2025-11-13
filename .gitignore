@@ -7,8 +7,10 @@ build/
 
 # Paint.NET
 *.pdnSave
-/Jelly/assets/models/lost-empire
-/Jelly/assets/models/pine
-/Jelly/include/stb_image.h
+ZakOpenGLEngine/Jelly/assets/models/lost-empire
+ZakOpenGLEngine/Jelly/assets/models/pine
+ZakOpenGLEngine/Jelly/deps/stb_image.h
 
-/Game/include/stb_image.h
+ZakOpenGLEngine/Game/deps/stb_image.h
+
+ZakOpenGLEngine/Graphics/deps/stb_image.h

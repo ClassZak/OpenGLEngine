@@ -65,5 +65,18 @@ public:
 	{
 		return m_count;
 	}
+
+
+
+
+	static inline std::vector<GLuint> GenerateIndecies(GLsizeiptr count)
+	{
+		std::vector<GLuint> result(count);
+
+		for(GLsizeiptr i=0; i!=count; ++i)
+			result[i]=i;
+
+		return result;
+	}
 };
 }

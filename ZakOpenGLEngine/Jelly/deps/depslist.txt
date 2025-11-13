@@ -1,1 +1,1 @@
-stb_image.h
+stb_image.h v2.30
