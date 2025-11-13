@@ -15,4 +15,4 @@ ZakOpenGLEngine/Graphics/deps/stb_image.h
 
 ZakOpenGLEngine/Airplanes/deps/stb_image.h
 
-# ZakOpenGLEngine/Engine/deps/stb_image.h
+ZakOpenGLEngine/Engine/deps/stb_image.h
