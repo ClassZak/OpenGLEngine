@@ -11,6 +11,6 @@ ZakOpenGLEngine/Jelly/assets/models/lost-empire
 ZakOpenGLEngine/Jelly/assets/models/pine
 ZakOpenGLEngine/Jelly/deps/stb_image.h
 
-ZakOpenGLEngine/Game/deps/stb_image.h
-
 ZakOpenGLEngine/Graphics/deps/stb_image.h
+
+ZakOpenGLEngine/Airplanes/deps/stb_image.h
