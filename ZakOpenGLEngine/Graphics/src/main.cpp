@@ -40,6 +40,28 @@ float windowWidth = 640;
 float windowHeight = 480;
 inline void exit_failure(int code = EXIT_FAILURE);
 
+void MappingVerticies(std::vector<Zak::Vertex2D<float>>& verticies, float startX, float endX, float startY, float endY, float startXDrawing, float endXDrawing, float startYDrawing, float endYDrawing)
+{
+	if(startX > endX)
+		throw std::runtime_error("Start x cannot be more than end x");
+	if(startY > endY)
+		throw std::runtime_error("Start y cannot be more than end y");
+	if(startXDrawing > endXDrawing)
+		throw std::runtime_error("Start x for drawing cannot be more than end x for drawing");
+	if(startYDrawing > endYDrawing)
+		throw std::runtime_error("Start y for drawing cannot be more than end y for drawing");
+
+	static float delta_x = startX - endX;
+	static float delta_y = startY - endY;
+	static float delta_x_drawing = startXDrawing - endXDrawing;
+	static float delta_y_drawing = startYDrawing - endYDrawing;
+
+	for(auto && el : verticies)
+	{
+		el.x = startXDrawing + ((el.x - startX) / delta_x) * delta_x_drawing;
+		el.y = startYDrawing + ((el.y - startY) / delta_y) * delta_y_drawing;
+	}
+}
 
 std::vector<Zak::Vertex2D<float>> GenerateGrephicsVerticies(float startX, float  endX, float  startY, float  endY, unsigned int steps, Zak::Vertex2D<float> center, std::function<float(float)> func)
 {
