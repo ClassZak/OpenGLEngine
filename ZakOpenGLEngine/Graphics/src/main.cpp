@@ -51,10 +51,10 @@ void MappingVerticies(std::vector<Zak::Vertex2D<float>>& verticies, float startX
 	if(startYDrawing > endYDrawing)
 		throw std::runtime_error("Start y for drawing cannot be more than end y for drawing");
 
-	static float delta_x = startX - endX;
-	static float delta_y = startY - endY;
-	static float delta_x_drawing = startXDrawing - endXDrawing;
-	static float delta_y_drawing = startYDrawing - endYDrawing;
+	static float delta_x = abs(endX - startX);
+	static float delta_y = abs(endY - startY);
+	static float delta_x_drawing = abs(endXDrawing - startXDrawing);
+	static float delta_y_drawing = abs(endYDrawing - startYDrawing);
 
 	for(auto && el : verticies)
 	{
@@ -63,22 +63,27 @@ void MappingVerticies(std::vector<Zak::Vertex2D<float>>& verticies, float startX
 	}
 }
 
-std::vector<Zak::Vertex2D<float>> GenerateGrephicsVerticies(float startX, float  endX, float  startY, float  endY, unsigned int steps, const Zak::Vertex2D<float>& center, const std::function<float(float)>& func)
+std::vector<Zak::Vertex2D<float>> GenerateGrephicsVerticies(float startX, float  endX, float  startY, float  endY, unsigned int steps, const std::function<float(float)>& func, const Zak::Vertex2D<float>& center = {0.f, 0.f})
 {
 	if(startX > endX)
 		throw std::runtime_error("Start x cannot be more than end x");
 	if(startY > endY)
 		throw std::runtime_error("Start y cannot be more than end y");
 
-	std::vector<Zak::Vertex2D<float>> result(steps);
+	std::vector<Zak::Vertex2D<float>> result(steps+1);
 	
-	static float delta = (endX - startX) / steps;
+	static float delta = (endX - startX) / (float)steps;
 	for(unsigned int i = 0; i != steps; ++i)
 	{
 		result[i].x = startX + i * delta;
 		result[i].y = func(result[i].x);
+
+		result[i].x += center.x;
+		result[i].y += center.y;
 	}
 
+	result[steps].x = endX;
+	result[steps].y = func(endX);
 
 	return result;
 }
@@ -164,23 +169,8 @@ int main(int argc, char** argv)
 	std::chrono::milliseconds	milliseconds_since_epoch =
 	std::chrono::duration_cast<std::chrono::milliseconds>(duration_since_epoch);
 
-	float a=0, b=0;
-	float x0 = 0, xn = 40;
-	float h = 10;
-	const int VERTICES_COUNT=5;
-
-	std::vector<Zak::Vertex2D_float> graphic_verticies(VERTICES_COUNT);
-	for(std::size_t i=0; i!=graphic_verticies.size(); ++i)
-		graphic_verticies[i].x = -1 + (x0 + i*h) / xn * 2;
-	
-	graphic_verticies[0].y = -1 + 0.f	/ 50.f * 2;
-	graphic_verticies[1].y = -1 + 1.f	/ 50.f * 2;
-	graphic_verticies[2].y = -1 + 2.f	/ 50.f * 2;
-	graphic_verticies[3].y = -1 + 10.f	/ 50.f * 2;
-	graphic_verticies[4].y = -1 + 49.f	/ 50.f * 2;
-
-	graphic_verticies.push_back({0.f,0.f});
-	graphic_verticies.push_back({0.5f,0.5f});
+	std::vector<Zak::Vertex2D<float>> graphic_verticies = GenerateGrephicsVerticies(-10, 10, -10, 10, 200, [](float x)->float{return sin(x);});
+	MappingVerticies(graphic_verticies, -10, 10, -10, 10, -1.f, 1.f, -1.f, 1.f);
 	
 	Zak::VertexArrayObject vertexArrayObject;
 	Zak::VertexBufferObject vertexBufferObject(graphic_verticies);
@@ -213,7 +203,7 @@ while (!glfwWindowShouldClose(window))
 		// ENABLE SHADER BEFORE DRAW ANYTHING !1!!!
 		default_shader->Bind();
 		default_shader->SetUniform
-		(Zak::Uniform("u_Color", Zak::UniformVec4(1.f, abs(sin(milliseconds_since_epoch.count())), 0.f, 1.f)));
+		(Zak::Uniform("u_Color", Zak::UniformVec4(0.f, 1.f, 1.f, 1.f)));
 		vertexArrayObject.Bind();
 		vertexBufferObject.Bind();
 		glDrawArrays(GL_LINE_STRIP, 0, vertexBufferObject.GetCount());
