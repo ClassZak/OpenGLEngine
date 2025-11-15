@@ -40,6 +40,28 @@ float windowWidth = 640;
 float windowHeight = 480;
 inline void exit_failure(int code = EXIT_FAILURE);
 
+
+std::vector<Zak::Vertex2D<float>> GenerateGrephicsVerticies(float startX, float  endX, float  startY, float  endY, unsigned int steps, Zak::Vertex2D<float> center, std::function<float(float)> func)
+{
+	if(startX > endX)
+		throw std::runtime_error("Start x cannot be more than end x");
+	if(startY > endY)
+		throw std::runtime_error("Start y cannot be more than end y");
+
+	std::vector<Zak::Vertex2D<float>> result(steps);
+	
+	static float delta = (endX - startX) / steps;
+	for(unsigned int i = 0; i != steps; ++i)
+	{
+		result[i].x = startX + i * delta;
+		result[i].y = func(result[i].x);
+	}
+
+
+	return result;
+}
+
+
 int main(int argc, char** argv)
 {
 #pragma region Initialization
@@ -170,7 +192,6 @@ while (!glfwWindowShouldClose(window))
 		default_shader->Bind();
 		default_shader->SetUniform
 		(Zak::Uniform("u_Color", Zak::UniformVec4(1.f, abs(sin(milliseconds_since_epoch.count())), 0.f, 1.f)));
-
 		vertexArrayObject.Bind();
 		vertexBufferObject.Bind();
 		glDrawArrays(GL_LINE_STRIP, 0, vertexBufferObject.GetCount());
