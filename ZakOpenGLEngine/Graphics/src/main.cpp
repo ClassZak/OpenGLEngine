@@ -63,7 +63,7 @@ void MappingVerticies(std::vector<Zak::Vertex2D<float>>& verticies, float startX
 	}
 }
 
-std::vector<Zak::Vertex2D<float>> GenerateGrephicsVerticies(float startX, float  endX, float  startY, float  endY, unsigned int steps, Zak::Vertex2D<float> center, std::function<float(float)> func)
+std::vector<Zak::Vertex2D<float>> GenerateGrephicsVerticies(float startX, float  endX, float  startY, float  endY, unsigned int steps, const Zak::Vertex2D<float>& center, const std::function<float(float)>& func)
 {
 	if(startX > endX)
 		throw std::runtime_error("Start x cannot be more than end x");
