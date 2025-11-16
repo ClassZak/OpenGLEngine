@@ -40,6 +40,7 @@ float windowWidth = 640;
 float windowHeight = 480;
 inline void exit_failure(int code = EXIT_FAILURE);
 
+
 void MappingVerticies(std::vector<Zak::Vertex2D<float>>& verticies, float startX, float endX, float startY, float endY, float startXDrawing, float endXDrawing, float startYDrawing, float endYDrawing)
 {
 	if(startX > endX)
@@ -63,16 +64,14 @@ void MappingVerticies(std::vector<Zak::Vertex2D<float>>& verticies, float startX
 	}
 }
 
-std::vector<Zak::Vertex2D<float>> GenerateGrephicsVerticies(float startX, float  endX, float  startY, float  endY, unsigned int steps, const std::function<float(float)>& func, const Zak::Vertex2D<float>& center = {0.f, 0.f})
+std::vector<Zak::Vertex2D<float>> GenerateGrephicsVerticies(float startX, float endX, unsigned int steps, const std::function<float(float)>& func, const Zak::Vertex2D<float>& center = {0.f, 0.f})
 {
 	if(startX > endX)
 		throw std::runtime_error("Start x cannot be more than end x");
-	if(startY > endY)
-		throw std::runtime_error("Start y cannot be more than end y");
 
 	std::vector<Zak::Vertex2D<float>> result(steps+1);
 	
-	static float delta = (endX - startX) / (float)steps;
+	static float delta = abs(endX - startX) / (float)steps;
 	for(unsigned int i = 0; i != steps; ++i)
 	{
 		result[i].x = startX + i * delta;
@@ -87,6 +86,39 @@ std::vector<Zak::Vertex2D<float>> GenerateGrephicsVerticies(float startX, float 
 
 	return result;
 }
+
+/* Recalculate y coordinares */
+void RecalculateYForFunctionVerticies(std::vector<Zak::Vertex2D<float>>& verticies, const std::function<float(float)>& func, const Zak::Vertex2D<float>& center = {0.f, 0.f})
+{
+	for(auto&& el : verticies)
+		el.y = func(el.x) + center.y;
+}
+
+/* Full recalculation */
+void RecalculateFunctionVerticies(std::vector<Zak::Vertex2D<float>>& verticies, float startX, float endX, const std::function<float(float)>& func, const Zak::Vertex2D<float>& center = {0.f, 0.f})
+{
+	if(verticies.size() <= 1)
+		throw std::runtime_error("Vector is very small for recalculation function verrticies");
+
+	static float delta = abs(endX - startX) / (float)(verticies.size() - 1);
+
+	for(std::size_t i = 0; i != verticies.size() - 1; ++i)
+	{
+		verticies[i].x = startX + i*delta;
+		verticies[i].y = func(verticies[i].x)+center.y;
+
+		verticies[i].x += center.x;
+		verticies[i].y += center.y;
+	}
+	verticies.back().x = endX + center.x;
+	verticies.back().y = func(verticies.back().x) + center.y; 
+}
+
+#define ANIMATION_SPEED 1.e-2
+
+const std::function<double(double)> BASE_FUNCTION = [](double x)->double{
+	return sin(x);
+};
 
 
 int main(int argc, char** argv)
@@ -168,9 +200,10 @@ int main(int argc, char** argv)
 	std::chrono::system_clock::duration duration_since_epoch = now.time_since_epoch();
 	std::chrono::milliseconds	milliseconds_since_epoch =
 	std::chrono::duration_cast<std::chrono::milliseconds>(duration_since_epoch);
+	int64_t milliseconds_since_epoch_count;
 
-	std::vector<Zak::Vertex2D<float>> graphic_verticies = GenerateGrephicsVerticies(-10, 10, -10, 10, 200, [](float x)->float{return sin(x);});
-	MappingVerticies(graphic_verticies, -10, 10, -10, 10, -1.f, 1.f, -1.f, 1.f);
+	std::vector<Zak::Vertex2D<float>> graphic_verticies = GenerateGrephicsVerticies(-20, 20, 200, [](float x)->float{return sin(x);});
+	MappingVerticies(graphic_verticies, -20, 20, -1, 1, -0.9f, 0.9f, -0.9f, 0.9f);
 	
 	Zak::VertexArrayObject vertexArrayObject;
 	Zak::VertexBufferObject vertexBufferObject(graphic_verticies);
@@ -188,13 +221,19 @@ while (!glfwWindowShouldClose(window))
 		duration_since_epoch = now.time_since_epoch();
 		milliseconds_since_epoch =
 		std::chrono::duration_cast<std::chrono::milliseconds>(duration_since_epoch);
+		milliseconds_since_epoch_count = milliseconds_since_epoch.count();
 
 #pragma region Animation
+		RecalculateFunctionVerticies(graphic_verticies, -20, 20, 
+			[milliseconds_since_epoch_count](float x)->float{
+				return BASE_FUNCTION(x + (milliseconds_since_epoch_count * ANIMATION_SPEED));
+			});
+		MappingVerticies(graphic_verticies, -20, 20, -1, 1, -0.9f, 0.9f, -0.9f, 0.9f);
 #pragma endregion
 
 #pragma region Render
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClearColor(0.7,0.7,0.7,1.0);
+		glClearColor(0.3,0.3,0.3,1.0);
 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_BLEND);
@@ -205,6 +244,7 @@ while (!glfwWindowShouldClose(window))
 		default_shader->SetUniform
 		(Zak::Uniform("u_Color", Zak::UniformVec4(0.f, 1.f, 1.f, 1.f)));
 		vertexArrayObject.Bind();
+		vertexBufferObject.ReBind(graphic_verticies);
 		vertexBufferObject.Bind();
 		glDrawArrays(GL_LINE_STRIP, 0, vertexBufferObject.GetCount());
 		vertexArrayObject.UnBind();
