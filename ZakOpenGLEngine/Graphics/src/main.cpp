@@ -117,7 +117,24 @@ void RecalculateFunctionVerticies(std::vector<Zak::Vertex2D<float>>& verticies, 
 #define ANIMATION_SPEED 1.e-2
 
 const std::function<double(double)> BASE_FUNCTION = [](double x)->double{
-	return sin(x);
+	double y = 0;
+	double prev_y = 0;
+
+	static const float ACCURACY = 1e-6;
+	static const unsigned char MAX_ITERATIONS = 100;
+
+	unsigned char iteration = 0;
+
+	do
+	{
+		prev_y = y;
+		y = -pow(sin(prev_y),2) + pow(cos(x),2) + x;
+		if(fabs(y-prev_y) < ACCURACY)
+			break;
+	}
+	while(iteration++ < MAX_ITERATIONS);
+
+    return y;
 };
 
 
@@ -203,7 +220,7 @@ int main(int argc, char** argv)
 	int64_t milliseconds_since_epoch_count;
 
 	std::vector<Zak::Vertex2D<float>> graphic_verticies = GenerateGrephicsVerticies(-20, 20, 200, [](float x)->float{return sin(x);});
-	MappingVerticies(graphic_verticies, -20, 20, -1, 1, -0.9f, 0.9f, -0.9f, 0.9f);
+	MappingVerticies(graphic_verticies, -20, 20, -20, 20, -0.9f, 0.9f, -0.9f, 0.9f);
 	
 	Zak::VertexArrayObject vertexArrayObject;
 	Zak::VertexBufferObject vertexBufferObject(graphic_verticies);
@@ -226,9 +243,10 @@ while (!glfwWindowShouldClose(window))
 #pragma region Animation
 		RecalculateFunctionVerticies(graphic_verticies, -20, 20, 
 			[milliseconds_since_epoch_count](float x)->float{
-				return BASE_FUNCTION(x + (milliseconds_since_epoch_count * ANIMATION_SPEED));
-			});
-		MappingVerticies(graphic_verticies, -20, 20, -1, 1, -0.9f, 0.9f, -0.9f, 0.9f);
+				return BASE_FUNCTION(x + (milliseconds_since_epoch_count%1000 * ANIMATION_SPEED));
+			}
+		);
+		MappingVerticies(graphic_verticies, -20, 20, -20, 20, -0.9f, 0.9f, -0.9f, 0.9f);
 #pragma endregion
 
 #pragma region Render
