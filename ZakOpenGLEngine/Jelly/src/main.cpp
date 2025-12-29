@@ -94,13 +94,11 @@ int main(int argc, char** argv)
 	);
 #pragma endregion
 #pragma region AssetsManager
-	std::shared_ptr<Zak::Texture> background;
 	std::shared_ptr<Zak::Texture> plane_texture;
 	std::shared_ptr<Zak::Shader> texture_shader;
 	std::shared_ptr<Zak::Shader> default_shader;
 	try
 	{
-		background = Zak::AssetsManager::GetInstance().LoadTexture("background", "../../Jelly/assets/backgrounds/background.png");
 		plane_texture = Zak::AssetsManager::GetInstance().LoadTexture("plane_texture", "../../Jelly/assets/sprites/plane.png");
 
 		texture_shader = Zak::AssetsManager::GetInstance().LoadShader("texture_shader", "../../Jelly/res/shaders/texture_shader.shader");
@@ -109,6 +107,7 @@ int main(int argc, char** argv)
 	catch (std::exception& e)
 	{
 		std::cerr<<e.what()<<std::endl;
+		std::cerr<<__FILE__<<' '<< __LINE__ << ' '<< __FUNCTION__ << std::endl;
 		exit_failure();
 	}
 #pragma endregion

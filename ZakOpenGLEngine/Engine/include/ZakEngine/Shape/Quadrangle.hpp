@@ -222,19 +222,6 @@ public:
 
 
 	// Attribute crafting
-#ifdef _WIN32
-	template<typename Vertex2DClass>
-	static void CraftAttributes(VertexBufferLayout& layout)
-	{
-		static_assert(false);
-	}
-	template<>
-	static void CraftAttributes<Vertex2DText>(VertexBufferLayout& layout)
-	{
-		layout.Push<float>(2);
-		layout.Push<float>(2);
-	}
-#else
 	static void CraftAttributes(VertexBufferLayout& layout)
 	{
 		if constexpr (std::is_same_v<Vertex2DClass, Vertex2DText>)
@@ -248,6 +235,5 @@ public:
 			throw "Unsupported vertex type for textured quadrangle";
 		}
 	}
-#endif
 };
 }
