@@ -2,6 +2,9 @@ build/
 .vs/
 .trash/
 
+# Vim
+.cache
+
 # VS Code
 .vscode
 
