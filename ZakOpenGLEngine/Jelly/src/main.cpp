@@ -41,6 +41,10 @@ int main(int argc, char** argv)
 	setlocale(LC_ALL, "Russian");
 	srand(time(NULL));
 
+	glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
+	glfwSetErrorCallback([](int error, const char* description) {
+		fprintf(stderr, "GLFW Error %d: %s\n", error, description);
+	});
 	GLFWwindow* window;
 	if(!glfwInit())
 		exit_failure();
@@ -48,11 +52,7 @@ int main(int argc, char** argv)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	const char* XDG_CURRENT_DESKTOP = getenv("XDG_CURRENT_DESKTOP");
-	if (XDG_CURRENT_DESKTOP && strcmp(XDG_CURRENT_DESKTOP, "GNOME") == 0)
-		glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
-	else
-		glfwInitHint(GLFW_PLATFORM, GLFW_ANY_PLATFORM);
+	
 
 	window = glfwCreateWindow(windowWidth, windowHeight, "Jelly", NULL, NULL);
 	if (!window)
@@ -63,16 +63,13 @@ int main(int argc, char** argv)
 
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
-
 	GLFWimage images[1];
 	images[0].pixels = stbi_load("../../Jelly/assets/icon.png", &images[0].width, &images[0].height, 0, 4);
 	glfwSetWindowIcon(window, 1, images);
 	stbi_image_free(images[0].pixels);
+	
 
 	glfwSwapInterval(1);
-
-	if (glewInit() != GLEW_OK)
-		exit_failure();
 	
 #ifdef _DEBUG
 	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
@@ -80,6 +77,16 @@ int main(int argc, char** argv)
 	std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
 	std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
 #endif
+
+	glewExperimental = GL_TRUE;
+	GLenum glewErr = glewInit();
+	glGetError();
+	if (glewErr != GLEW_OK)
+	{
+		std::cerr<<"GLEW init failed: "<< glewGetErrorString(glewErr) << std::endl;
+		exit_failure();
+	}
+
 #pragma endregion 
 #pragma region Callback functions
 	glfwSetFramebufferSizeCallback
