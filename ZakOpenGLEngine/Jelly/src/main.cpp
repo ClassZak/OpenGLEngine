@@ -40,7 +40,7 @@ int main(int argc, char** argv)
 #pragma region Initialization
 	setlocale(LC_ALL, "Russian");
 	srand(time(NULL));
-
+	
 	glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
 	glfwSetErrorCallback([](int error, const char* description) {
 		fprintf(stderr, "GLFW Error %d: %s\n", error, description);
@@ -48,11 +48,13 @@ int main(int argc, char** argv)
 	GLFWwindow* window;
 	if(!glfwInit())
 		exit_failure();
-
+	
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	
+
+
+
 
 	window = glfwCreateWindow(windowWidth, windowHeight, "Jelly", NULL, NULL);
 	if (!window)
@@ -67,17 +69,18 @@ int main(int argc, char** argv)
 	images[0].pixels = stbi_load("../../Jelly/assets/icon.png", &images[0].width, &images[0].height, 0, 4);
 	glfwSetWindowIcon(window, 1, images);
 	stbi_image_free(images[0].pixels);
-	
 
 	glfwSwapInterval(1);
 	
+
+
+
 #ifdef _DEBUG
 	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
 	std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 	std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
 	std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
 #endif
-
 	glewExperimental = GL_TRUE;
 	GLenum glewErr = glewInit();
 	glGetError();
