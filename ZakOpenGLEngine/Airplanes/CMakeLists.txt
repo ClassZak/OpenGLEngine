@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.5...4.4)
 
 
 # Автоматическая настройка для Windows 7
@@ -25,7 +25,10 @@ project(Airplanes VERSION 1.0
 
 include_directories(PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/deps/)
 set(SOURCES
+	${CMAKE_CURRENT_SOURCE_DIR}/include/CustomClasses/Airplane.hpp
+
 	${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/CustomClasses/Airplane.cpp
 )
 
 # Добавляем исполняемый файл

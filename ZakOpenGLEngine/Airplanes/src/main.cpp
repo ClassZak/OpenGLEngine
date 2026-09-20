@@ -27,6 +27,14 @@
 #include <thread>
 
 
+
+
+
+
+
+#include "../include/CustomClasses/Airplane.hpp"
+
+
 using namespace Zak;
 
 std::mutex planeMutex;
@@ -103,6 +111,27 @@ int main(int argc, char** argv)
 			windowWidth = width;
 		}
 	);
+	glfwSetCharCallback(
+		window, 
+		[](GLFWwindow* window, unsigned int codepoint){
+			if (codepoint == 'q' || codepoint == 'Q')
+				exit(EXIT_SUCCESS);
+
+			if (planeQuadrangle_ptr)
+			{
+				while (!objectAnimationMutex.try_lock());
+				while(!planeMutex.try_lock());
+				auto& vertices = planeQuadrangle_ptr->GetVertices();
+				vertices[0].m_pos.y += 0.1;
+				vertices[1].m_pos.y += 0.1;
+				vertices[2].m_pos.y += 0.1;
+				vertices[3].m_pos.y += 0.1;
+				planeQuadrangle_ptr->ReBind();
+				planeMutex.unlock();
+				objectAnimationMutex.unlock();
+			}
+		}
+	);
 	glfwSetMouseButtonCallback
 	(
 		window,
@@ -148,6 +177,8 @@ int main(int argc, char** argv)
 	}
 #pragma endregion
 
+	Airplane airplane(0.3, 0.3, "plane_texture", "texture_shader");
+
 	QuadrangleTexture<Vertex2DText> planeQuadrangle
 	({
 		Vertex2DText({ -0.1, -0.1 },	{ 0,0 }),
@@ -168,7 +199,7 @@ int main(int argc, char** argv)
 	planeQuadrangle.SetTexture(plane_texture);
 	planeQuadrangle.SetShader(texture_shader);
 
-	std::thread objectAnimationThread([&planeQuadrangle](){
+	std::thread objectAnimationThread([&planeQuadrangle, &airplane](){
 #ifdef _DEBUG
 		std::cout<<std::this_thread::get_id()<<std::endl;
 #endif // _DEBUG
@@ -184,6 +215,7 @@ int main(int argc, char** argv)
 			vertices[1].m_pos.y -= 0.001;
 			vertices[2].m_pos.y -= 0.001;
 			vertices[3].m_pos.y -= 0.001;
+			airplane.Move(0.0001,0.f);
 			planeMutex.unlock();
 
 			objectAnimationMutex.unlock();
@@ -204,6 +236,7 @@ int main(int argc, char** argv)
 		/* Animation here */
 		while (!objectAnimationMutex.try_lock());
 		planeQuadrangle.ReBind();
+		airplane.ReBind();
 		objectAnimationMutex.unlock();
 
 		/* Render here */
@@ -216,6 +249,7 @@ int main(int argc, char** argv)
 
 		while(!objectAnimationMutex.try_lock());
 		Renderer::GetInstance().Draw(planeQuadrangle_ptr, Uniform("u_Color", UniformVec4(1.f, 1.f, 1.f, 1.f)));
+		airplane.Draw();
 		objectAnimationMutex.unlock();
 
 		/* Swap front and back buffers */
