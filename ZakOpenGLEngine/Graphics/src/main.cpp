@@ -38,106 +38,24 @@
 #include <chrono>
 #include <cmath>
 
+
+
+
+#include "../include/graphics_engine/base_function.hpp"
+
+
+
+
 float windowWidth = 640;
 float windowHeight = 480;
 inline void exit_failure(int code = EXIT_FAILURE);
 
 
-void MappingVerticies(std::vector<Zak::Vertex2D<float>>& verticies, float startX, float endX, float startY, float endY, float startXDrawing, float endXDrawing, float startYDrawing, float endYDrawing)
-{
-	if(startX > endX)
-		throw std::runtime_error("Start x cannot be more than end x");
-	if(startY > endY)
-		throw std::runtime_error("Start y cannot be more than end y");
-	if(startXDrawing > endXDrawing)
-		throw std::runtime_error("Start x for drawing cannot be more than end x for drawing");
-	if(startYDrawing > endYDrawing)
-		throw std::runtime_error("Start y for drawing cannot be more than end y for drawing");
 
-	static float delta_x = abs(endX - startX);
-	static float delta_y = abs(endY - startY);
-	static float delta_x_drawing = abs(endXDrawing - startXDrawing);
-	static float delta_y_drawing = abs(endYDrawing - startYDrawing);
-
-	for(auto && el : verticies)
-	{
-		el.x = startXDrawing + ((el.x - startX) / delta_x) * delta_x_drawing;
-		el.y = startYDrawing + ((el.y - startY) / delta_y) * delta_y_drawing;
-	}
-}
-
-std::vector<Zak::Vertex2D<float>> GenerateGrephicsVerticies(float startX, float endX, unsigned int steps, const std::function<float(float)>& func, const Zak::Vertex2D<float>& center = {0.f, 0.f})
-{
-	if(startX > endX)
-		throw std::runtime_error("Start x cannot be more than end x");
-
-	std::vector<Zak::Vertex2D<float>> result(steps+1);
-	
-	static float delta = abs(endX - startX) / (float)steps;
-	for(unsigned int i = 0; i != steps; ++i)
-	{
-		result[i].x = startX + i * delta;
-		result[i].y = func(result[i].x);
-
-		result[i].x += center.x;
-		result[i].y += center.y;
-	}
-
-	result[steps].x = endX;
-	result[steps].y = func(endX);
-
-	return result;
-}
-
-/* Recalculate y coordinares */
-void RecalculateYForFunctionVerticies(std::vector<Zak::Vertex2D<float>>& verticies, const std::function<float(float)>& func, const Zak::Vertex2D<float>& center = {0.f, 0.f})
-{
-	for(auto&& el : verticies)
-		el.y = func(el.x) + center.y;
-}
-
-/* Full recalculation */
-void RecalculateFunctionVerticies(std::vector<Zak::Vertex2D<float>>& verticies, float startX, float endX, const std::function<float(float)>& func, const Zak::Vertex2D<float>& center = {0.f, 0.f})
-{
-	if(verticies.size() <= 1)
-		throw std::runtime_error("Vector is very small for recalculation function verrticies");
-
-	static float delta = abs(endX - startX) / (float)(verticies.size() - 1);
-
-	for(std::size_t i = 0; i != verticies.size() - 1; ++i)
-	{
-		verticies[i].x = startX + i*delta;
-		verticies[i].y = func(verticies[i].x)+center.y;
-
-		verticies[i].x += center.x;
-		verticies[i].y += center.y;
-	}
-	verticies.back().x = endX + center.x;
-	verticies.back().y = func(verticies.back().x) + center.y; 
-}
 
 #define ANIMATION_SPEED 1.e-2
 
-const std::function<double(double)> BASE_FUNCTION = [](double x)->double{
-	double y = 0;
-	double prev_y = 0;
 
-	static const float ACCURACY = 1e-6;
-	static const unsigned char MAX_ITERATIONS = 100;
-
-	unsigned char iteration = 0;
-
-	do
-	{
-		prev_y = y;
-		y = -pow(sin(prev_y),2) + pow(cos(x),2) + x;
-		if(fabs(y-prev_y) < ACCURACY)
-			break;
-	}
-	while(iteration++ < MAX_ITERATIONS);
-
-    return y;
-};
 
 
 int main(int argc, char** argv)
@@ -231,20 +149,10 @@ int main(int argc, char** argv)
 	std::chrono::milliseconds	milliseconds_since_epoch =
 	std::chrono::duration_cast<std::chrono::milliseconds>(duration_since_epoch);
 	int64_t milliseconds_since_epoch_count;
-
-	std::vector<Zak::Vertex2D<float>> graphic_verticies = GenerateGrephicsVerticies(-20, 20, 200, [](float x)->float{return sin(x);});
-	MappingVerticies(graphic_verticies, -20, 20, -20, 20, -0.9f, 0.9f, -0.9f, 0.9f);
 	
 	Zak::VertexArrayObject vertexArrayObject;
-	Zak::VertexBufferObject vertexBufferObject(graphic_verticies);
 	Zak::VertexBufferLayout layout;
 	layout.Push<float>(2);
-	vertexArrayObject.AddBuffer(vertexBufferObject, layout);
-	vertexArrayObject.UnBind();
-	vertexBufferObject.UnBind();
-
-	Zak::Line line(graphic_verticies);
-	line.SetShader(default_shader);
 
 while (!glfwWindowShouldClose(window))
 	{
@@ -254,12 +162,6 @@ while (!glfwWindowShouldClose(window))
 		milliseconds_since_epoch_count = milliseconds_since_epoch.count();
 
 #pragma region Animation
-		RecalculateFunctionVerticies(graphic_verticies, -20, 20, 
-			[milliseconds_since_epoch_count](float x)->float{
-				return BASE_FUNCTION(x + (milliseconds_since_epoch_count%1000 * ANIMATION_SPEED));
-			}
-		);
-		MappingVerticies(graphic_verticies, -20, 20, -20, 20, -0.9f, 0.9f, -0.9f, 0.9f);
 #pragma endregion
 
 #pragma region Render
@@ -272,15 +174,6 @@ while (!glfwWindowShouldClose(window))
 
 		// ENABLE SHADER BEFORE DRAW ANYTHING !1!!!
 		default_shader->Bind();
-		default_shader->SetUniform
-		(Zak::Uniform("u_Color", Zak::UniformVec4(0.f, 1.f, 1.f, 1.f)));
-		vertexArrayObject.Bind();
-		vertexBufferObject.ReBind(graphic_verticies);
-		vertexBufferObject.Bind();
-		glDrawArrays(GL_LINE_STRIP, 0, vertexBufferObject.GetCount());
-		vertexArrayObject.UnBind();
-		vertexBufferObject.UnBind();
-		default_shader->UnBind();
 #pragma endregion
 
 		/* Swap front and back buffers */
