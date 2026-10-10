@@ -1,1 +1,2 @@
 stb_image.h v2.30
+stb_truetype.h v1.26

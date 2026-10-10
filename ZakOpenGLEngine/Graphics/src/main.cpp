@@ -1,3 +1,6 @@
+#include <cstdint>
+#include <filesystem>
+#include <fstream>
 #define _USE_MATH_DEFINES
 #define STB_IMAGE_IMPLEMENTATION
 #ifndef TINYOBJLOADER_IMPLEMENTATION
@@ -35,6 +38,9 @@
 #include <ZakEngine/OpenGLClass/VertexBufferLayout.hpp>
 #include <ZakEngine/OpenGLClass/IndexBufferObject.hpp>
 
+#define STB_TRUETYPE_IMPLEMENTATION
+#include <stb_truetype.h>
+
 #include <chrono>
 #include <cmath>
 
@@ -49,6 +55,7 @@
 float windowWidth = 640;
 float windowHeight = 480;
 inline void exit_failure(int code = EXIT_FAILURE);
+inline stbtt_fontinfo* load_font(const char* filename);
 
 
 
@@ -190,8 +197,31 @@ while (!glfwWindowShouldClose(window))
 	return EXIT_SUCCESS;
 }
 
+
 inline void exit_failure(int code)
 {
 	glfwTerminate();
 	exit(code);
+}
+
+
+inline stbtt_fontinfo* load_font(const char* filename) {
+	std::ifstream file(filename);
+	size_t file_size = std::filesystem::file_size(filename);
+	if (!file.is_open()) {
+		return nullptr;
+	}
+
+	uint8_t* buffer = new uint8_t[file_size];
+
+	file.read((char*)(buffer), file_size);
+	file.close();
+
+	stbtt_fontinfo* font = new stbtt_fontinfo;
+	if (!stbtt_InitFont(font, buffer, 0)) {
+		delete [] buffer;
+		return nullptr;
+	}
+
+	return font;
 }

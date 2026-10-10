@@ -13,6 +13,7 @@ build/
 ZakOpenGLEngine/Jelly/assets/models/lost-empire
 ZakOpenGLEngine/Jelly/assets/models/pine
 ZakOpenGLEngine/Jelly/deps/stb_image.h
+stb_truetype.h
 
 ZakOpenGLEngine/Graphics/deps/stb_image.h
 
